@@ -136,6 +136,7 @@ class MenuListController: UITableViewController {
         if (indexPath.row == 1) {
             let settingsURL = URL(string: UIApplication.openSettingsURLString)!
             UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
+            tableView.deselectRow(at: indexPath, animated: true)
             let alert = UIAlertController(title: String(localized: "restartApp"), message: "", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
