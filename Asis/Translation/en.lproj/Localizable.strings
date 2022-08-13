@@ -1,0 +1,60 @@
+"sideMenuShareApp" = "Share App";
+"sideMenuLanguage" = "Language";
+"sideMenuAllBusStops" = "View All Bus Stops";
+"openSafari" = "Open in Safari";
+"backButton" = "Back";
+"searchBar" = "Search Bus Stops...";
+"internetConnection" = "Please check your internet connection";
+
+"okButton" = "Ok";
+
+"address" = "Address: ";
+"service" = "Services: ";
+"destination" = "Destinations: ";
+"namePlaceHolder" = "Name";
+"emailPlaceHolder" = "Email";
+"passwordPlaceHolder" = "Password";
+"newPasswordPlaceHolder" = "New Password";
+"authenticatePlaceHolder" = "Authenticate Password";
+"updateUserButton" = "Update User";
+"passwordError" = "Check Current Password!";
+"dataError" = "An error occurred while getting user data! Try again.";
+"updatedUser" = "User Successfully Updated";
+"passwordNotMatchError" = "Passwords do not match!";
+"passwordRequirementError" = "Please make sure your password is at least 8 characters, contains a special character (!,?,&,...) and a number.";
+"basicFillError" = "Please fill name, email and current password fields!";
+
+"signUpButton" = "Sign Up";
+"creatingError" = "An error occurred while creating the user.";
+"advancedFillError" = "Please fill all fields!";
+
+"loginButton" = "Login";
+"createAccountButton" = "I want to create an account!";
+"resetPasswordButton" = "Reset My Password";
+
+"emailpasswordMatchError" = "Check Your Email and Password!";
+"emailError" = "Check your email!";
+"emailemptyError" = "Please enter your email to first field.";
+
+"personalPersonalInfoTable" = "Personal Info";
+"personalFAQTable" = "Frequently Asked Questions";
+"personalLogOutButtonTable" = "Log Out";
+
+"addCardButton" = "Add new Card";
+"notScanSupportedError" = "Scanning Not Supported";
+"notScanSupportedErrorDetail" = "This device doesn't support tag scanning.";
+"scanSuccess" = "Hold your iPhone near the item to learn more about it.";
+"notLoggedInError" = "Please Log In From Settings!";
+"timeOutError" = "Session Invalidated";
+
+"tabBarItemHome" = "Home";
+"tabBarItemStops" = "Stops";
+"tabBarItemsMyCards" = "My Cards";
+"tabBarItemsSettings" = "Settings";
+
+"asisKartText" = "ASİS KART";
+"cardCardHolderName" = "Card Holder Name";
+"nameCardHolderName" = "NAME";
+"cardBalance" = "Balance";
+"hiText" = "Hi, ";
+"restartApp" = "Please restart app to change language.";
