@@ -11,6 +11,18 @@ import SideMenu
 import MapKit
 import CoreLocation
 
+
+struct Routes {
+    let departureID: Int
+    let departureName: String
+    let departureTime: String
+    let destinationID: Int
+    let destinationName: String
+    let destinationTime: String
+    let routetime: Int
+
+}
+
 class HomeViewController: UIViewController, UISearchBarDelegate {
 
 //MARK: Set Up
@@ -34,6 +46,42 @@ class HomeViewController: UIViewController, UISearchBarDelegate {
     var suitableStopsAroundDestinationArray: [Stop] = []
     var suitableStopsAroundCurentLocationArray: [Stop] = []
     var suitableRouteArray: [Stop] = []
+    var routesArray: [Routes] = []
+    var startingpoint = MKPlacemark()
+    var finishingpoint =  MKPlacemark()
+    var times:[Trip] = [] {
+        didSet {
+            for times in (0..<self.times.count) {
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "HH:mm"
+                dateFormatter.timeZone = TimeZone(abbreviation: "GMT+00:00")
+                let departure = self.times[times].departures[0].time
+                let destination = self.times[times].departures[self.times[times].departures.count-1].time
+                let departuredate = dateFormatter.date(from: departure)
+                let destinationdate =  dateFormatter.date(from: destination)
+                let diffSeconds = destinationdate!.timeIntervalSinceReferenceDate - departuredate!.timeIntervalSinceReferenceDate
+                let diffMinutes = diffSeconds / 60
+                routesArray.append(Routes(departureID: self.times[times].departures[0].stopID,
+                                          departureName: self.times[times].departures[0].name,
+                                          departureTime: self.times[times].departures[0].time,
+                                          destinationID: self.times[times].departures[self.times[times].departures.count-1].stopID,
+                                          destinationName: self.times[times].departures[self.times[times].departures.count-1].name,
+                                          destinationTime: self.times[times].departures[self.times[times].departures.count-1].time,
+                                          routetime: Int(diffMinutes)))
+            }
+            for stop in stops {
+                for routes in routesArray {
+                    if stop.stopID == routes.departureID{
+                        startingpoint = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: stop.latitude!, longitude: stop.longitude!), addressDictionary: nil)
+                    }
+                    if stop.stopID == routes.destinationID{
+                        finishingpoint = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: stop.latitude!, longitude: stop.longitude!), addressDictionary: nil)
+                    }
+                }
+                walkingtime(starting_point: startingpoint, finishing_point: finishingpoint)
+            }
+        }
+    }
     
     //MARK: Table Setup
     lazy var howToGoSearchTable: UITableView = {
@@ -47,20 +95,6 @@ class HomeViewController: UIViewController, UISearchBarDelegate {
     var matchingItems: [MKMapItem] = [] {
         didSet{
             howToGoSearchTable.reloadData()
-        }
-    }
-    var departuretime: [String] = []
-    var departureStopName: [String] = []
-    var destinationtime: [String] = []
-    var destinationStopName: [String] = []
-    var times:[Trip] = [] {
-        didSet {
-            for times in (0..<self.times.count) {
-                departuretime.append(self.times[times].departures[0].time)
-                departureStopName.append(self.times[times].departures[0].name)
-                destinationtime.append(self.times[times].departures[self.times[times].departures.count-1].time)
-                destinationStopName.append(self.times[times].departures[self.times[times].departures.count-1].name)
-            }
         }
     }
     
@@ -182,6 +216,9 @@ class HomeViewController: UIViewController, UISearchBarDelegate {
 
 //MARK: HowToGo
     
+    
+    
+    //MARK: Address Seaarch
     func findLocations(with query: String) {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
@@ -195,6 +232,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate {
         }
     }
     
+    //MARK: Set Address
     func parseAddress(selectedItem:MKPlacemark) -> String {
         let firstSpace = (selectedItem.subThoroughfare != nil &&
                             selectedItem.thoroughfare != nil) ? " " : ""
@@ -215,7 +253,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate {
         return addressLine
     }
     
-    //MARK:
+    //MARK: Find Close Stops
     var selectedItemCoordination = CLLocationCoordinate2D()
     @objc func makeRoad(){
         let busstopsCount = stops.count
@@ -228,6 +266,8 @@ class HomeViewController: UIViewController, UISearchBarDelegate {
             }
             userlatitude = location.coordinate.latitude
             userlongitude = location.coordinate.longitude
+            
+            //MARK: 500 Metre
             for i in (0..<busstopsCount){
                 if (((self.selectedItemCoordination.latitude)-0.005) < (self.stops[i].latitude!) &&
                     (self.stops[i].latitude!) < ((self.selectedItemCoordination.latitude)+0.005) &&
@@ -243,18 +283,71 @@ class HomeViewController: UIViewController, UISearchBarDelegate {
                     self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
                 }
             }
-        
-
-            for start in (0..<self.suitableStopsAroundCurentLocationArray.count) {
-                for destination in (0..<self.suitableStopsAroundDestinationArray.count) {
-                    let timestamp = Date().timeIntervalSince1970
-                    self.timeData(timestring: "stoptostop-timetable/?start_stop_id=36236495&finish_stop_id=36232896&date=\(timestamp)&duration=\(15)")
-                    //self.timeData(timestring: "stoptostop-timetable/?start_stop_id=\(start)&finish_stop_id=\(destination)&date=\(timestamp)&duration=\(15)")
-                }
-            }
+            
+            //MARK: APİI Decoder
+            let timestamp = Date().timeIntervalSince1970
+            self.timeData(timestring: "stoptostop-timetable/?start_stop_id=36236495&finish_stop_id=36232896&date=\(timestamp)&duration=\(15)")
+//            for start in (0..<self.suitableStopsAroundCurentLocationArray.count) {
+//                for destination in (0..<self.suitableStopsAroundDestinationArray.count) {
+//                    let timestamp = Date().timeIntervalSince1970
+//                    self.timeData(timestring: "stoptostop-timetable/?start_stop_id=\(start)&finish_stop_id=\(destination)&date=\(timestamp)&duration=\(15)")
+//                }
+//            }
         }
     }
+    func walkingtime(starting_point: MKPlacemark, finishing_point: MKPlacemark){
+        var currenttostart: Double = 0
+        var finishtodestination: Double = 0
+        let request = MKDirections.Request()
+        let secondrequest = MKDirections.Request()
+        
+        LocationManager.shared.getUserLocation { [weak self] location in
+            guard let self = self else {
+                return
+            }
+            request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude), addressDictionary: nil))
+            request.destination = MKMapItem(placemark: starting_point)
+            request.requestsAlternateRoutes = true
+            request.transportType = .walking
+            
+            secondrequest.source = MKMapItem(placemark: finishing_point)
+            print("selecteditem \(self.selectedItemCoordination)")
+            secondrequest.destination = MKMapItem(placemark: MKPlacemark(coordinate: self.selectedItemCoordination))
+            secondrequest.requestsAlternateRoutes = true
+            secondrequest.transportType = .walking
+            
+            let directionsfromcurrent = MKDirections(request: request)
+            directionsfromcurrent.calculate {(response, error) -> Void in
+                       guard let response = response else {
+                           if let error = error {
+                               print("Error: \(error)")
+                           }
+                           return
+                       }
 
+                      if response.routes.count > 0 {
+                           let route = response.routes[0]
+                           currenttostart = (route.expectedTravelTime / 60)
+                       }
+                   }
+            
+            let directionstodestination = MKDirections(request: secondrequest)
+            directionstodestination.calculate {(response, error) -> Void in
+                       guard let response = response else {
+                           if let error = error {
+                               print("Error: \(error)")
+                           }
+                           return
+                       }
+
+                      if response.routes.count > 0 {
+                           let route = response.routes[0]
+                           finishtodestination = (route.expectedTravelTime / 60)
+                       }
+                   }
+            print(currenttostart, finishtodestination)
+        }
+    }
     
     
 //MARK: Map
@@ -440,7 +533,6 @@ extension HomeViewController : MKMapViewDelegate {
         guard let annotation = annotation as? CustomPointAnnotation else {
             return nil
         }
-        
         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "reuseIdentifier")
         if annotationView == nil {
             annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "reuseIdentifier")
@@ -450,10 +542,11 @@ extension HomeViewController : MKMapViewDelegate {
             annotationView?.annotation = annotation
         }
 
-        // Now you can identify your point annotation
+        //MARK: Bus Annotation
         if annotation.customidentifier == "busAnnotation" {
             annotationView?.image = UIImage(systemName: "bus")!.withRenderingMode(.alwaysOriginal).withTintColor(.systemBlue).resized(to: CGSize(width: 15, height: 15))
         }
+        //MARK: Location Annotation
         if annotation.customidentifier == "howToGoAnnotation" {
             let pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: String(annotation.hash))
             let rightButton = UIButton(type: .contactAdd)
@@ -471,12 +564,16 @@ extension HomeViewController : MKMapViewDelegate {
 }
 
 
+
+//MARK: Adress Search Tableview
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
+    //MARK: Row Number
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return matchingItems.count
     }
     
+    //MARK: Cell Content
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: HowToGoSearchTableCellSetup.identifer, for: indexPath) as! HowToGoSearchTableCellSetup
         let selectedItem = matchingItems[indexPath.row].placemark
@@ -485,14 +582,15 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    //MARK: Cell Height
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
-    
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
     
+    //MARK: Select Function
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         howToGoSearchTable.isHidden = true
