@@ -49,6 +49,20 @@ class HomeViewController: UIViewController, UISearchBarDelegate {
             howToGoSearchTable.reloadData()
         }
     }
+    var departuretime: [String] = []
+    var departureStopName: [String] = []
+    var destinationtime: [String] = []
+    var destinationStopName: [String] = []
+    var times:[Trip] = [] {
+        didSet {
+            for times in (0..<self.times.count) {
+                departuretime.append(self.times[times].departures[0].time)
+                departureStopName.append(self.times[times].departures[0].name)
+                destinationtime.append(self.times[times].departures[self.times[times].departures.count-1].time)
+                destinationStopName.append(self.times[times].departures[self.times[times].departures.count-1].name)
+            }
+        }
+    }
     
     //MARK: Data Setup
     var timer = Timer()
@@ -60,18 +74,10 @@ class HomeViewController: UIViewController, UISearchBarDelegate {
                     self.map.removeAnnotation(BusAnnotation)
                 }
             }
-            //self.map.removeAnnotations(self.map.annotations)
             busLocations()
         }
     }
     var stops:[Stop] = []
-    var times:[Trip] = [] {
-        didSet{
-            print("---------------------------")
-            print(times)
-            print("---------------------------")
-        }
-    }
     
     //MARK: Side Menu Setup
     var menu: SideMenuNavigationController?
@@ -238,31 +244,14 @@ class HomeViewController: UIViewController, UISearchBarDelegate {
                 }
             }
         
-            var departuretime: [String] = []
-            var departureStopName: [String] = []
-            var destinationtime: [String] = []
-            var destinationStopName: [String] = []
+
             for start in (0..<self.suitableStopsAroundCurentLocationArray.count) {
                 for destination in (0..<self.suitableStopsAroundDestinationArray.count) {
                     let timestamp = Date().timeIntervalSince1970
-                    self.timeData(timestring: "stoptostop-timetable/?start_stop_id=36236495&finish_stop_id=36232896&date=\(Int(timestamp))&duration=\(15)")
-                    print(self.times)
-                    for times in (0..<self.times.count) {
-                        for departures in (0..<self.times[times].departures.count) {
-                            if self.times[times].departures[departures].stopID == self.suitableStopsAroundCurentLocationArray[start].stopID {
-                                departuretime.append(self.times[times].departures[departures].time)
-                                departureStopName.append(self.times[times].departures[departures].name)
-                                
-                            }
-                            if self.times[times].departures[departures].stopID == self.suitableStopsAroundDestinationArray[start].stopID {
-                                destinationtime.append(self.times[times].departures[departures].time)
-                                destinationStopName.append(self.times[times].departures[departures].name)
-                            }
-                        }
-                    }
+                    self.timeData(timestring: "stoptostop-timetable/?start_stop_id=36236495&finish_stop_id=36232896&date=\(timestamp)&duration=\(15)")
+                    //self.timeData(timestring: "stoptostop-timetable/?start_stop_id=\(start)&finish_stop_id=\(destination)&date=\(timestamp)&duration=\(15)")
                 }
             }
-            print(departuretime, departureStopName, destinationtime, destinationStopName)
         }
     }
 
