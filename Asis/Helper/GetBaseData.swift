@@ -13,10 +13,13 @@ class GetBaseData {
     fileprivate var baseUrl = "https://tfe-opendata.com/api/v1/"
     typealias basedataCallBack = (_ stops:[Stop]?, _ status: Bool, _ message:String) -> Void
     typealias baseBusdataCallBack = (_ busses:[Vehicle]?, _ status: Bool, _ message:String) -> Void
+    typealias baseTimedataCallBack = (_ times:[Trip]?, _ status: Bool, _ message:String) -> Void
+
     
     //MARK: Bus stops
     var callBack:basedataCallBack?
     var callBusBack:baseBusdataCallBack?
+    var callTimeback: baseTimedataCallBack?
     
 
     //MARK: Bus Stops Data
@@ -56,11 +59,34 @@ class GetBaseData {
         }
     }
     
+    
+    //MARK: Time Data
+    func getTimeBaseData(endPoint: String) {
+        AF.request(self.baseUrl + endPoint, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: nil, interceptor: nil).response { (TimeresponseData) in
+            guard let data = TimeresponseData.data else {
+                self.callTimeback?(nil, false, "")
+               
+                return}
+            do {
+            let basedata = try JSONDecoder().decode(TimetableModel.self, from: data)
+                self.callTimeback?(basedata.journeys , true, "")
+                
+            } catch {
+                self.callTimeback?(nil, false, error.localizedDescription)
+
+            }
+        }
+    }
+    
     func completionHandler(callBack: @escaping basedataCallBack) {
         self.callBack = callBack
     }
     
     func busCompletionHandler(callBusBack: @escaping baseBusdataCallBack) {
         self.callBusBack = callBusBack
+    }
+    
+    func timeCompletionHandler(callTimeBack: @escaping baseTimedataCallBack) {
+        self.callTimeback = callTimeBack
     }
 }

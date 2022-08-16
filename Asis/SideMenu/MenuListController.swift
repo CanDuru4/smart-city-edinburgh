@@ -50,30 +50,27 @@ class MenuListController: UITableViewController {
         
         //MARK: Language Content
         if indexPath == [0, 1] {
-            if pre == "de" {
-                cell.imagePlace.image = UIImage(named: "German")
+            if pre.contains("de") {
+                cell.imagePlace.image = UIImage(named: "German")!.resized(to: CGSize(width: 20,height: 20))
             }
-            if pre == "en" {
-                cell.imagePlace.image = UIImage(named: "English")
+            if pre.contains("en") {
+                cell.imagePlace.image = UIImage(named: "English")!.resized(to: CGSize(width: 20,height: 20))
             }
-            if pre == "es" {
-                cell.imagePlace.image = UIImage(named: "Spanish")
+            if pre.contains("es") {
+                cell.imagePlace.image = UIImage(named: "Spanish")!.resized(to: CGSize(width: 20,height: 20))
             }
-            if pre == "fr" {
-                cell.imagePlace.image = UIImage(named: "French")
+            if pre.contains("fr") {
+                cell.imagePlace.image = UIImage(named: "French")!.resized(to: CGSize(width: 20,height: 20))
             }
-            if pre == "ru" {
-                cell.imagePlace.image = UIImage(named: "Russian")
+            if pre.contains("ru") {
+                cell.imagePlace.image = UIImage(named: "Russian")!.resized(to: CGSize(width: 20,height: 20))
             }
-            if pre == "tr" {
-                cell.imagePlace.image = UIImage(named: "Turkish")
+            if pre.contains("tr") {
+                cell.imagePlace.image = UIImage(named: "Turkish")!.resized(to: CGSize(width: 20,height: 20))
             }
-            if pre == "zh-Hans" {
-                cell.imagePlace.image = UIImage(named: "Chinese")
+            if pre.contains("zh-Hans") {
+                cell.imagePlace.image = UIImage(named: "Chinese")!.resized(to: CGSize(width: 20,height: 20))
             }
-        }
-        if indexPath == [0,0] {
-            heightOfRow = self.calculateHeight(inString: cell.description)
         }
         return cell
 
@@ -99,32 +96,12 @@ class MenuListController: UITableViewController {
     
     //MARK: Cell Height
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath == [0,0] {
-            print(heightOfRow)
-            return heightOfRow
-        }
-        if indexPath == [0,1] {
-            return 40
-        }
-
-        if indexPath == [0,2] {
-            return 40
-        }
-        return 0
+        return UITableView.automaticDimension
     }
-        
-    func calculateHeight(inString:String) -> CGFloat
-        {
-            let messageString = inString
-
-            let attributedString : NSAttributedString = NSAttributedString(string: messageString, attributes: nil)
-
-            let rect : CGRect = attributedString.boundingRect(with: CGSize(width: view.bounds.width , height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, context: nil)
-
-            let requredSize:CGRect = rect
-            return requredSize.height
-        }
     
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
     
     //MARK: Select function
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -137,9 +114,6 @@ class MenuListController: UITableViewController {
             let settingsURL = URL(string: UIApplication.openSettingsURLString)!
             UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
             tableView.deselectRow(at: indexPath, animated: true)
-            let alert = UIAlertController(title: String(localized: "restartApp"), message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
         }
         if (indexPath.row == 2) {
             tableView.deselectRow(at: indexPath, animated: true)

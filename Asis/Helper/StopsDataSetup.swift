@@ -18,12 +18,14 @@ struct StopsDataSetup: Decodable {
 }
 
 struct Stop: Decodable {
+    var stopID: Int
     var name: String?
     var latitude: Double?
     var longitude: Double?
     var destinations, services: [String]
     
     enum CodingKeys: String, CodingKey {
+        case stopID = "stop_id"
         case name = "name"
         case latitude = "latitude"
         case longitude = "longitude"

@@ -35,13 +35,6 @@
 		1F31E0BB2898FAED003693C8 /* LanguageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F31E0BA2898FAED003693C8 /* LanguageViewController.swift */; };
 		1F31E0BD2898FB05003693C8 /* AllStopsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F31E0BC2898FB05003693C8 /* AllStopsViewController.swift */; };
 		1F48C50F28A66AC700E8617C /* ASIS_LOGO_SEFFAF-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F48C50E28A66AC700E8617C /* ASIS_LOGO_SEFFAF-2.png */; };
-		1F492A8928A79D650065260B /* French.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F492A8228A79D630065260B /* French.png */; };
-		1F492A8A28A79D650065260B /* Turkish.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F492A8328A79D630065260B /* Turkish.png */; };
-		1F492A8B28A79D650065260B /* Chinese.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F492A8428A79D640065260B /* Chinese.png */; };
-		1F492A8C28A79D650065260B /* Russian.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F492A8528A79D640065260B /* Russian.png */; };
-		1F492A8D28A79D650065260B /* English.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F492A8628A79D640065260B /* English.png */; };
-		1F492A8E28A79D650065260B /* German.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F492A8728A79D650065260B /* German.png */; };
-		1F492A8F28A79D650065260B /* Spanish.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F492A8828A79D650065260B /* Spanish.png */; };
 		1F492A9128A79E620065260B /* SideMenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F492A9028A79E620065260B /* SideMenuTableViewCell.swift */; };
 		1F64ABC028A110D600FEB09C /* BusDataSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F64ABBF28A110D600FEB09C /* BusDataSetup.swift */; };
 		1F64ABC428A146E400FEB09C /* CustomAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F64ABC328A146E400FEB09C /* CustomAnnotation.swift */; };
@@ -49,6 +42,15 @@
 		1F72674D2898F97400C0AAE6 /* BusStopsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F72674C2898F97400C0AAE6 /* BusStopsViewController.swift */; };
 		1F79888C28A27DEB002A9950 /* pngwing.com.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F79888A28A27DEB002A9950 /* pngwing.com.png */; };
 		1F79888D28A27DEB002A9950 /* flag-united-states-emoji-on-apple-ios-500603.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F79888B28A27DEB002A9950 /* flag-united-states-emoji-on-apple-ios-500603.png */; };
+		1F7FECC228AA19B00025031D /* English.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F7FECBB28AA19B00025031D /* English.png */; };
+		1F7FECC328AA19B00025031D /* French.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F7FECBC28AA19B00025031D /* French.png */; };
+		1F7FECC428AA19B00025031D /* Chinese.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F7FECBD28AA19B00025031D /* Chinese.png */; };
+		1F7FECC528AA19B00025031D /* Spanish.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F7FECBE28AA19B00025031D /* Spanish.png */; };
+		1F7FECC628AA19B00025031D /* Turkish.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F7FECBF28AA19B00025031D /* Turkish.png */; };
+		1F7FECC728AA19B00025031D /* German.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F7FECC028AA19B00025031D /* German.png */; };
+		1F7FECC828AA19B00025031D /* Russian.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F7FECC128AA19B00025031D /* Russian.png */; };
+		1F7FECCD28AA34E20025031D /* HowToGoSearchTableCellSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7FECCC28AA34E20025031D /* HowToGoSearchTableCellSetup.swift */; };
+		1F7FECD128ABB4770025031D /* JourneyTımeDataSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7FECD028ABB4770025031D /* JourneyTımeDataSetup.swift */; };
 		1F8F825128A520930008A8E7 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8F825028A520930008A8E7 /* AuthViewController.swift */; };
 		1FB0A74228A4DF1500CAE38A /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB0A74128A4DF1500CAE38A /* SettingsTableViewCell.swift */; };
 		1FB0A74428A4F36E00CAE38A /* ASIS_LOGO_SEFFAF.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FB0A74328A4F36E00CAE38A /* ASIS_LOGO_SEFFAF.png */; };
@@ -91,13 +93,6 @@
 		1F31E0BA2898FAED003693C8 /* LanguageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewController.swift; sourceTree = "<group>"; };
 		1F31E0BC2898FB05003693C8 /* AllStopsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllStopsViewController.swift; sourceTree = "<group>"; };
 		1F48C50E28A66AC700E8617C /* ASIS_LOGO_SEFFAF-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ASIS_LOGO_SEFFAF-2.png"; sourceTree = "<group>"; };
-		1F492A8228A79D630065260B /* French.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = French.png; sourceTree = "<group>"; };
-		1F492A8328A79D630065260B /* Turkish.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Turkish.png; sourceTree = "<group>"; };
-		1F492A8428A79D640065260B /* Chinese.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Chinese.png; sourceTree = "<group>"; };
-		1F492A8528A79D640065260B /* Russian.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Russian.png; sourceTree = "<group>"; };
-		1F492A8628A79D640065260B /* English.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = English.png; sourceTree = "<group>"; };
-		1F492A8728A79D650065260B /* German.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = German.png; sourceTree = "<group>"; };
-		1F492A8828A79D650065260B /* Spanish.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Spanish.png; sourceTree = "<group>"; };
 		1F492A9028A79E620065260B /* SideMenuTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuTableViewCell.swift; sourceTree = "<group>"; };
 		1F64ABBF28A110D600FEB09C /* BusDataSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusDataSetup.swift; sourceTree = "<group>"; };
 		1F64ABC328A146E400FEB09C /* CustomAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAnnotation.swift; sourceTree = "<group>"; };
@@ -106,6 +101,15 @@
 		1F79888928A267E9002A9950 /* Asis.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Asis.entitlements; sourceTree = "<group>"; };
 		1F79888A28A27DEB002A9950 /* pngwing.com.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pngwing.com.png; sourceTree = "<group>"; };
 		1F79888B28A27DEB002A9950 /* flag-united-states-emoji-on-apple-ios-500603.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "flag-united-states-emoji-on-apple-ios-500603.png"; sourceTree = "<group>"; };
+		1F7FECBB28AA19B00025031D /* English.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = English.png; sourceTree = "<group>"; };
+		1F7FECBC28AA19B00025031D /* French.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = French.png; sourceTree = "<group>"; };
+		1F7FECBD28AA19B00025031D /* Chinese.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Chinese.png; sourceTree = "<group>"; };
+		1F7FECBE28AA19B00025031D /* Spanish.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Spanish.png; sourceTree = "<group>"; };
+		1F7FECBF28AA19B00025031D /* Turkish.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Turkish.png; sourceTree = "<group>"; };
+		1F7FECC028AA19B00025031D /* German.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = German.png; sourceTree = "<group>"; };
+		1F7FECC128AA19B00025031D /* Russian.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Russian.png; sourceTree = "<group>"; };
+		1F7FECCC28AA34E20025031D /* HowToGoSearchTableCellSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToGoSearchTableCellSetup.swift; sourceTree = "<group>"; };
+		1F7FECD028ABB4770025031D /* JourneyTımeDataSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JourneyTımeDataSetup.swift"; sourceTree = "<group>"; };
 		1F8F825028A520930008A8E7 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		1FB0A74128A4DF1500CAE38A /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
 		1FB0A74328A4F36E00CAE38A /* ASIS_LOGO_SEFFAF.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ASIS_LOGO_SEFFAF.png; sourceTree = "<group>"; };
@@ -300,6 +304,7 @@
 				1F0EF77028991D6F0053F4DB /* GetBaseData.swift */,
 				1F2A057B289B99E20009F98F /* Network.swift */,
 				1F64ABBF28A110D600FEB09C /* BusDataSetup.swift */,
+				1F7FECD028ABB4770025031D /* JourneyTımeDataSetup.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -308,6 +313,7 @@
 			isa = PBXGroup;
 			children = (
 				1F0F1E852897BA9F00695807 /* HomeViewController.swift */,
+				1F7FECCC28AA34E20025031D /* HowToGoSearchTableCellSetup.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -333,13 +339,13 @@
 		1FB9334828980C32009C1FAA /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				1F492A8428A79D640065260B /* Chinese.png */,
-				1F492A8628A79D640065260B /* English.png */,
-				1F492A8228A79D630065260B /* French.png */,
-				1F492A8728A79D650065260B /* German.png */,
-				1F492A8528A79D640065260B /* Russian.png */,
-				1F492A8828A79D650065260B /* Spanish.png */,
-				1F492A8328A79D630065260B /* Turkish.png */,
+				1F7FECBD28AA19B00025031D /* Chinese.png */,
+				1F7FECBB28AA19B00025031D /* English.png */,
+				1F7FECBC28AA19B00025031D /* French.png */,
+				1F7FECC028AA19B00025031D /* German.png */,
+				1F7FECC128AA19B00025031D /* Russian.png */,
+				1F7FECBE28AA19B00025031D /* Spanish.png */,
+				1F7FECBF28AA19B00025031D /* Turkish.png */,
 				1FB9334928980C69009C1FAA /* logo-dark.png */,
 				1F48C50E28A66AC700E8617C /* ASIS_LOGO_SEFFAF-2.png */,
 				1F79888B28A27DEB002A9950 /* flag-united-states-emoji-on-apple-ios-500603.png */,
@@ -435,31 +441,31 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F7FECC828AA19B00025031D /* Russian.png in Resources */,
 				1F042ECC28A7722C00C72FAF /* Localizable.strings in Resources */,
+				1F7FECC228AA19B00025031D /* English.png in Resources */,
 				1F0F1E912897BAA000695807 /* LaunchScreen.storyboard in Resources */,
-				1F492A8928A79D650065260B /* French.png in Resources */,
 				1F042EC728A7722C00C72FAF /* Localizable.strings in Resources */,
-				1F492A8F28A79D650065260B /* Spanish.png in Resources */,
-				1F492A8A28A79D650065260B /* Turkish.png in Resources */,
+				1F7FECC628AA19B00025031D /* Turkish.png in Resources */,
+				1F7FECC528AA19B00025031D /* Spanish.png in Resources */,
 				1FB9334A28980C69009C1FAA /* logo-dark.png in Resources */,
+				1F7FECC728AA19B00025031D /* German.png in Resources */,
 				1F042EC928A7722C00C72FAF /* Localizable.strings in Resources */,
-				1F492A8E28A79D650065260B /* German.png in Resources */,
 				1F48C50F28A66AC700E8617C /* ASIS_LOGO_SEFFAF-2.png in Resources */,
-				1F492A8D28A79D650065260B /* English.png in Resources */,
 				1F0F9C7628A2ACF6002E6E13 /* log-in.png in Resources */,
 				1F79888C28A27DEB002A9950 /* pngwing.com.png in Resources */,
 				1F79888D28A27DEB002A9950 /* flag-united-states-emoji-on-apple-ios-500603.png in Resources */,
-				1F492A8B28A79D650065260B /* Chinese.png in Resources */,
 				1F0F1E8E2897BAA000695807 /* Assets.xcassets in Resources */,
+				1F7FECC428AA19B00025031D /* Chinese.png in Resources */,
 				1F64ABC628A14B9000FEB09C /* bus-stop-logo.png in Resources */,
 				1F042ECA28A7722C00C72FAF /* Localizable.strings in Resources */,
 				1F042EC828A7722C00C72FAF /* Localizable.strings in Resources */,
 				1F042ECD28A7722C00C72FAF /* Localizable.strings in Resources */,
-				1F492A8C28A79D650065260B /* Russian.png in Resources */,
 				1FB0A74428A4F36E00CAE38A /* ASIS_LOGO_SEFFAF.png in Resources */,
 				1F042ECB28A7722C00C72FAF /* Localizable.strings in Resources */,
 				1FF3355A28A27F65007F3D29 /* GoogleService-Info.plist in Resources */,
 				1F0F9C7528A2ACF6002E6E13 /* logout.png in Resources */,
+				1F7FECC328AA19B00025031D /* French.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -520,11 +526,13 @@
 				1F8F825128A520930008A8E7 /* AuthViewController.swift in Sources */,
 				1FE0863628A4CE860054D965 /* PersonalInfoViewController.swift in Sources */,
 				1F31E0B52898FA8C003693C8 /* SettingsViewController.swift in Sources */,
+				1F7FECD128ABB4770025031D /* JourneyTımeDataSetup.swift in Sources */,
 				1F64ABC028A110D600FEB09C /* BusDataSetup.swift in Sources */,
 				1F0EF77328992CEF0053F4DB /* StopsDataSetup.swift in Sources */,
 				1F0F9C6C28A290E3002E6E13 /* SignUpViewController.swift in Sources */,
 				1F0F9C6E28A29AE4002E6E13 /* LoginViewController.swift in Sources */,
 				1F0EF777289AB7100053F4DB /* MenuListController.swift in Sources */,
+				1F7FECCD28AA34E20025031D /* HowToGoSearchTableCellSetup.swift in Sources */,
 				1F31E0BD2898FB05003693C8 /* AllStopsViewController.swift in Sources */,
 				1FB9334C28980FFA009C1FAA /* LocationManager.swift in Sources */,
 				1F0EF775289AB2B40053F4DB /* BusStopTableViewCellSetup.swift in Sources */,

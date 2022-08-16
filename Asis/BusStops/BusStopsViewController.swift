@@ -144,6 +144,11 @@ class BusStopsViewController: UIViewController, UISearchBarDelegate {
         }
     }
     
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = nil
+        filteredStops = stops
+    }
+    
     
 
 //MARK: Adressline

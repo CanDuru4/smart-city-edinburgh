@@ -9,28 +9,69 @@
 import UIKit
 import SideMenu
 import MapKit
+import CoreLocation
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController, UISearchBarDelegate {
 
 //MARK: Set Up
-    
-    
-    
-    //MARK: Data Setup
-    var timer = Timer()
-    var busses:[Vehicle] = [] {
-        didSet{
-            //MARK: Annotate Bus Locations
-            self.map.removeAnnotations(self.map.annotations)
-            busLocations()
-        }
-    }
     
     //MARK: Map Setup
     private let map: MKMapView = {
         let map = MKMapView()
         return map
     }()
+    
+    //MARK: HowToGo Setup
+    lazy var searchController: UISearchController = {
+        let search = UISearchController()
+        search.obscuresBackgroundDuringPresentation = false
+        search.searchBar.placeholder = String(localized: "howToGoSearchBar")
+        search.searchBar.sizeToFit()
+        search.searchBar.searchBarStyle = .prominent        
+        search.searchBar.delegate = self
+        return search
+    }()
+    var suitableStopsAroundDestinationArray: [Stop] = []
+    var suitableStopsAroundCurentLocationArray: [Stop] = []
+    var suitableRouteArray: [Stop] = []
+    
+    //MARK: Table Setup
+    lazy var howToGoSearchTable: UITableView = {
+        let tb = UITableView()
+        tb.translatesAutoresizingMaskIntoConstraints = false
+        tb.delegate = self
+        tb.dataSource = self
+        tb.register(HowToGoSearchTableCellSetup.self, forCellReuseIdentifier: HowToGoSearchTableCellSetup.identifer)
+        return tb
+    }()
+    var matchingItems: [MKMapItem] = [] {
+        didSet{
+            howToGoSearchTable.reloadData()
+        }
+    }
+    
+    //MARK: Data Setup
+    var timer = Timer()
+    var busses:[Vehicle] = [] {
+        didSet{
+            //MARK: Annotate Bus Locations
+            for BusAnnotation in self.map.annotations {
+                if let BusAnnotation = BusAnnotation as? CustomPointAnnotation, BusAnnotation.customidentifier == "busAnnotation" {
+                    self.map.removeAnnotation(BusAnnotation)
+                }
+            }
+            //self.map.removeAnnotations(self.map.annotations)
+            busLocations()
+        }
+    }
+    var stops:[Stop] = []
+    var times:[Trip] = [] {
+        didSet{
+            print("---------------------------")
+            print(times)
+            print("---------------------------")
+        }
+    }
     
     //MARK: Side Menu Setup
     var menu: SideMenuNavigationController?
@@ -49,14 +90,15 @@ class HomeViewController: UIViewController {
         view.backgroundColor = .systemBackground
         return view
     }()
-    
+
     
     
 //MARK: Load
     override func viewDidLoad() {
         super.viewDidLoad() 
         view.backgroundColor = .systemBackground
-        
+        howToGoSearchTable.isHidden = true
+
         //MARK: Map Load
         view.addSubview(map)
         setMapLayout()
@@ -68,10 +110,160 @@ class HomeViewController: UIViewController {
         BusData()
         BusDataRepeat()
         
+        //MARK: Bus Stops Data Load
+        BusStopsData()
+        
         //MARK: Side Menu Load
         navigationItem.setLeftBarButton(menuBarButtonItem, animated: false)
         menu = SideMenuNavigationController(rootViewController: MenuListController())
         menu?.leftSide = true
+        
+        //MARK: Search Bar Load
+        navigationItem.searchController = searchController
+        
+        //MARK: HowToGo Search Table
+        view.addSubview(howToGoSearchTable)
+        setTableLayout()
+    }
+
+    
+    
+//MARK: Table
+    func setTableLayout(){
+        howToGoSearchTable.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([howToGoSearchTable.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 1),
+                                     howToGoSearchTable.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                                     howToGoSearchTable.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                                     howToGoSearchTable.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)])
+    }
+    
+    
+    
+//MARK: Search Bar
+    func isSearchBarEmpty() -> Bool{
+        return searchController.searchBar.text?.isEmpty ?? true
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        if isSearchBarEmpty() {
+            howToGoSearchTable.isHidden = true
+            zoomInButton.isHidden = false
+            zoomOutButton.isHidden = false
+            currentlocationButton.isHidden = false
+            map.isHidden = false
+        } else{
+            //MARK: HowToGo Search
+            howToGoSearchTable.isHidden = false
+            zoomInButton.isHidden = true
+            zoomOutButton.isHidden = true
+            currentlocationButton.isHidden = true
+            map.isHidden = true
+            findLocations(with: searchText)
+            howToGoSearchTable.reloadData()
+        }
+    }
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = nil
+        howToGoSearchTable.isHidden = true
+        zoomInButton.isHidden = false
+        zoomOutButton.isHidden = false
+        currentlocationButton.isHidden = false
+        map.isHidden = false
+    }
+
+    
+
+//MARK: HowToGo
+    
+    func findLocations(with query: String) {
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = query
+        let search = MKLocalSearch(request: request)
+    
+        search.start { response, _ in
+            guard response != nil else {
+                return
+            }
+            self.matchingItems = response!.mapItems
+        }
+    }
+    
+    func parseAddress(selectedItem:MKPlacemark) -> String {
+        let firstSpace = (selectedItem.subThoroughfare != nil &&
+                            selectedItem.thoroughfare != nil) ? " " : ""
+        let comma = (selectedItem.subThoroughfare != nil || selectedItem.thoroughfare != nil) &&
+                    (selectedItem.subAdministrativeArea != nil || selectedItem.administrativeArea != nil) ? ", " : ""
+        let secondSpace = (selectedItem.subAdministrativeArea != nil &&
+                            selectedItem.administrativeArea != nil) ? " " : ""
+        let addressLine = String(
+            format:"%@%@%@%@%@%@%@",
+            selectedItem.subThoroughfare ?? "",
+            firstSpace,
+            selectedItem.thoroughfare ?? "",
+            comma,
+            selectedItem.locality ?? "",
+            secondSpace,
+            selectedItem.administrativeArea ?? ""
+        )
+        return addressLine
+    }
+    
+    //MARK:
+    var selectedItemCoordination = CLLocationCoordinate2D()
+    @objc func makeRoad(){
+        let busstopsCount = stops.count
+        var userlatitude: Double = 0
+        var userlongitude: Double = 0
+
+        LocationManager.shared.getUserLocation { [weak self] location in
+            guard let self = self else {
+                return
+            }
+            userlatitude = location.coordinate.latitude
+            userlongitude = location.coordinate.longitude
+            for i in (0..<busstopsCount){
+                if (((self.selectedItemCoordination.latitude)-0.005) < (self.stops[i].latitude!) &&
+                    (self.stops[i].latitude!) < ((self.selectedItemCoordination.latitude)+0.005) &&
+                    ((self.selectedItemCoordination.longitude)-0.005) < (self.stops[i].longitude!) &&
+                    (self.stops[i].longitude!) < ((self.selectedItemCoordination.longitude)+0.005)) {
+                    self.suitableStopsAroundDestinationArray.append(self.stops[i])
+                }
+
+                if (((userlatitude)-0.005) < (self.stops[i].latitude!) &&
+                    (self.stops[i].latitude!) < ((userlatitude)+0.005) &&
+                    ((userlongitude)-0.005) < (self.stops[i].longitude!) &&
+                    (self.stops[i].longitude!) < ((userlongitude)+0.005)){
+                    self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
+                }
+            }
+        
+            var departuretime: [String] = []
+            var departureStopName: [String] = []
+            var destinationtime: [String] = []
+            var destinationStopName: [String] = []
+            for start in (0..<self.suitableStopsAroundCurentLocationArray.count) {
+                for destination in (0..<self.suitableStopsAroundDestinationArray.count) {
+                    let timestamp = Date().timeIntervalSince1970
+                    self.timeData(timestring: "stoptostop-timetable/?start_stop_id=36236495&finish_stop_id=36232896&date=\(Int(timestamp))&duration=\(15)")
+                    print(self.times)
+                    for times in (0..<self.times.count) {
+                        for departures in (0..<self.times[times].departures.count) {
+                            if self.times[times].departures[departures].stopID == self.suitableStopsAroundCurentLocationArray[start].stopID {
+                                departuretime.append(self.times[times].departures[departures].time)
+                                departureStopName.append(self.times[times].departures[departures].name)
+                                
+                            }
+                            if self.times[times].departures[departures].stopID == self.suitableStopsAroundDestinationArray[start].stopID {
+                                destinationtime.append(self.times[times].departures[departures].time)
+                                destinationStopName.append(self.times[times].departures[departures].name)
+                            }
+                        }
+                    }
+                }
+            }
+            print(departuretime, departureStopName, destinationtime, destinationStopName)
+        }
     }
 
     
@@ -99,14 +291,15 @@ class HomeViewController: UIViewController {
     }
     
     
-    
+let currentlocationButton = UIButton(type: .custom)
+let zoomOutButton = UIButton(type: .custom)
+let zoomInButton = UIButton(type: .custom)
     
 //MARK: Buttons Setup
     func setButton(){
         
         
         //MARK: Current Location Button
-        let currentlocationButton = UIButton(type: .custom)
         currentlocationButton.backgroundColor = UIColor(white: 1, alpha: 0.8)
         currentlocationButton.setImage(UIImage(systemName: "location.fill")?.resized(to: CGSize(width: 25, height: 25)).withTintColor(.systemBlue), for: .normal)
         currentlocationButton.addTarget(self, action: #selector(pressed), for: .touchUpInside)
@@ -118,7 +311,6 @@ class HomeViewController: UIViewController {
         currentlocationButton.layer.masksToBounds = true
         
         //MARK: Zoom Out Button
-        let zoomOutButton = UIButton(type: .custom)
         zoomOutButton.backgroundColor = UIColor(white: 1, alpha: 0.8)
         zoomOutButton.setImage(UIImage(systemName: "minus.square.fill")?.resized(to: CGSize(width: 25, height: 25)).withTintColor(.systemBlue), for: .normal)
         zoomOutButton.addTarget(self, action: #selector(zoomOut), for: .touchUpInside)
@@ -130,7 +322,6 @@ class HomeViewController: UIViewController {
         zoomOutButton.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner] // Top right corner, Top left corner respectively
         
         //MARK: Zoom In Button
-        let zoomInButton = UIButton(type: .custom)
         zoomInButton.backgroundColor = UIColor(white: 1, alpha: 0.8)
         zoomInButton.setImage(UIImage(systemName: "plus.square.fill")?.resized(to: CGSize(width: 25, height: 25)).withTintColor(.systemBlue), for: .normal)
         zoomInButton.addTarget(self, action: #selector(zoomIn), for: .touchUpInside)
@@ -166,7 +357,7 @@ class HomeViewController: UIViewController {
     
     
 //MARK: Bus Location Annotation
-    var BusAnnotation:CustomPointAnnotation!
+    var BusAnnotation: CustomPointAnnotation!
     var BusAnnotationView:MKPinAnnotationView!
     //MARK: Check and mark bus locations in every 15 second
     @objc func busLocations(){
@@ -177,8 +368,8 @@ class HomeViewController: UIViewController {
             BusAnnotation.coordinate = coordinate
             BusAnnotation.title = busses[i].serviceName
             BusAnnotation.subtitle = busses[i].destination
-            BusAnnotationView = MKPinAnnotationView(annotation: BusAnnotation, reuseIdentifier: "custom")
-            map.addAnnotation(BusAnnotationView.annotation!)
+            BusAnnotation.customidentifier = "busAnnotation"
+            map.addAnnotation(BusAnnotation)
         }
     }
     
@@ -196,7 +387,7 @@ class HomeViewController: UIViewController {
     
     
     
-//MARK: Bus Stops Data
+//MARK: Bus Data
     func BusDataRepeat(){
         timer = Timer.scheduledTimer(withTimeInterval: 15, repeats: true, block: { _ in
             self.BusData()
@@ -208,6 +399,28 @@ class HomeViewController: UIViewController {
             self.busses = busses ?? []
         }
         basedata.getBusBaseData(endPoint: "vehicle_locations")
+    }
+    
+    
+    
+//MARK: Bus Stops Data
+    func BusStopsData(){
+        let basedata = GetBaseData()
+        basedata.completionHandler { stops, error, message in
+            
+            self.stops = stops ?? []
+        }
+        basedata.getStopsBaseData(endPoint: "stops")
+    }
+    
+    
+//MARK: Time Data
+    func timeData(timestring: String){
+        let basedata = GetBaseData()
+        basedata.timeCompletionHandler { times, status, message in
+            self.times = times ?? []
+        }
+        basedata.getTimeBaseData(endPoint: timestring)
     }
 }
 
@@ -230,21 +443,90 @@ extension UIImage {
 }
 
 
+
 //MARK: Pin With Image Extension
 extension HomeViewController : MKMapViewDelegate {
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if annotation is MKUserLocation {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView?  {
+        
+        guard let annotation = annotation as? CustomPointAnnotation else {
             return nil
         }
-        let reuseIdentifier = "custom"
-        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)
+        
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "reuseIdentifier")
         if annotationView == nil {
-            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
+            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "reuseIdentifier")
             annotationView?.canShowCallout = true
+
         } else {
             annotationView?.annotation = annotation
         }
-        annotationView?.image = UIImage(systemName: "bus")!.withRenderingMode(.alwaysOriginal).withTintColor(.systemBlue).resized(to: CGSize(width: 15, height: 15))
+
+        // Now you can identify your point annotation
+        if annotation.customidentifier == "busAnnotation" {
+            annotationView?.image = UIImage(systemName: "bus")!.withRenderingMode(.alwaysOriginal).withTintColor(.systemBlue).resized(to: CGSize(width: 15, height: 15))
+        }
+        if annotation.customidentifier == "howToGoAnnotation" {
+            let pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: String(annotation.hash))
+            let rightButton = UIButton(type: .contactAdd)
+            rightButton.setImage(UIImage(named: "customAnnotationButton"), for: .normal)
+            rightButton.tag = annotation.hash
+            pinView.animatesDrop = true
+            pinView.canShowCallout = true
+            pinView.rightCalloutAccessoryView = rightButton
+            rightButton.addTarget(self, action: #selector(makeRoad), for: .touchUpInside)
+            return pinView
+        }
+
         return annotationView
+    }
+}
+
+
+extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return matchingItems.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: HowToGoSearchTableCellSetup.identifer, for: indexPath) as! HowToGoSearchTableCellSetup
+        let selectedItem = matchingItems[indexPath.row].placemark
+        cell.titleLabel?.text = selectedItem.name
+        cell.detailLabel?.text = parseAddress(selectedItem: selectedItem)
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        howToGoSearchTable.isHidden = true
+        zoomInButton.isHidden = false
+        zoomOutButton.isHidden = false
+        currentlocationButton.isHidden = false
+        map.isHidden = false
+        searchController.searchBar.text = nil
+        
+        selectedItemCoordination = matchingItems[indexPath.row].placemark.coordinate
+        let selectedItemName = matchingItems[indexPath.row].placemark.name
+        let selectedItemSubtitle = matchingItems[indexPath.row].placemark.compactAddress
+        let selectedItemAnnotation = CustomPointAnnotation()
+        for selectedItemAnnotation in self.map.annotations {
+            if let selectedItemAnnotation = selectedItemAnnotation as? CustomPointAnnotation, selectedItemAnnotation.customidentifier == "howToGoAnnotation" {
+                self.map.removeAnnotation(selectedItemAnnotation)
+            }
+        }
+        selectedItemAnnotation.coordinate = selectedItemCoordination
+        selectedItemAnnotation.title = selectedItemName
+        selectedItemAnnotation.subtitle = selectedItemSubtitle
+        selectedItemAnnotation.customidentifier = "howToGoAnnotation"
+        map.addAnnotation(selectedItemAnnotation)
+        map.selectAnnotation(selectedItemAnnotation, animated: true)
     }
 }

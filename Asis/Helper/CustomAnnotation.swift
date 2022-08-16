@@ -9,5 +9,6 @@ import UIKit
 import MapKit
 
 class CustomPointAnnotation: MKPointAnnotation {
+    var customidentifier: String!
     var pinCustomImageName:String!
 }

@@ -8,6 +8,7 @@
 import Foundation
 import CoreLocation
 
+
 class LocationManager: NSObject, CLLocationManagerDelegate {
     static let shared = LocationManager()
     
@@ -29,4 +30,6 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         completion?(location)
         manager.stopUpdatingLocation()
     }
+
 }
+            

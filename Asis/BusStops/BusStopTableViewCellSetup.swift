@@ -169,7 +169,7 @@ class BusStopTableViewCellSetup: UITableViewCell {
         mapItem.name = busstoptableStop.name
         mapItem.openInMaps(launchOptions: options)
     }
-    
+
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

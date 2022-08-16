@@ -64,6 +64,7 @@ class SideMenuTableViewCell: UITableViewCell {
             
             //MARK: Title Constraints
             titleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
+            titleLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
             titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
             titleLabel.widthAnchor.constraint(equalTo: self.widthAnchor),
         
