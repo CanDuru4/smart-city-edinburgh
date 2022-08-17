@@ -51,3 +51,11 @@
 "restartApp" = "Пожалуйста, перезапустите приложение, чтобы изменить язык.";
 "howToGoSearchBar" = "Как перейти в локацию?";
 "goButton" = "Направления";
+"walkingToStop" = "Прогулка до автобусной остановки";
+"walkingToStopTime" = "Время ходьбы до автобусной остановки: ";
+"transportation" = "Транспортная служба";
+"transportationTime" = "Время на транспортное обслуживание: ";
+"transportationServices" = "Обслуживание: ";
+"walkingToDestination" = "Идти к месту назначения";
+"walkingToDestinationTime" = "Время ходьбы до места назначения: ";
+"totalTravelTime" = "Общее время в пути: ";

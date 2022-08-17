@@ -15,6 +15,7 @@ class TabBarViewController : UITabBarController {
         super.viewDidLoad()
         view.backgroundColor = .white
         UITabBar.appearance().barTintColor = .systemBackground
+        tabBar.backgroundColor = .white
         tabBar.tintColor = .label
         setupVCs()
     }

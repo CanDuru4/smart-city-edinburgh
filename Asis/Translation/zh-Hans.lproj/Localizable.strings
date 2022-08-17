@@ -52,4 +52,13 @@
 "howToGoSearchBar" = "如何前往某个地点？";
 "goButton" = "方向";
 
+"walkingToStop" = "步行到巴士站";
+"walkingToStopTime" = "步行到巴士站的时间: ";
+"transportation" = "交通服务";
+"transportationTime" = "接送服务时间: ";
+"transportationServices" = "服务: ";
+"walkingToDestination" = "步行到目的地";
+"walkingToDestinationTime" = "步行到目的地的时间: ";
+"totalTravelTime" = "总旅行时间: ";
+
 

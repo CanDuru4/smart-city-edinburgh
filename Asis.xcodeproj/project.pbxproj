@@ -43,6 +43,8 @@
 		1FB9334C28980FFA009C1FAA /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB9334B28980FFA009C1FAA /* LocationManager.swift */; };
 		1FBBBA9128ACEEEB00701F0C /* can-duru-ana-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FBBBA8F28ACEEEB00701F0C /* can-duru-ana-logo.png */; };
 		1FBBBA9228ACEEEB00701F0C /* can-duru-menu-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FBBBA9028ACEEEB00701F0C /* can-duru-menu-logo.png */; };
+		1FBBBA9428ACF20D00701F0C /* FloatingPanelTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBBBA9328ACF20D00701F0C /* FloatingPanelTableViewController.swift */; };
+		1FBBBA9628ACF22800701F0C /* FloatingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBBBA9528ACF22800701F0C /* FloatingTableViewCell.swift */; };
 		1FE0863628A4CE860054D965 /* PersonalInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0863528A4CE860054D965 /* PersonalInfoViewController.swift */; };
 		1FE0863828A4CEDC0054D965 /* FAQViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0863728A4CEDC0054D965 /* FAQViewController.swift */; };
 		1FF3355A28A27F65007F3D29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1FF3355928A27F65007F3D29 /* GoogleService-Info.plist */; };
@@ -89,6 +91,8 @@
 		1FB9334B28980FFA009C1FAA /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		1FBBBA8F28ACEEEB00701F0C /* can-duru-ana-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "can-duru-ana-logo.png"; sourceTree = "<group>"; };
 		1FBBBA9028ACEEEB00701F0C /* can-duru-menu-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "can-duru-menu-logo.png"; sourceTree = "<group>"; };
+		1FBBBA9328ACF20D00701F0C /* FloatingPanelTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelTableViewController.swift; sourceTree = "<group>"; };
+		1FBBBA9528ACF22800701F0C /* FloatingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingTableViewCell.swift; sourceTree = "<group>"; };
 		1FE0863528A4CE860054D965 /* PersonalInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoViewController.swift; sourceTree = "<group>"; };
 		1FE0863728A4CEDC0054D965 /* FAQViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQViewController.swift; sourceTree = "<group>"; };
 		1FF3355928A27F65007F3D29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -288,6 +292,8 @@
 			children = (
 				1F0F1E852897BA9F00695807 /* HomeViewController.swift */,
 				1F7FECCC28AA34E20025031D /* HowToGoSearchTableCellSetup.swift */,
+				1FBBBA9328ACF20D00701F0C /* FloatingPanelTableViewController.swift */,
+				1FBBBA9528ACF22800701F0C /* FloatingTableViewCell.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -482,10 +488,12 @@
 				1F0EF777289AB7100053F4DB /* MenuListController.swift in Sources */,
 				1F7FECCD28AA34E20025031D /* HowToGoSearchTableCellSetup.swift in Sources */,
 				1F31E0BD2898FB05003693C8 /* AllStopsViewController.swift in Sources */,
+				1FBBBA9428ACF20D00701F0C /* FloatingPanelTableViewController.swift in Sources */,
 				1FB9334C28980FFA009C1FAA /* LocationManager.swift in Sources */,
 				1F0EF775289AB2B40053F4DB /* BusStopTableViewCellSetup.swift in Sources */,
 				1F2A057C289B99E20009F98F /* Network.swift in Sources */,
 				1FE0863828A4CEDC0054D965 /* FAQViewController.swift in Sources */,
+				1FBBBA9628ACF22800701F0C /* FloatingTableViewCell.swift in Sources */,
 				1F72674D2898F97400C0AAE6 /* BusStopsViewController.swift in Sources */,
 				1F0F1E822897BA9F00695807 /* AppDelegate.swift in Sources */,
 				1F0F1E992897C7AC00695807 /* TabBarViewController.swift in Sources */,

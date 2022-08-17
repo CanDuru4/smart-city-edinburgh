@@ -51,3 +51,11 @@
 "restartApp" = "Bitte starten Sie die App neu, um die Sprache zu ändern.";
 "howToGoSearchBar" = "Wie gehe ich zu einem Ort?";
 "goButton" = "Richtungen";
+"walkingToStop" = "Gehen zur Bushaltestelle";
+"walkingToStopTime" = "Gehzeit zur Bushaltestelle: ";
+"transportation" = "Transport-Service";
+"transportationTime" = "Zeit für den Transportservice: ";
+"transportationServices" = "Service: ";
+"walkingToDestination" = "Gehen zum Ziel";
+"walkingToDestinationTime" = "Gehzeit zum Ziel: ";
+"totalTravelTime" = "Gesamtreisezeit: ";

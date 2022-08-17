@@ -51,3 +51,11 @@
 "restartApp" = "Dili değiştirmek için lütfen uygulamayı yeniden başlatın.";
 "howToGoSearchBar" = "Bir Lokasyona Nasıl Gidilir?";
 "goButton" = "Yol Tarifi";
+"walkingToStop" = "Otobüs Durağına Yürüyüş";
+"walkingToStopTime" = "Otobüs durağına yürüme süresi: ";
+"transportation" = "Toplu Taşıma";
+"transportationTime" = "Ulaşım hizmeti süresi: ";
+"transportationServices" = "Servis: ";
+"walkingToDestination" = "Hedefe Yürümek";
+"walkingToDestinationTime" = "Hedefe yürüme süresi: ";
+"totalTravelTime" = "Toplam Seyahat Süresi: ";
