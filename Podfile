@@ -21,5 +21,6 @@ target 'Asis' do
   pod 'FirebaseAuth'
   pod 'FirebaseFirestore'
   pod 'Firebase/Database'
+  pod 'FloatingPanel'
 
 end

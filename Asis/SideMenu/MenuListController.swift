@@ -78,8 +78,8 @@ class MenuListController: UITableViewController {
     
     //MARK: Header Content
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 50))
-        let imageView = UIImageView(image: UIImage(named: "logo-dark"))
+        let header = UIView(frame: CGRect(x: 10, y: 0, width: view.frame.width, height: 50))
+        let imageView = UIImageView(image: UIImage(named: "can-duru-menu-logo"))
         imageView.contentMode = .scaleAspectFit
         header.addSubview(imageView)
         return header
@@ -89,7 +89,7 @@ class MenuListController: UITableViewController {
     
     //MARK: Header Height
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 100
+        return 65
     }
     
     

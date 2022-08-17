@@ -41,7 +41,7 @@ class LoginViewController: UIViewController {
         
         
         //MARK: Image Features
-        let imageAsis = UIImage(named: "ASIS_LOGO_SEFFAF-2")?.resized(to: CGSize(width: 600, height: 600))
+        let imageAsis = UIImage(named: "can-duru-ana-logo")?.resized(to: CGSize(width: 600, height: 600))
         let imageView = UIImageView(image: imageAsis)
         imageView.clipsToBounds = true
         imageView.contentMode = UIView.ContentMode.scaleAspectFit

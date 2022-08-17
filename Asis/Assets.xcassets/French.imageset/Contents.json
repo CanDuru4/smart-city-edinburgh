@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "direction-1.png",
+      "filename" : "French-1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "direction.png",
+      "filename" : "French.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "direction-2.png",
+      "filename" : "French-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

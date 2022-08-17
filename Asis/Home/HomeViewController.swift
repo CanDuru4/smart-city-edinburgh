@@ -13,14 +13,17 @@ import CoreLocation
 
 
 struct Routes {
-    let departureID: Int
-    let departureName: String
-    let departureTime: String
-    let destinationID: Int
-    let destinationName: String
-    let destinationTime: String
-    let routetime: Int
-
+    var departureID: Int
+    var departureName: String
+    var departureTime: String
+    var departureCoordinates: MKPlacemark
+    var destinationID: Int
+    var destinationName: String
+    var destinationTime: String
+    var destinationCoordinates: MKPlacemark
+    var routetime: Int
+    var walkingfromcurrent: Double
+    var walkingtodestination: Double
 }
 
 class HomeViewController: UIViewController, UISearchBarDelegate {
@@ -46,9 +49,25 @@ class HomeViewController: UIViewController, UISearchBarDelegate {
     var suitableStopsAroundDestinationArray: [Stop] = []
     var suitableStopsAroundCurentLocationArray: [Stop] = []
     var suitableRouteArray: [Stop] = []
-    var routesArray: [Routes] = []
-    var startingpoint = MKPlacemark()
-    var finishingpoint =  MKPlacemark()
+    var routesArray: [Routes] = [] {
+        didSet{
+            for times in routesArray {
+                print(times)
+                if times.walkingtodestination != 0 && times.walkingfromcurrent != 0 {
+                    let totalduration = Int(times.walkingtodestination + times.walkingfromcurrent + Double(times.routetime))
+                    if totalduration > 60 {
+                        let hour = Int(totalduration / 60)
+                        let minute = totalduration - (hour*60)
+                        print("\(hour) hour and \(minute) minutes")
+                    } else{
+                        print(totalduration)
+                    }
+                }
+            }
+        }
+    }
+    var startingpoint: MKPlacemark!
+    var finishingpoint: MKPlacemark!
     var times:[Trip] = [] {
         didSet {
             for times in (0..<self.times.count) {
@@ -64,21 +83,75 @@ class HomeViewController: UIViewController, UISearchBarDelegate {
                 routesArray.append(Routes(departureID: self.times[times].departures[0].stopID,
                                           departureName: self.times[times].departures[0].name,
                                           departureTime: self.times[times].departures[0].time,
+                                          departureCoordinates: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0)),
                                           destinationID: self.times[times].departures[self.times[times].departures.count-1].stopID,
                                           destinationName: self.times[times].departures[self.times[times].departures.count-1].name,
                                           destinationTime: self.times[times].departures[self.times[times].departures.count-1].time,
-                                          routetime: Int(diffMinutes)))
+                                          destinationCoordinates: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0)),
+                                          routetime: Int(diffMinutes),
+                                          walkingfromcurrent: 0,
+                                          walkingtodestination: 0))
             }
             for stop in stops {
-                for routes in routesArray {
-                    if stop.stopID == routes.departureID{
-                        startingpoint = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: stop.latitude!, longitude: stop.longitude!), addressDictionary: nil)
+                for routes in (0..<routesArray.count) {
+                    if stop.stopID == routesArray[routes].departureID{
+                        routesArray[routes].departureCoordinates = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: stop.latitude!, longitude: stop.longitude!), addressDictionary: nil)
                     }
-                    if stop.stopID == routes.destinationID{
-                        finishingpoint = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: stop.latitude!, longitude: stop.longitude!), addressDictionary: nil)
+                    if stop.stopID == routesArray[routes].destinationID{
+                        routesArray[routes].destinationCoordinates = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: stop.latitude!, longitude: stop.longitude!), addressDictionary: nil)
                     }
                 }
-                walkingtime(starting_point: startingpoint, finishing_point: finishingpoint)
+            }
+            LocationManager.shared.getUserLocation { [weak self] location in
+                guard let self = self else {
+                    return
+                }
+                for walkings in (0..<self.routesArray.count) {
+                    var currenttostart: Double = 0
+                    var finishtodestination: Double = 0
+                    let request = MKDirections.Request()
+                    let secondrequest = MKDirections.Request()
+                
+                    request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude), addressDictionary: nil))
+                    request.destination = MKMapItem(placemark: self.routesArray[walkings].departureCoordinates)
+                    request.requestsAlternateRoutes = true
+                    request.transportType = .walking
+                    
+                    secondrequest.source = MKMapItem(placemark: self.routesArray[walkings].destinationCoordinates)
+                    secondrequest.destination = MKMapItem(placemark: MKPlacemark(coordinate: self.selectedItemCoordination))
+                    secondrequest.requestsAlternateRoutes = true
+                    secondrequest.transportType = .walking
+                    
+                    let directionsfromcurrent = MKDirections(request: request)
+                    directionsfromcurrent.calculate {(response, error) -> Void in
+                        guard let response = response else {
+                           if let error = error {
+                               print("Error: \(error)")
+                           }
+                           return
+                        }
+                        if response.routes.count > 0 {
+                            let route = response.routes[0]
+                            currenttostart = (route.expectedTravelTime / 60)
+                            self.routesArray[walkings].walkingfromcurrent = currenttostart
+                        }
+                    }
+                    
+                    let directionstodestination = MKDirections(request: secondrequest)
+                    directionstodestination.calculate {(response, error) -> Void in
+                        guard let response = response else {
+                           if let error = error {
+                               print("Error: \(error)")
+                           }
+                           return
+                        }
+                        if response.routes.count > 0 {
+                            let route = response.routes[0]
+                            finishtodestination = (route.expectedTravelTime / 60)
+                            self.routesArray[walkings].walkingtodestination = finishtodestination
+                        }
+                    }
+                }
             }
         }
     }
@@ -295,59 +368,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate {
 //            }
         }
     }
-    func walkingtime(starting_point: MKPlacemark, finishing_point: MKPlacemark){
-        var currenttostart: Double = 0
-        var finishtodestination: Double = 0
-        let request = MKDirections.Request()
-        let secondrequest = MKDirections.Request()
-        
-        LocationManager.shared.getUserLocation { [weak self] location in
-            guard let self = self else {
-                return
-            }
-            request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude), addressDictionary: nil))
-            request.destination = MKMapItem(placemark: starting_point)
-            request.requestsAlternateRoutes = true
-            request.transportType = .walking
-            
-            secondrequest.source = MKMapItem(placemark: finishing_point)
-            print("selecteditem \(self.selectedItemCoordination)")
-            secondrequest.destination = MKMapItem(placemark: MKPlacemark(coordinate: self.selectedItemCoordination))
-            secondrequest.requestsAlternateRoutes = true
-            secondrequest.transportType = .walking
-            
-            let directionsfromcurrent = MKDirections(request: request)
-            directionsfromcurrent.calculate {(response, error) -> Void in
-                       guard let response = response else {
-                           if let error = error {
-                               print("Error: \(error)")
-                           }
-                           return
-                       }
-
-                      if response.routes.count > 0 {
-                           let route = response.routes[0]
-                           currenttostart = (route.expectedTravelTime / 60)
-                       }
-                   }
-            
-            let directionstodestination = MKDirections(request: secondrequest)
-            directionstodestination.calculate {(response, error) -> Void in
-                       guard let response = response else {
-                           if let error = error {
-                               print("Error: \(error)")
-                           }
-                           return
-                       }
-
-                      if response.routes.count > 0 {
-                           let route = response.routes[0]
-                           finishtodestination = (route.expectedTravelTime / 60)
-                       }
-                   }
-            print(currenttostart, finishtodestination)
-        }
-    }
+    
     
     
 //MARK: Map

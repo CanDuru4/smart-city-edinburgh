@@ -56,7 +56,7 @@ class HowToGoSearchTableCellSetup: UITableViewCell {
     
         //MARK: Button
         goButton = UIButton()
-        goButton.setTitle("Git", for: .normal)
+        goButton.setTitle((String(localized: "goButton")), for: .normal)
         goButton.setTitleColor(.black, for: .normal)
         goButton.backgroundColor = .systemBlue
         goButton.translatesAutoresizingMaskIntoConstraints = false
@@ -86,7 +86,7 @@ class HowToGoSearchTableCellSetup: UITableViewCell {
             //MARK: Go Button Constraints
             goButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15),
             goButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            goButton.widthAnchor.constraint(equalToConstant: 50)
+            goButton.widthAnchor.constraint(equalToConstant: 100)
 
         ])
         

@@ -27,35 +27,22 @@
 		1F0F1E992897C7AC00695807 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0F1E982897C7AC00695807 /* TabBarViewController.swift */; };
 		1F0F9C6C28A290E3002E6E13 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0F9C6B28A290E3002E6E13 /* SignUpViewController.swift */; };
 		1F0F9C6E28A29AE4002E6E13 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0F9C6D28A29AE4002E6E13 /* LoginViewController.swift */; };
-		1F0F9C7528A2ACF6002E6E13 /* logout.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F0F9C7328A2ACF5002E6E13 /* logout.png */; };
-		1F0F9C7628A2ACF6002E6E13 /* log-in.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F0F9C7428A2ACF6002E6E13 /* log-in.png */; };
 		1F2A057C289B99E20009F98F /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2A057B289B99E20009F98F /* Network.swift */; };
 		1F31E0B22898FA7B003693C8 /* CardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F31E0B12898FA7B003693C8 /* CardViewController.swift */; };
 		1F31E0B52898FA8C003693C8 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F31E0B42898FA8C003693C8 /* SettingsViewController.swift */; };
 		1F31E0BB2898FAED003693C8 /* LanguageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F31E0BA2898FAED003693C8 /* LanguageViewController.swift */; };
 		1F31E0BD2898FB05003693C8 /* AllStopsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F31E0BC2898FB05003693C8 /* AllStopsViewController.swift */; };
-		1F48C50F28A66AC700E8617C /* ASIS_LOGO_SEFFAF-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F48C50E28A66AC700E8617C /* ASIS_LOGO_SEFFAF-2.png */; };
 		1F492A9128A79E620065260B /* SideMenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F492A9028A79E620065260B /* SideMenuTableViewCell.swift */; };
 		1F64ABC028A110D600FEB09C /* BusDataSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F64ABBF28A110D600FEB09C /* BusDataSetup.swift */; };
 		1F64ABC428A146E400FEB09C /* CustomAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F64ABC328A146E400FEB09C /* CustomAnnotation.swift */; };
-		1F64ABC628A14B9000FEB09C /* bus-stop-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F64ABC528A14B9000FEB09C /* bus-stop-logo.png */; };
 		1F72674D2898F97400C0AAE6 /* BusStopsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F72674C2898F97400C0AAE6 /* BusStopsViewController.swift */; };
-		1F79888C28A27DEB002A9950 /* pngwing.com.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F79888A28A27DEB002A9950 /* pngwing.com.png */; };
-		1F79888D28A27DEB002A9950 /* flag-united-states-emoji-on-apple-ios-500603.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F79888B28A27DEB002A9950 /* flag-united-states-emoji-on-apple-ios-500603.png */; };
-		1F7FECC228AA19B00025031D /* English.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F7FECBB28AA19B00025031D /* English.png */; };
-		1F7FECC328AA19B00025031D /* French.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F7FECBC28AA19B00025031D /* French.png */; };
-		1F7FECC428AA19B00025031D /* Chinese.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F7FECBD28AA19B00025031D /* Chinese.png */; };
-		1F7FECC528AA19B00025031D /* Spanish.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F7FECBE28AA19B00025031D /* Spanish.png */; };
-		1F7FECC628AA19B00025031D /* Turkish.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F7FECBF28AA19B00025031D /* Turkish.png */; };
-		1F7FECC728AA19B00025031D /* German.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F7FECC028AA19B00025031D /* German.png */; };
-		1F7FECC828AA19B00025031D /* Russian.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F7FECC128AA19B00025031D /* Russian.png */; };
 		1F7FECCD28AA34E20025031D /* HowToGoSearchTableCellSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7FECCC28AA34E20025031D /* HowToGoSearchTableCellSetup.swift */; };
 		1F7FECD128ABB4770025031D /* JourneyTımeDataSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7FECD028ABB4770025031D /* JourneyTımeDataSetup.swift */; };
 		1F8F825128A520930008A8E7 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8F825028A520930008A8E7 /* AuthViewController.swift */; };
 		1FB0A74228A4DF1500CAE38A /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB0A74128A4DF1500CAE38A /* SettingsTableViewCell.swift */; };
-		1FB0A74428A4F36E00CAE38A /* ASIS_LOGO_SEFFAF.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FB0A74328A4F36E00CAE38A /* ASIS_LOGO_SEFFAF.png */; };
-		1FB9334A28980C69009C1FAA /* logo-dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FB9334928980C69009C1FAA /* logo-dark.png */; };
 		1FB9334C28980FFA009C1FAA /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB9334B28980FFA009C1FAA /* LocationManager.swift */; };
+		1FBBBA9128ACEEEB00701F0C /* can-duru-ana-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FBBBA8F28ACEEEB00701F0C /* can-duru-ana-logo.png */; };
+		1FBBBA9228ACEEEB00701F0C /* can-duru-menu-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FBBBA9028ACEEEB00701F0C /* can-duru-menu-logo.png */; };
 		1FE0863628A4CE860054D965 /* PersonalInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0863528A4CE860054D965 /* PersonalInfoViewController.swift */; };
 		1FE0863828A4CEDC0054D965 /* FAQViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0863728A4CEDC0054D965 /* FAQViewController.swift */; };
 		1FF3355A28A27F65007F3D29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1FF3355928A27F65007F3D29 /* GoogleService-Info.plist */; };
@@ -85,36 +72,23 @@
 		1F0F1E982897C7AC00695807 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		1F0F9C6B28A290E3002E6E13 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		1F0F9C6D28A29AE4002E6E13 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		1F0F9C7328A2ACF5002E6E13 /* logout.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logout.png; sourceTree = "<group>"; };
-		1F0F9C7428A2ACF6002E6E13 /* log-in.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "log-in.png"; sourceTree = "<group>"; };
 		1F2A057B289B99E20009F98F /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		1F31E0B12898FA7B003693C8 /* CardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewController.swift; sourceTree = "<group>"; };
 		1F31E0B42898FA8C003693C8 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		1F31E0BA2898FAED003693C8 /* LanguageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewController.swift; sourceTree = "<group>"; };
 		1F31E0BC2898FB05003693C8 /* AllStopsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllStopsViewController.swift; sourceTree = "<group>"; };
-		1F48C50E28A66AC700E8617C /* ASIS_LOGO_SEFFAF-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ASIS_LOGO_SEFFAF-2.png"; sourceTree = "<group>"; };
 		1F492A9028A79E620065260B /* SideMenuTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuTableViewCell.swift; sourceTree = "<group>"; };
 		1F64ABBF28A110D600FEB09C /* BusDataSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusDataSetup.swift; sourceTree = "<group>"; };
 		1F64ABC328A146E400FEB09C /* CustomAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAnnotation.swift; sourceTree = "<group>"; };
-		1F64ABC528A14B9000FEB09C /* bus-stop-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bus-stop-logo.png"; sourceTree = "<group>"; };
 		1F72674C2898F97400C0AAE6 /* BusStopsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopsViewController.swift; sourceTree = "<group>"; };
 		1F79888928A267E9002A9950 /* Asis.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Asis.entitlements; sourceTree = "<group>"; };
-		1F79888A28A27DEB002A9950 /* pngwing.com.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pngwing.com.png; sourceTree = "<group>"; };
-		1F79888B28A27DEB002A9950 /* flag-united-states-emoji-on-apple-ios-500603.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "flag-united-states-emoji-on-apple-ios-500603.png"; sourceTree = "<group>"; };
-		1F7FECBB28AA19B00025031D /* English.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = English.png; sourceTree = "<group>"; };
-		1F7FECBC28AA19B00025031D /* French.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = French.png; sourceTree = "<group>"; };
-		1F7FECBD28AA19B00025031D /* Chinese.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Chinese.png; sourceTree = "<group>"; };
-		1F7FECBE28AA19B00025031D /* Spanish.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Spanish.png; sourceTree = "<group>"; };
-		1F7FECBF28AA19B00025031D /* Turkish.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Turkish.png; sourceTree = "<group>"; };
-		1F7FECC028AA19B00025031D /* German.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = German.png; sourceTree = "<group>"; };
-		1F7FECC128AA19B00025031D /* Russian.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Russian.png; sourceTree = "<group>"; };
 		1F7FECCC28AA34E20025031D /* HowToGoSearchTableCellSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToGoSearchTableCellSetup.swift; sourceTree = "<group>"; };
 		1F7FECD028ABB4770025031D /* JourneyTımeDataSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JourneyTımeDataSetup.swift"; sourceTree = "<group>"; };
 		1F8F825028A520930008A8E7 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		1FB0A74128A4DF1500CAE38A /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
-		1FB0A74328A4F36E00CAE38A /* ASIS_LOGO_SEFFAF.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ASIS_LOGO_SEFFAF.png; sourceTree = "<group>"; };
-		1FB9334928980C69009C1FAA /* logo-dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-dark.png"; sourceTree = "<group>"; };
 		1FB9334B28980FFA009C1FAA /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		1FBBBA8F28ACEEEB00701F0C /* can-duru-ana-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "can-duru-ana-logo.png"; sourceTree = "<group>"; };
+		1FBBBA9028ACEEEB00701F0C /* can-duru-menu-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "can-duru-menu-logo.png"; sourceTree = "<group>"; };
 		1FE0863528A4CE860054D965 /* PersonalInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoViewController.swift; sourceTree = "<group>"; };
 		1FE0863728A4CEDC0054D965 /* FAQViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQViewController.swift; sourceTree = "<group>"; };
 		1FF3355928A27F65007F3D29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -208,7 +182,7 @@
 		1F0F1E752897BA9F00695807 = {
 			isa = PBXGroup;
 			children = (
-				1FB9334828980C32009C1FAA /* Images */,
+				1FBBBA8E28ACEEEB00701F0C /* Images */,
 				1F0F1E802897BA9F00695807 /* Asis */,
 				1F0F1E7F2897BA9F00695807 /* Products */,
 				C7689E43FABFD17A04EBE192 /* Pods */,
@@ -336,24 +310,11 @@
 			path = Menu;
 			sourceTree = "<group>";
 		};
-		1FB9334828980C32009C1FAA /* Images */ = {
+		1FBBBA8E28ACEEEB00701F0C /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				1F7FECBD28AA19B00025031D /* Chinese.png */,
-				1F7FECBB28AA19B00025031D /* English.png */,
-				1F7FECBC28AA19B00025031D /* French.png */,
-				1F7FECC028AA19B00025031D /* German.png */,
-				1F7FECC128AA19B00025031D /* Russian.png */,
-				1F7FECBE28AA19B00025031D /* Spanish.png */,
-				1F7FECBF28AA19B00025031D /* Turkish.png */,
-				1FB9334928980C69009C1FAA /* logo-dark.png */,
-				1F48C50E28A66AC700E8617C /* ASIS_LOGO_SEFFAF-2.png */,
-				1F79888B28A27DEB002A9950 /* flag-united-states-emoji-on-apple-ios-500603.png */,
-				1F0F9C7428A2ACF6002E6E13 /* log-in.png */,
-				1F0F9C7328A2ACF5002E6E13 /* logout.png */,
-				1F79888A28A27DEB002A9950 /* pngwing.com.png */,
-				1F64ABC528A14B9000FEB09C /* bus-stop-logo.png */,
-				1FB0A74328A4F36E00CAE38A /* ASIS_LOGO_SEFFAF.png */,
+				1FBBBA8F28ACEEEB00701F0C /* can-duru-ana-logo.png */,
+				1FBBBA9028ACEEEB00701F0C /* can-duru-menu-logo.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -441,31 +402,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F7FECC828AA19B00025031D /* Russian.png in Resources */,
 				1F042ECC28A7722C00C72FAF /* Localizable.strings in Resources */,
-				1F7FECC228AA19B00025031D /* English.png in Resources */,
+				1FBBBA9128ACEEEB00701F0C /* can-duru-ana-logo.png in Resources */,
 				1F0F1E912897BAA000695807 /* LaunchScreen.storyboard in Resources */,
+				1FBBBA9228ACEEEB00701F0C /* can-duru-menu-logo.png in Resources */,
 				1F042EC728A7722C00C72FAF /* Localizable.strings in Resources */,
-				1F7FECC628AA19B00025031D /* Turkish.png in Resources */,
-				1F7FECC528AA19B00025031D /* Spanish.png in Resources */,
-				1FB9334A28980C69009C1FAA /* logo-dark.png in Resources */,
-				1F7FECC728AA19B00025031D /* German.png in Resources */,
 				1F042EC928A7722C00C72FAF /* Localizable.strings in Resources */,
-				1F48C50F28A66AC700E8617C /* ASIS_LOGO_SEFFAF-2.png in Resources */,
-				1F0F9C7628A2ACF6002E6E13 /* log-in.png in Resources */,
-				1F79888C28A27DEB002A9950 /* pngwing.com.png in Resources */,
-				1F79888D28A27DEB002A9950 /* flag-united-states-emoji-on-apple-ios-500603.png in Resources */,
 				1F0F1E8E2897BAA000695807 /* Assets.xcassets in Resources */,
-				1F7FECC428AA19B00025031D /* Chinese.png in Resources */,
-				1F64ABC628A14B9000FEB09C /* bus-stop-logo.png in Resources */,
 				1F042ECA28A7722C00C72FAF /* Localizable.strings in Resources */,
 				1F042EC828A7722C00C72FAF /* Localizable.strings in Resources */,
 				1F042ECD28A7722C00C72FAF /* Localizable.strings in Resources */,
-				1FB0A74428A4F36E00CAE38A /* ASIS_LOGO_SEFFAF.png in Resources */,
 				1F042ECB28A7722C00C72FAF /* Localizable.strings in Resources */,
 				1FF3355A28A27F65007F3D29 /* GoogleService-Info.plist in Resources */,
-				1F0F9C7528A2ACF6002E6E13 /* logout.png in Resources */,
-				1F7FECC328AA19B00025031D /* French.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -745,7 +693,8 @@
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Asis/Info.plist;
-				INFOPLIST_KEY_NFCReaderUsageDescription = "Please allow NFC reader to add card!";
+				INFOPLIST_KEY_CFBundleDisplayName = "Smart City";
+				INFOPLIST_KEY_NFCReaderUsageDescription = "Please allow NFC to add new card!";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Please allow location access to use our app!";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -780,7 +729,8 @@
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Asis/Info.plist;
-				INFOPLIST_KEY_NFCReaderUsageDescription = "Please allow NFC reader to add card!";
+				INFOPLIST_KEY_CFBundleDisplayName = "Smart City";
+				INFOPLIST_KEY_NFCReaderUsageDescription = "Please allow NFC to add new card!";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Please allow location access to use our app!";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;

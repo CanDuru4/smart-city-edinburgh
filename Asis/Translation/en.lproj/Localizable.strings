@@ -50,3 +50,5 @@
 "hiText" = "Hi, ";
 "restartApp" = "Please restart app to change language.";
 "howToGoSearchBar" = "How to Go to a Location?";
+"goButton" = "Directions";
+

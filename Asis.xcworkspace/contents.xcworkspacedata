@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Asis.xcodeproj">
+      location = "group:/Users/canduru04/Desktop/Proje C&#x327;al&#x131;s&#x327;malar&#x131;/Kodlar/Swift/Asis/Asis.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
