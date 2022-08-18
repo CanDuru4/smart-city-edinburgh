@@ -59,3 +59,8 @@
 "walkingToDestination" = "Идти к месту назначения";
 "walkingToDestinationTime" = "Время ходьбы до места назначения: ";
 "totalTravelTime" = "Общее время в пути: ";
+"hours" = " час и ";
+"minutes" = " минута";
+"departure" = "Вылет из: ";
+"walkingRouteError" = "Пешеходный маршрут не найден.";
+"routeTimeError" = "Подходящий маршрут не найден.";

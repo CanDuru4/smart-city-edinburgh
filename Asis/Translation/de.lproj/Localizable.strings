@@ -59,3 +59,8 @@
 "walkingToDestination" = "Gehen zum Ziel";
 "walkingToDestinationTime" = "Gehzeit zum Ziel: ";
 "totalTravelTime" = "Gesamtreisezeit: ";
+"hours" = " Stunde und ";
+"minutes" = " Minute";
+"departure" = "Abfahrt: ";
+"walkingRouteError" = "Keine Wanderroute gefunden.";
+"routeTimeError" = "Keine passende Route gefunden.";

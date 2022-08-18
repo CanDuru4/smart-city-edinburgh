@@ -11,6 +11,7 @@ import SideMenu
 import MapKit
 import CoreLocation
 import FloatingPanel
+import Alamofire
 
 //MARK: Routes Array
 struct Routes {
@@ -55,26 +56,52 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     var finishingpoint: MKPlacemark!
     var routesArray: [Routes] = [] {
         didSet{
+            //MARK: Check All Elements Filled
+            var check = false
+            for times in (0..<routesArray.count) {
+                if routesArray[times].walkingtodestination != 0 && routesArray[times].walkingfromcurrent != 0 {
+                    check = true
+                } else{
+                    check = false
+                }
+            }
             //MARK: Floating Panel Cell Content
-            for times in routesArray {
-                if times.walkingtodestination != 0 && times.walkingfromcurrent != 0 {
-                    map.deselectAnnotation(selectedItemAnnotation, animated: true)
-                    floatingPanel.show()
-                    let totalduration = Int(times.walkingtodestination + times.walkingfromcurrent + Double(times.routetime))
-                    if totalduration > 60 {
-                        let hour = Int(totalduration / 60)
-                        let minute = totalduration - (hour*60)
-                        floatingpanelview.walkingToDestinationTime = Int(times.walkingtodestination)
-                        floatingpanelview.walkingFromCurrentTime = Int(times.walkingfromcurrent)
-                        floatingpanelview.routeTime = Int(times.routetime)
-                        floatingpanelview.totaltime = ("\(hour) hour and \(minute) minutes")
-                        floatingpanelview.service = times.services
-                    } else{
-                        floatingpanelview.walkingToDestinationTime = Int(times.walkingtodestination)
-                        floatingpanelview.walkingFromCurrentTime = Int(times.walkingfromcurrent)
-                        floatingpanelview.routeTime = Int(times.routetime)
-                        floatingpanelview.totaltime = String(totalduration)
-                        floatingpanelview.service = times.services
+            if check == true{
+                for walkingtimecheck in routesArray{
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "HH:mm"
+                    dateFormatter.timeZone = TimeZone(abbreviation: "GMT+00:00")
+                    let departuredate = Date()
+                    let destinationdate = dateFormatter.date(from: walkingtimecheck.departureTime)
+                    let diffSeconds = destinationdate!.timeIntervalSinceReferenceDate - departuredate.timeIntervalSinceReferenceDate
+                    let diffMinutes = diffSeconds / 60
+                    if Int(diffMinutes) < walkingtimecheck.routetime{
+                        let alert = UIAlertController(title: String(localized: "routeTimeError"), message: "", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                    } else {
+                        map.deselectAnnotation(selectedItemAnnotation, animated: true)
+                        let totalduration = Int(walkingtimecheck.walkingtodestination + walkingtimecheck.walkingfromcurrent + Double(walkingtimecheck.routetime))
+                        if totalduration > 60 {
+                            let hour = Int(totalduration / 60)
+                            let minute = totalduration - (hour*60)
+                            floatingPanel.show()
+                            floatingpanelview.walkingToDestinationTime = Int(walkingtimecheck.walkingtodestination)
+                            floatingpanelview.walkingFromCurrentTime = Int(walkingtimecheck.walkingfromcurrent)
+                            floatingpanelview.routeTime = Int(walkingtimecheck.routetime)
+                            floatingpanelview.totaltime = ((String(hour)) + String(localized: "hours") + String((minute)) + String(localized: "minutes"))
+                            floatingpanelview.departuretime = walkingtimecheck.departureTime
+                            floatingpanelview.service = walkingtimecheck.services
+                        } else{
+                            floatingPanel.show()
+                            floatingpanelview.walkingToDestinationTime = Int(walkingtimecheck.walkingtodestination)
+                            floatingpanelview.walkingFromCurrentTime = Int(walkingtimecheck.walkingfromcurrent)
+                            floatingpanelview.routeTime = Int(walkingtimecheck.routetime)
+                            floatingpanelview.totaltime = String(totalduration)
+                            floatingpanelview.departuretime = walkingtimecheck.departureTime
+                            floatingpanelview.service = walkingtimecheck.services
+                        }
+                        break
                     }
                 }
             }
@@ -86,6 +113,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
         didSet {
             getRouteDetails()
             getStartandFinishCoordinates()
+            self.count = 0
             getWalkingTime()
         }
     }
@@ -176,10 +204,9 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
         //MARK: Floating Panel Load
         floatingPanel = FloatingPanelController()
         floatingPanel.delegate = self
-        let source = FloatingPanelTableViewController()
-        source.parentvc = self
-        floatingPanel.set(contentViewController: source)
-        floatingPanel.track(scrollView: source.tableView)
+        floatingpanelview.parentvc = self
+        floatingPanel.set(contentViewController: floatingpanelview)
+        floatingPanel.track(scrollView: floatingpanelview.tableView)
         floatingPanel.addPanel(toParent: self)
         floatingPanel.hide()
     }
@@ -304,7 +331,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
             
             //MARK: APİI Decoder
             let timestamp = Date().timeIntervalSince1970
-            self.timeData(timestring: "stoptostop-timetable/?start_stop_id=36236495&finish_stop_id=36232896&date=\(timestamp)&duration=\(15)")
+            self.timeData(timestring: "stoptostop-timetable/?start_stop_id=36236495&finish_stop_id=36232896&date=\(timestamp)&duration=\(30)")
 //            for start in (0..<self.suitableStopsAroundCurentLocationArray.count) {
 //                for destination in (0..<self.suitableStopsAroundDestinationArray.count) {
 //                    let timestamp = Date().timeIntervalSince1970
@@ -356,56 +383,63 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     }
     
     //MARK: Get Walking Time
+    var count: Int = 0
     func getWalkingTime(){
         LocationManager.shared.getUserLocation { [weak self] location in
-            guard let self = self else {
-                return
-            }
-            for walkings in (0..<self.routesArray.count) {
-                var currenttostart: Double = 0
-                var finishtodestination: Double = 0
-                let request = MKDirections.Request()
-                let secondrequest = MKDirections.Request()
             
-                request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude), addressDictionary: nil))
-                request.destination = MKMapItem(placemark: self.routesArray[walkings].departureCoordinates)
-                request.requestsAlternateRoutes = true
-                request.transportType = .walking
-                
-                secondrequest.source = MKMapItem(placemark: self.routesArray[walkings].destinationCoordinates)
-                secondrequest.destination = MKMapItem(placemark: MKPlacemark(coordinate: self.selectedItemCoordination))
-                secondrequest.requestsAlternateRoutes = true
-                secondrequest.transportType = .walking
-                
-                let directionsfromcurrent = MKDirections(request: request)
-                directionsfromcurrent.calculate {(response, error) -> Void in
-                    guard let response = response else {
-                       if let error = error {
-                           print("Error: \(error)")
-                       }
-                       return
-                    }
-                    if response.routes.count > 0 {
-                        let route = response.routes[0]
-                        currenttostart = (route.expectedTravelTime / 60)
-                        self.routesArray[walkings].walkingfromcurrent = currenttostart
-                    }
+            guard let self = self else { return }
+            self.run(location: location, walkings: self.count) {
+                self.count += 1
+                if self.count < self.routesArray.count{
+                    self.getWalkingTime()
                 }
-                
-                let directionstodestination = MKDirections(request: secondrequest)
-                directionstodestination.calculate {(response, error) -> Void in
-                    guard let response = response else {
-                       if let error = error {
-                           print("Error: \(error)")
-                       }
-                       return
-                    }
-                    if response.routes.count > 0 {
-                        let route = response.routes[0]
-                        finishtodestination = (route.expectedTravelTime / 60)
-                        self.routesArray[walkings].walkingtodestination = finishtodestination
-                    }
-                }
+            }
+        }
+    }
+    
+        //MARK: Repeat Request for Walking Time
+    func run(location: CLLocation, walkings: Int, completion: @escaping () -> ()){
+        
+        let request = MKDirections.Request()
+        let secondrequest = MKDirections.Request()
+        request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude), addressDictionary: nil))
+        request.destination = MKMapItem(placemark: self.routesArray[walkings].departureCoordinates)
+        request.requestsAlternateRoutes = true
+        request.transportType = .walking
+
+        secondrequest.source = MKMapItem(placemark: self.routesArray[walkings].destinationCoordinates)
+        secondrequest.destination = MKMapItem(placemark: MKPlacemark(coordinate: self.selectedItemCoordination))
+        secondrequest.requestsAlternateRoutes = true
+        secondrequest.transportType = .walking
+        
+        self.walkings_calculator(request: request) { Double in
+            self.routesArray[walkings].walkingfromcurrent = Double
+            
+            self.walkings_calculator(request: secondrequest) { Double in
+                self.routesArray[walkings].walkingtodestination = Double
+                completion()
+
+            }
+        }
+        
+    }
+        //MARK: Send Request for Walking Time
+    func walkings_calculator(request: MKDirections.Request, completion: @escaping (Double) -> ()) {
+        var time_duration: Double = 0
+        let directionsfromcurrent = MKDirections(request: request)
+        directionsfromcurrent.calculate {(response, error) -> Void in
+            guard let response = response else {
+               if let _ = error {
+                   let alert = UIAlertController(title: String(localized: "walkingRouteError"), message: "", preferredStyle: .alert)
+                   alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
+                   self.present(alert, animated: true, completion: nil)
+               }
+               return
+            }
+            if response.routes.count > 0 {
+                let route = response.routes[0]
+                time_duration = (route.expectedTravelTime / 60)
+                completion(Double(time_duration))
             }
         }
     }

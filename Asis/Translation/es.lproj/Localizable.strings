@@ -59,3 +59,8 @@
 "walkingToDestination" = "Caminando hacia el destino";
 "walkingToDestinationTime" = "Tiempo para caminar al destino: ";
 "totalTravelTime" = "Gesamtreisezeit: Tiempo total de viaje: ";
+"hours" = " hora y ";
+"minutes" = " minuto";
+"departure" = "Partida: ";
+"walkingRouteError" = "No se ha encontrado ninguna ruta para caminar.";
+"routeTimeError" = "No se encontró una ruta adecuada.";

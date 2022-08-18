@@ -59,3 +59,8 @@
 "walkingToDestination" = "Hedefe Yürümek";
 "walkingToDestinationTime" = "Hedefe yürüme süresi: ";
 "totalTravelTime" = "Toplam Seyahat Süresi: ";
+"hours" = " saat ve ";
+"minutes" = " dakika";
+"departure" = "Kalkış: ";
+"walkingRouteError" = "Yürüyüş Rotası Bulunamadı.";
+"routeTimeError" = "Uygun Rota Bulunamadı.";

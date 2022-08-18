@@ -51,7 +51,6 @@
 "restartApp" = "请重新启动应用程序以更改语言。";
 "howToGoSearchBar" = "如何前往某个地点？";
 "goButton" = "方向";
-
 "walkingToStop" = "步行到巴士站";
 "walkingToStopTime" = "步行到巴士站的时间: ";
 "transportation" = "交通服务";
@@ -60,5 +59,8 @@
 "walkingToDestination" = "步行到目的地";
 "walkingToDestinationTime" = "步行到目的地的时间: ";
 "totalTravelTime" = "总旅行时间: ";
-
-
+"hours" = " 小时和 ";
+"minutes" = " 分钟";
+"departure" = "离开: ";
+"walkingRouteError" = "未找到步行路线.";
+"routeTimeError" = "未找到合适的路线.";

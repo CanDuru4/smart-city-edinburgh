@@ -59,3 +59,8 @@
 "walkingToDestination" = "Marcher jusqu'à destination";
 "walkingToDestinationTime" = "Temps de marche jusqu'à destination: ";
 "totalTravelTime" = "Temps de trajet total: ";
+"hours" = " heure et ";
+"minutes" = " minute";
+"departure" = "Départ: ";
+"walkingRouteError" = "Aucun itinéraire de marche trouvé.";
+"routeTimeError" = "Aucun itinéraire approprié n'a été trouvé.";
