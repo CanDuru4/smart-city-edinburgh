@@ -85,7 +85,7 @@ class GetBaseData {
                 
             } catch {
                 self.callTimeback?(nil, false, error.localizedDescription)
-
+                print(String(describing: error))
             }
         }
     }

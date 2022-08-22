@@ -27,6 +27,7 @@ struct Routes {
     var walkingfromcurrent: Double
     var walkingtodestination: Double
     var services: String
+    var totalwalk: Double
 }
 
 class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelControllerDelegate {
@@ -68,6 +69,8 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     var alert: Bool!
     var continue_mark = true
     var start_number = 99999999
+    var repeat_routes = 0
+    let wait2 = DispatchGroup()
     var routesArray: [Routes] = [] {
         didSet{
             //MARK: Check All Elements Filled
@@ -87,7 +90,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                 dismiss(animated: true)
 
                 for walkingtimecheck in routesArray{
-                    
+                    repeat_routes = repeat_routes+1
                     //MARK: Format Date
                     let dateFormatter = DateFormatter()
                     let currentDateFormatter = DateFormatter()
@@ -126,27 +129,37 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                                 if services.name == walkingtimecheck.services {
                                     if services.routes.count == 0 {
                                         let servicecoordinates = CLLocationCoordinate2DMake(walkingtimecheck.departureCoordinates.coordinate.latitude, walkingtimecheck.departureCoordinates.coordinate.longitude);
+                                        wait2.enter()
                                         routeCoordinates.append(servicecoordinates)
+                                        wait2.leave()
                                         let servicecoordinates2 = CLLocationCoordinate2DMake(walkingtimecheck.destinationCoordinates.coordinate.latitude, walkingtimecheck.destinationCoordinates.coordinate.longitude);
+                                        wait2.enter()
                                         routeCoordinates.append(servicecoordinates2)
+                                        wait2.leave()
                                     } else{
                                         for serviceRoutes in services.routes{
                                             if continue_mark == true{
                                                 for serviceCoordinates in (0..<serviceRoutes.points.count) {
                                                     if Int(serviceRoutes.points[serviceCoordinates].stopID ?? "") == walkingtimecheck.departureID {
                                                         let servicecoordinates = CLLocationCoordinate2DMake(serviceRoutes.points[serviceCoordinates].latitude, serviceRoutes.points[serviceCoordinates].longitude);
+                                                        wait2.enter()
                                                         routeCoordinates.append(servicecoordinates)
                                                         start_number = serviceCoordinates
+                                                        wait2.leave()
                                                     }
                                                     if serviceCoordinates > start_number {
                                                         if Int(serviceRoutes.points[serviceCoordinates].stopID ?? "") == walkingtimecheck.destinationID {
                                                             let servicecoordinates = CLLocationCoordinate2DMake(serviceRoutes.points[serviceCoordinates].latitude, serviceRoutes.points[serviceCoordinates].longitude);
-                                                                routeCoordinates.append(servicecoordinates)
+                                                            wait2.enter()
+                                                            routeCoordinates.append(servicecoordinates)
+                                                            wait2.leave()
                                                             continue_mark = false
                                                             break
                                                         } else{
                                                             let servicecoordinates = CLLocationCoordinate2DMake(serviceRoutes.points[serviceCoordinates].latitude, serviceRoutes.points[serviceCoordinates].longitude);
+                                                            wait2.enter()
                                                             routeCoordinates.append(servicecoordinates)
+                                                            wait2.leave()
                                                         }
                                                     }
                                                 }
@@ -157,7 +170,6 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                             }
                         }
                         wait.leave()
-                        print(routeCoordinates)
                         wait.notify(queue: .main) {
                             self.polyLines(currentLocationLatitude: self.user_latitude,
                                       currentLocationLongitude: self.user_longitude,
@@ -197,18 +209,20 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                         break
                     }
                 }
-            }
-            if alert == true {
-//                minutesFor15Button.isHidden = false
-//                minutesFor30Button.isHidden = false
-//                minutesFor45Button.isHidden = false
-//                metersFor500Button.isHidden = false
-//                metersFor1000Button.isHidden = false
-//                metersFor1500Button.isHidden = false
-//                print("hata3")
-//                let alert = UIAlertController(title: String(localized: "routeTimeError"), message: "", preferredStyle: .alert)
-//                alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-//                self.present(alert, animated: true, completion: nil)
+                
+                if repeat_routes == routesArray.count {
+                    if alert == true {
+                        minutesFor15Button.isHidden = false
+                        minutesFor30Button.isHidden = false
+                        minutesFor45Button.isHidden = false
+                        metersFor500Button.isHidden = false
+                        metersFor1000Button.isHidden = false
+                        metersFor1500Button.isHidden = false
+                        let alert = UIAlertController(title: String(localized: "routeTimeError"), message: "", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                }
             }
         }
     }
@@ -232,7 +246,6 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                     metersFor500Button.isHidden = false
                     metersFor1000Button.isHidden = false
                     metersFor1500Button.isHidden = false
-                    print("hata1")
                     let alert = UIAlertController(title: String(localized: "routeTimeError"), message: "", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: String(localized: "tryAgainAlertView"), style: UIAlertAction.Style.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
@@ -307,7 +320,13 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
 //MARK: Load
     var floatingPanel :FloatingPanelController!
     override func viewDidLoad() {
-        super.viewDidLoad() 
+        super.viewDidLoad()
+        
+//        for i in (0..<500) {
+//            let timestamp = Date().timeIntervalSince1970
+//            self.timeData(timestring: "stoptostop-timetable/?start_stop_id=36236489&finish_stop_id=36234253&date=\(timestamp)&duration=15")
+//        }
+        
         view.backgroundColor = .systemBackground
         howToGoSearchTable.isHidden = true
 
@@ -488,9 +507,9 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                         ((userlongitude)-0.001) < (self.stops[i].longitude!) &&
                         (self.stops[i].longitude!) < ((userlongitude)+0.001)){
                         self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
-                        group.leave()
                     }
                 }
+                group.leave()
                 group.notify(queue: .main) {
                     self.apiDecoder(minute: 15)
                 }
@@ -512,9 +531,9 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                         ((userlongitude)-0.001) < (self.stops[i].longitude!) &&
                         (self.stops[i].longitude!) < ((userlongitude)+0.001)){
                         self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
-                        group.leave()
                     }
                 }
+                group.leave()
                 group.notify(queue: .main) {
                     self.apiDecoder(minute: 30)
                 }
@@ -536,9 +555,9 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                         ((userlongitude)-0.001) < (self.stops[i].longitude!) &&
                         (self.stops[i].longitude!) < ((userlongitude)+0.001)){
                         self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
-                        group.leave()
                     }
                 }
+                group.leave()
                 group.notify(queue: .main) {
                     self.apiDecoder(minute: 45)
                 }
@@ -584,9 +603,9 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                         ((userlongitude)-0.0025) < (self.stops[i].longitude!) &&
                         (self.stops[i].longitude!) < ((userlongitude)+0.0025)){
                         self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
-                        group.leave()
                     }
                 }
+                group.leave()
                 group.notify(queue: .main) {
                     self.apiDecoder(minute: 30)
                 }
@@ -594,8 +613,8 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
 
             
             //MARK: 250 Meter and 45 Minute Search
-            group.enter()
             if self.minute45check == true && self.meter1000check == true {
+                group.enter()
                 for i in (0..<busstopsCount){
                     if (((self.selectedItemCoordination.latitude)-0.0025) < (self.stops[i].latitude!) &&
                         (self.stops[i].latitude!) < ((self.selectedItemCoordination.latitude)+0.0025) &&
@@ -609,9 +628,9 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                         ((userlongitude)-0.0025) < (self.stops[i].longitude!) &&
                         (self.stops[i].longitude!) < ((userlongitude)+0.0025)){
                         self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
-                        group.leave()
                     }
                 }
+                group.leave()
                 group.notify(queue: .main) {
                     self.apiDecoder(minute: 45)
                 }
@@ -633,9 +652,9 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                         ((userlongitude)-0.004) < (self.stops[i].longitude!) &&
                         (self.stops[i].longitude!) < ((userlongitude)+0.004)){
                         self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
-                        group.leave()
                     }
                 }
+                group.leave()
                 group.notify(queue: .main) {
                     self.apiDecoder(minute: 15)
                 }
@@ -657,9 +676,9 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                         ((userlongitude)-0.004) < (self.stops[i].longitude!) &&
                         (self.stops[i].longitude!) < ((userlongitude)+0.004)){
                         self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
-                        group.leave()
                     }
                 }
+                group.leave()
                 group.notify(queue: .main) {
                     self.apiDecoder(minute: 30)
                 }
@@ -681,9 +700,9 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                         ((userlongitude)-0.004) < (self.stops[i].longitude!) &&
                         (self.stops[i].longitude!) < ((userlongitude)+0.004)){
                         self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
-                        group.leave()
                     }
                 }
+                group.leave()
                 group.notify(queue: .main) {
                     self.apiDecoder(minute: 45)
                 }
@@ -701,8 +720,6 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
             metersFor500Button.isHidden = false
             metersFor1000Button.isHidden = false
             metersFor1500Button.isHidden = false
-            print(self.suitableStopsAroundCurentLocationArray.count, self.suitableStopsAroundDestinationArray.count == 0)
-            print("hata2")
             let alert = UIAlertController(title: String(localized: "routeTimeError"), message: "", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: String(localized: "tryAgainAlertView"), style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -740,7 +757,8 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                                       routetime: Int(diffMinutes),
                                       walkingfromcurrent: 0,
                                       walkingtodestination: 0,
-                                      services: self.times[times].serviceName))
+                                      services: self.times[times].serviceName,
+                                      totalwalk: 0.0))
         }
     }
 
@@ -796,13 +814,13 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
         secondrequest.requestsAlternateRoutes = true
         secondrequest.transportType = .walking
         
-        self.walkings_calculator(request: request) { Double in
-            self.routesArray[walkings].walkingfromcurrent = Double
+        self.walkings_calculator(request: request) { first_Double in
+            self.routesArray[walkings].walkingfromcurrent = first_Double
             
-            self.walkings_calculator(request: secondrequest) { Double in
-                self.routesArray[walkings].walkingtodestination = Double
+            self.walkings_calculator(request: secondrequest) { second_Double in
+                self.routesArray[walkings].walkingtodestination = second_Double
+                self.routesArray[walkings].totalwalk = first_Double + second_Double
                 completion()
-
             }
         }
         
@@ -967,6 +985,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     //MARK: Service Route Polyline
     var servicePolyline: MKPolyline?
     func servicePolyLine(selectedServiceRouteCoordinates: [CLLocationCoordinate2D], stopID: [Int], servicepPolyMapView: MKMapView){
+        
         let servicepolyline = MKPolyline(coordinates: selectedServiceRouteCoordinates, count: selectedServiceRouteCoordinates.count)
         servicePolyline = servicepolyline
         servicepPolyMapView.addOverlay(servicepolyline)
@@ -1126,9 +1145,9 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
         minutesFor45Button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([minutesFor45Button.leadingAnchor.constraint(equalTo: minutesFor30Button.trailingAnchor), minutesFor45Button.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10), minutesFor45Button.widthAnchor.constraint(equalToConstant: 60), minutesFor45Button.heightAnchor.constraint(equalToConstant: 25)])
         
-        //MARK: 1500 Meters Button
+        //MARK: 400 Meters Button
         metersFor1500Button.backgroundColor = UIColor(white: 1, alpha: 0.8)
-        metersFor1500Button.setTitle("1500 m", for: .normal)
+        metersFor1500Button.setTitle("400 m", for: .normal)
         metersFor1500Button.setTitleColor(.black, for: .normal)
         metersFor1500Button.titleLabel?.font = minutesFor15Button.titleLabel?.font.withSize(14)
         metersFor1500Button.addTarget(self, action: #selector(meter1500), for: .touchUpInside)
@@ -1139,9 +1158,9 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
         metersFor1500Button.layer.cornerRadius = 8
         metersFor1500Button.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
         
-        //MARK: 1000 Meters Button
+        //MARK: 250 Meters Button
         metersFor1000Button.backgroundColor = UIColor(white: 1, alpha: 0.8)
-        metersFor1000Button.setTitle("1000", for: .normal)
+        metersFor1000Button.setTitle("250", for: .normal)
         metersFor1000Button.setTitleColor(.black, for: .normal)
         metersFor1000Button.titleLabel?.font = minutesFor15Button.titleLabel?.font.withSize(14)
         metersFor1000Button.addTarget(self, action: #selector(meter1000), for: .touchUpInside)
@@ -1150,9 +1169,9 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
         metersFor1000Button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([metersFor1000Button.trailingAnchor.constraint(equalTo: metersFor1500Button.leadingAnchor), metersFor1000Button.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10), metersFor1000Button.widthAnchor.constraint(equalToConstant: 60), metersFor1000Button.heightAnchor.constraint(equalToConstant: 25)])
         
-        //MARK: 500 Meters Button
+        //MARK: 100 Meters Button
         metersFor500Button.backgroundColor = UIColor(red: 10/255, green: 96/255, blue: 254/255, alpha: 0.5)
-        metersFor500Button.setTitle("500", for: .normal)
+        metersFor500Button.setTitle("100", for: .normal)
         metersFor500Button.setTitleColor(.black, for: .normal)
         metersFor500Button.titleLabel?.font = minutesFor15Button.titleLabel?.font.withSize(14)
         metersFor500Button.addTarget(self, action: #selector(meter500), for: .touchUpInside)
@@ -1328,8 +1347,8 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     let wait = DispatchGroup()
     func timeData(timestring: String){
         let basedata = GetBaseData()
+        self.wait.enter()
         basedata.timeCompletionHandler { times, status, message in
-            self.wait.enter()
             self.times.append(contentsOf: times!)
             self.wait.leave()
         }
