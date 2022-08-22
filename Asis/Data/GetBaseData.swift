@@ -71,14 +71,14 @@ class GetBaseData {
 //MARK: Time Data
     func getTimeBaseData(endPoint: String) {
         print("-------------------------------")
-        print("Link: \(self.baseUrl + endPoint)")
+        print("url: \(self.baseUrl + endPoint)")
         print("-------------------------------")
 
         AF.request(self.baseUrl + endPoint, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: nil, interceptor: nil).response { (TimeresponseData) in
             guard let data = TimeresponseData.data else {
                 self.callTimeback?(nil, false, "")
-               
-                return}
+                return
+            }
             do {
             let basedata = try JSONDecoder().decode(TimetableModel.self, from: data)
                 self.callTimeback?(basedata.journeys , true, "")
