@@ -18,7 +18,7 @@ class MenuListController: UITableViewController {
     
     //MARK: Side Menu Items
     var items = [String(localized: "sideMenuAllBusStops"), String(localized: "sideMenuLanguage"), String(localized: "sideMenuShareApp")]
-    let darkColor = UIColor(red: 33/255.0, green: 33/255.0, blue: 33/255.0, alpha: 1)
+    let darkColor = UIColor(red: 20/255.0, green: 50/255.0, blue: 90/255.0, alpha: 1)
     var selectedCellIndexPath: IndexPath?
 
 
@@ -78,8 +78,9 @@ class MenuListController: UITableViewController {
     
     //MARK: Header Content
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = UIView(frame: CGRect(x: 10, y: 0, width: view.frame.width, height: 50))
-        let imageView = UIImageView(image: UIImage(named: "can-duru-menu-logo"))
+        let header = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 50))
+        let imageView = UIImageView(image: UIImage(named: "can-duru-menu-logo")?.resized(to: CGSize(width: 150, height: 150)))
+        imageView.frame.origin.x = (self.view.bounds.size.width - imageView.frame.size.width) / 2.0 
         imageView.contentMode = .scaleAspectFit
         header.addSubview(imageView)
         return header

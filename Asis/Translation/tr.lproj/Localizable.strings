@@ -64,3 +64,6 @@
 "departure" = "Kalkış: ";
 "walkingRouteError" = "Yürüyüş Rotası Bulunamadı.";
 "routeTimeError" = "Uygun Rota Bulunamadı.";
+"tryAgainAlertView" = "Arama parametrelerini değiştirerek tekrar deneyin";
+"cancelButton" = "Vazgeç";
+"min" = "dk";

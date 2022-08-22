@@ -64,3 +64,6 @@
 "departure" = "Departure: ";
 "walkingRouteError" = "No Walking Route Found.";
 "routeTimeError" = "No Suitable Route Found.";
+"tryAgainAlertView" = "Try again with changing search parameters";
+"cancelButton" = "Cancel";
+"min" = "min";

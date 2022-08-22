@@ -64,3 +64,6 @@
 "departure" = "离开: ";
 "walkingRouteError" = "未找到步行路线.";
 "routeTimeError" = "未找到合适的路线.";
+"tryAgainAlertView" = "更改搜索参数再试一次";
+"cancelButton" = "取消";
+"min" = "分钟";

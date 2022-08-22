@@ -64,3 +64,6 @@
 "departure" = "Abfahrt: ";
 "walkingRouteError" = "Keine Wanderroute gefunden.";
 "routeTimeError" = "Keine passende Route gefunden.";
+"tryAgainAlertView" = "Versuchen Sie es erneut mit geänderten Suchparametern";
+"cancelButton" = "Absagen";
+"min" = "Min";

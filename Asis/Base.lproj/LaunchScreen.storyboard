@@ -15,15 +15,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="can-duru-ana-logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="pW8-A0-qhJ">
-                                <rect key="frame" x="34" y="342" width="345" height="212"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="can-duru-menu-logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="pW8-A0-qhJ">
+                                <rect key="frame" x="34" y="401" width="345" height="94"/>
                             </imageView>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="by Can Duru" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="21" translatesAutoresizingMaskIntoConstraints="NO" id="5QE-Qn-IIC">
+                                <rect key="frame" x="144" y="828" width="127" height="34"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" red="0.10309835486798148" green="0.16910803558689275" blue="0.24536379419191923" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="pW8-A0-qhJ" secondAttribute="trailing" constant="35" id="5gO-xG-5dA"/>
+                            <constraint firstItem="5QE-Qn-IIC" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="7pQ-gR-cdw"/>
+                            <constraint firstItem="5QE-Qn-IIC" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="144" id="bdW-JC-86x"/>
                             <constraint firstItem="pW8-A0-qhJ" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="fAu-wM-O9r"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="5QE-Qn-IIC" secondAttribute="trailing" constant="143" id="h3b-eR-xpT"/>
                             <constraint firstItem="pW8-A0-qhJ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="34" id="zJE-4y-l2E"/>
                         </constraints>
                     </view>
@@ -34,6 +45,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="can-duru-ana-logo.png" width="522" height="212"/>
+        <image name="can-duru-menu-logo.png" width="207" height="94"/>
     </resources>
 </document>

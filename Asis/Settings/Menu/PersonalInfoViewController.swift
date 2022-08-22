@@ -53,43 +53,48 @@ class PersonalInfoViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
 
         //MARK: Name Field Features
-        nameField.backgroundColor = .gray
         nameField.placeholder = String(localized: "namePlaceHolder")
         nameField.borderStyle = .roundedRect
+        nameField.layer.borderColor = CGColor(red: 13/255, green: 95/255, blue: 255/255, alpha: 1)
+        nameField.layer.borderWidth = CGFloat(1)
         nameField.autocorrectionType = .no
         view.addSubview(nameField)
         nameField.translatesAutoresizingMaskIntoConstraints = false
         
         //MARK: Email Field Features
-        emailField.backgroundColor = .gray
         emailField.placeholder = String(localized: "emailPlaceHolder")
         emailField.borderStyle = .roundedRect
+        emailField.layer.borderColor = CGColor(red: 13/255, green: 95/255, blue: 255/255, alpha: 1)
+        emailField.layer.borderWidth = CGFloat(1)
         emailField.autocorrectionType = .no
         view.addSubview(emailField)
         emailField.translatesAutoresizingMaskIntoConstraints = false
 
         //MARK: Current Password Field Features
-        currentpasswordField.backgroundColor = .gray
         currentpasswordField.placeholder = String(localized: "passwordPlaceHolder")
         currentpasswordField.borderStyle = .roundedRect
+        currentpasswordField.layer.borderColor = CGColor(red: 13/255, green: 95/255, blue: 255/255, alpha: 1)
+        currentpasswordField.layer.borderWidth = CGFloat(1)
         view.addSubview(currentpasswordField)
         currentpasswordField.isSecureTextEntry = true
         currentpasswordField.autocorrectionType = .no
         currentpasswordField.translatesAutoresizingMaskIntoConstraints = false
         
         //MARK: New Password Field Features
-        passwordField.backgroundColor = .gray
         passwordField.placeholder = String(localized: "newPasswordPlaceHolder")
         passwordField.borderStyle = .roundedRect
+        passwordField.layer.borderColor = CGColor(red: 13/255, green: 95/255, blue: 255/255, alpha: 1)
+        passwordField.layer.borderWidth = CGFloat(1)
         view.addSubview(passwordField)
         passwordField.isSecureTextEntry = true
         passwordField.autocorrectionType = .no
         passwordField.translatesAutoresizingMaskIntoConstraints = false
         
         //MARK: Authenticate Password Field Features
-        passwordAuthenticateField.backgroundColor = .gray
         passwordAuthenticateField.placeholder = String(localized: "authenticatePlaceHolder")
         passwordAuthenticateField.borderStyle = .roundedRect
+        passwordAuthenticateField.layer.borderColor = CGColor(red: 13/255, green: 95/255, blue: 255/255, alpha: 1)
+        passwordAuthenticateField.layer.borderWidth = CGFloat(1)
         view.addSubview(passwordAuthenticateField)
         passwordAuthenticateField.isSecureTextEntry = true
         passwordAuthenticateField.autocorrectionType = .no

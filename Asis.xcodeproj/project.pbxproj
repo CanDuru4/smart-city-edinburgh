@@ -36,18 +36,20 @@
 		1F64ABC028A110D600FEB09C /* BusDataSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F64ABBF28A110D600FEB09C /* BusDataSetup.swift */; };
 		1F64ABC428A146E400FEB09C /* CustomAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F64ABC328A146E400FEB09C /* CustomAnnotation.swift */; };
 		1F72674D2898F97400C0AAE6 /* BusStopsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F72674C2898F97400C0AAE6 /* BusStopsViewController.swift */; };
+		1F7B9C6528AF80650036336A /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7B9C6428AF80650036336A /* LoadingViewController.swift */; };
 		1F7FECCD28AA34E20025031D /* HowToGoSearchTableCellSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7FECCC28AA34E20025031D /* HowToGoSearchTableCellSetup.swift */; };
 		1F7FECD128ABB4770025031D /* JourneyTımeDataSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7FECD028ABB4770025031D /* JourneyTımeDataSetup.swift */; };
 		1F8F825128A520930008A8E7 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8F825028A520930008A8E7 /* AuthViewController.swift */; };
 		1FB0A74228A4DF1500CAE38A /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB0A74128A4DF1500CAE38A /* SettingsTableViewCell.swift */; };
 		1FB9334C28980FFA009C1FAA /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB9334B28980FFA009C1FAA /* LocationManager.swift */; };
-		1FBBBA9128ACEEEB00701F0C /* can-duru-ana-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FBBBA8F28ACEEEB00701F0C /* can-duru-ana-logo.png */; };
-		1FBBBA9228ACEEEB00701F0C /* can-duru-menu-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FBBBA9028ACEEEB00701F0C /* can-duru-menu-logo.png */; };
 		1FBBBA9428ACF20D00701F0C /* FloatingPanelTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBBBA9328ACF20D00701F0C /* FloatingPanelTableViewController.swift */; };
 		1FBBBA9628ACF22800701F0C /* FloatingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBBBA9528ACF22800701F0C /* FloatingTableViewCell.swift */; };
+		1FD82A1E28AF88FC00377D08 /* ServiceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD82A1D28AF88FC00377D08 /* ServiceData.swift */; };
 		1FE0863628A4CE860054D965 /* PersonalInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0863528A4CE860054D965 /* PersonalInfoViewController.swift */; };
 		1FE0863828A4CEDC0054D965 /* FAQViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0863728A4CEDC0054D965 /* FAQViewController.swift */; };
 		1FF3355A28A27F65007F3D29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1FF3355928A27F65007F3D29 /* GoogleService-Info.plist */; };
+		1FFC05FA28B11D19007BC964 /* can-duru-menu-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FFC05F828B11D19007BC964 /* can-duru-menu-logo.png */; };
+		1FFC05FB28B11D19007BC964 /* can-duru-ana-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FFC05F928B11D19007BC964 /* can-duru-ana-logo.png */; };
 		97126BD2ED52C820858693C3 /* Pods_Asis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB10984C8FE391A3FEBDD92 /* Pods_Asis.framework */; };
 /* End PBXBuildFile section */
 
@@ -84,18 +86,20 @@
 		1F64ABC328A146E400FEB09C /* CustomAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAnnotation.swift; sourceTree = "<group>"; };
 		1F72674C2898F97400C0AAE6 /* BusStopsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopsViewController.swift; sourceTree = "<group>"; };
 		1F79888928A267E9002A9950 /* Asis.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Asis.entitlements; sourceTree = "<group>"; };
+		1F7B9C6428AF80650036336A /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		1F7FECCC28AA34E20025031D /* HowToGoSearchTableCellSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToGoSearchTableCellSetup.swift; sourceTree = "<group>"; };
 		1F7FECD028ABB4770025031D /* JourneyTımeDataSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JourneyTımeDataSetup.swift"; sourceTree = "<group>"; };
 		1F8F825028A520930008A8E7 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		1FB0A74128A4DF1500CAE38A /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
 		1FB9334B28980FFA009C1FAA /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		1FBBBA8F28ACEEEB00701F0C /* can-duru-ana-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "can-duru-ana-logo.png"; sourceTree = "<group>"; };
-		1FBBBA9028ACEEEB00701F0C /* can-duru-menu-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "can-duru-menu-logo.png"; sourceTree = "<group>"; };
 		1FBBBA9328ACF20D00701F0C /* FloatingPanelTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelTableViewController.swift; sourceTree = "<group>"; };
 		1FBBBA9528ACF22800701F0C /* FloatingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingTableViewCell.swift; sourceTree = "<group>"; };
+		1FD82A1D28AF88FC00377D08 /* ServiceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceData.swift; sourceTree = "<group>"; };
 		1FE0863528A4CE860054D965 /* PersonalInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoViewController.swift; sourceTree = "<group>"; };
 		1FE0863728A4CEDC0054D965 /* FAQViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQViewController.swift; sourceTree = "<group>"; };
 		1FF3355928A27F65007F3D29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1FFC05F828B11D19007BC964 /* can-duru-menu-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "can-duru-menu-logo.png"; sourceTree = "<group>"; };
+		1FFC05F928B11D19007BC964 /* can-duru-ana-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "can-duru-ana-logo.png"; sourceTree = "<group>"; };
 		7DB10984C8FE391A3FEBDD92 /* Pods_Asis.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Asis.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5282496B1550989A04719B9 /* Pods-Asis.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Asis.release.xcconfig"; path = "Target Support Files/Pods-Asis/Pods-Asis.release.xcconfig"; sourceTree = "<group>"; };
 		DB84E3DFC1FA26BA79CC13AF /* Pods-Asis.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Asis.debug.xcconfig"; path = "Target Support Files/Pods-Asis/Pods-Asis.debug.xcconfig"; sourceTree = "<group>"; };
@@ -208,6 +212,7 @@
 				1F79888928A267E9002A9950 /* Asis.entitlements */,
 				1F042EB128A7720700C72FAF /* Translation */,
 				1F31E0BE289904A3003693C8 /* Helper */,
+				1F7B9C6628AF88950036336A /* Data */,
 				1F31E0B72898FAD0003693C8 /* SideMenu */,
 				1F72674A2898F92300C0AAE6 /* Home */,
 				1F72674B2898F93D00C0AAE6 /* BusStops */,
@@ -278,11 +283,8 @@
 			children = (
 				1F64ABC328A146E400FEB09C /* CustomAnnotation.swift */,
 				1FB9334B28980FFA009C1FAA /* LocationManager.swift */,
-				1F0EF77228992CEE0053F4DB /* StopsDataSetup.swift */,
-				1F0EF77028991D6F0053F4DB /* GetBaseData.swift */,
 				1F2A057B289B99E20009F98F /* Network.swift */,
-				1F64ABBF28A110D600FEB09C /* BusDataSetup.swift */,
-				1F7FECD028ABB4770025031D /* JourneyTımeDataSetup.swift */,
+				1F7B9C6428AF80650036336A /* LoadingViewController.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -307,6 +309,18 @@
 			path = BusStops;
 			sourceTree = "<group>";
 		};
+		1F7B9C6628AF88950036336A /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				1F0EF77028991D6F0053F4DB /* GetBaseData.swift */,
+				1F0EF77228992CEE0053F4DB /* StopsDataSetup.swift */,
+				1F64ABBF28A110D600FEB09C /* BusDataSetup.swift */,
+				1F7FECD028ABB4770025031D /* JourneyTımeDataSetup.swift */,
+				1FD82A1D28AF88FC00377D08 /* ServiceData.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
 		1F8F825228A54CBE0008A8E7 /* Menu */ = {
 			isa = PBXGroup;
 			children = (
@@ -319,8 +333,8 @@
 		1FBBBA8E28ACEEEB00701F0C /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				1FBBBA8F28ACEEEB00701F0C /* can-duru-ana-logo.png */,
-				1FBBBA9028ACEEEB00701F0C /* can-duru-menu-logo.png */,
+				1FFC05F828B11D19007BC964 /* can-duru-menu-logo.png */,
+				1FFC05F928B11D19007BC964 /* can-duru-ana-logo.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -409,14 +423,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F042ECC28A7722C00C72FAF /* Localizable.strings in Resources */,
-				1FBBBA9128ACEEEB00701F0C /* can-duru-ana-logo.png in Resources */,
 				1F0F1E912897BAA000695807 /* LaunchScreen.storyboard in Resources */,
-				1FBBBA9228ACEEEB00701F0C /* can-duru-menu-logo.png in Resources */,
+				1FFC05FA28B11D19007BC964 /* can-duru-menu-logo.png in Resources */,
 				1F042EC728A7722C00C72FAF /* Localizable.strings in Resources */,
 				1F042EC928A7722C00C72FAF /* Localizable.strings in Resources */,
 				1F0F1E8E2897BAA000695807 /* Assets.xcassets in Resources */,
 				1F042ECA28A7722C00C72FAF /* Localizable.strings in Resources */,
 				1F042EC828A7722C00C72FAF /* Localizable.strings in Resources */,
+				1FFC05FB28B11D19007BC964 /* can-duru-ana-logo.png in Resources */,
 				1F042ECD28A7722C00C72FAF /* Localizable.strings in Resources */,
 				1F042ECB28A7722C00C72FAF /* Localizable.strings in Resources */,
 				1FF3355A28A27F65007F3D29 /* GoogleService-Info.plist in Resources */,
@@ -472,6 +486,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FD82A1E28AF88FC00377D08 /* ServiceData.swift in Sources */,
 				1F0F1E862897BA9F00695807 /* HomeViewController.swift in Sources */,
 				1F0F1E8C2897BA9F00695807 /* Asis.xcdatamodeld in Sources */,
 				1F492A9128A79E620065260B /* SideMenuTableViewCell.swift in Sources */,
@@ -489,6 +504,7 @@
 				1F7FECCD28AA34E20025031D /* HowToGoSearchTableCellSetup.swift in Sources */,
 				1F31E0BD2898FB05003693C8 /* AllStopsViewController.swift in Sources */,
 				1FBBBA9428ACF20D00701F0C /* FloatingPanelTableViewController.swift in Sources */,
+				1F7B9C6528AF80650036336A /* LoadingViewController.swift in Sources */,
 				1FB9334C28980FFA009C1FAA /* LocationManager.swift in Sources */,
 				1F0EF775289AB2B40053F4DB /* BusStopTableViewCellSetup.swift in Sources */,
 				1F2A057C289B99E20009F98F /* Network.swift in Sources */,

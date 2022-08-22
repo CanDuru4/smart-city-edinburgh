@@ -64,3 +64,6 @@
 "departure" = "Partida: ";
 "walkingRouteError" = "No se ha encontrado ninguna ruta para caminar.";
 "routeTimeError" = "No se encontró una ruta adecuada.";
+"tryAgainAlertView" = "Vuelva a intentarlo cambiando los parámetros de búsqueda";
+"cancelButton" = "Cancelar";
+"min" = "min";

@@ -64,3 +64,6 @@
 "departure" = "Départ: ";
 "walkingRouteError" = "Aucun itinéraire de marche trouvé.";
 "routeTimeError" = "Aucun itinéraire approprié n'a été trouvé.";
+"tryAgainAlertView" = "Réessayez en modifiant les paramètres de recherche";
+"cancelButton" = "Annuler";
+"min" = "min";

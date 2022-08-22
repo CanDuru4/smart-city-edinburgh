@@ -64,3 +64,6 @@
 "departure" = "Вылет из: ";
 "walkingRouteError" = "Пешеходный маршрут не найден.";
 "routeTimeError" = "Подходящий маршрут не найден.";
+"tryAgainAlertView" = "Попробуйте еще раз, изменив параметры поиска";
+"cancelButton" = "Отмена";
+"min" = "мин";
