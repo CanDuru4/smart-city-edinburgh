@@ -48,7 +48,9 @@ You can use [CocoaPods](http://cocoapods.org/) to install `SideMenu, Alamofire, 
   pod 'Firebase/Database'
   pod 'FloatingPanel'
 ```
+
 ## Photos from Application
+
 <p align="center">
 <img src= "https://user-images.githubusercontent.com/73294429/186215025-a5e40cdb-2bf1-48dd-9b70-35745e120e63.png" width="400" >
 <img src= "https://user-images.githubusercontent.com/73294429/186215478-dacfe7a4-2358-4831-b046-50578876b6d2.png" width="400" >
@@ -66,7 +68,7 @@ You can use [CocoaPods](http://cocoapods.org/) to install `SideMenu, Alamofire, 
 
 ## Contribute
 
-I would love you for the contribution to **The Transport for Edinburgh Open Data API**
+I would like to thank **The Transport for Edinburgh Open Data API** for its contribution to the project.
 
 ## Meta
 
