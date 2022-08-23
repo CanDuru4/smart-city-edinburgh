@@ -6,7 +6,8 @@
 <br />
 <p align="center">
   <a href="https://canduru.net">
-    <img src="https://ibb.co/PM1Jfx2" alt="Logo" width="80" height="80">
+    <img src="https://user-images.githubusercontent.com/73294429/186216899-4e726e02-5377-441f-ac22-3793989b6961.png" alt="Logo" width="300" height="122">
+
   </a>
   <p align="center">
     This app created with Swift to iOS platform using "Transport For Edinburgh" api. User can view live bus locations and all bus locations, add card with NFC reading, and set personal info.
