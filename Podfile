@@ -7,8 +7,7 @@ target 'Asis' do
 
   # Pods for Asis
   pod 'SideMenu'
-  pod “Alamofire”
-  pod "CreditCardView"
+  pod 'Alamofire'
   pod 'DropDown'
   # Add the Firebase pod for Google Analytics
   pod 'FirebaseAnalytics'

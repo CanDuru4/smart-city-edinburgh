@@ -45,8 +45,8 @@ class PersonalInfoViewController: UIViewController {
         
         
         //MARK: Image Features
-        let imageAsis = UIImage(named: "can-duru-ana-logo")?.resized(to: CGSize(width: 600, height: 600))
-        let imageView = UIImageView(image: imageAsis)
+        let imageCan = UIImage(named: "can-duru-ana-logo")
+        let imageView = UIImageView(image: imageCan)
         imageView.clipsToBounds = true
         imageView.contentMode = UIView.ContentMode.scaleAspectFit
         view.addSubview(imageView)
@@ -118,7 +118,7 @@ class PersonalInfoViewController: UIViewController {
             
             //MARK: Image Constraints
             imageView.centerXAnchor.constraint(equalTo: nameField.centerXAnchor),
-            imageView.bottomAnchor.constraint(equalTo: nameField.topAnchor, constant: -20),
+            imageView.bottomAnchor.constraint(equalTo: nameField.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 50),
             imageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -50),
             

@@ -248,7 +248,7 @@ extension BusStopsViewController: UITableViewDelegate, UITableViewDataSource {
             cell.detailLabel_destinations.text = ((String(localized: "destination")) + destinationlist)
             cell.detailLabel_destinations.attributedText = addBoldText(fullString: cell.detailLabel_destinations.text! as NSString, boldPartOfString: (String(localized: "destination")) as NSString)
             cell.detailLabel_services.attributedText = addBoldText(fullString: cell.detailLabel_services.text! as NSString, boldPartOfString: (String(localized: "service")) as NSString)
-            cell.imagePlace.image = UIImage(systemName: "bus")?.withTintColor(.systemOrange, renderingMode: .alwaysOriginal)
+            cell.imagePlace.image = UIImage(systemName: "bus")?.withTintColor(.systemBlue, renderingMode: .alwaysOriginal)
             return cell
             
             
@@ -304,7 +304,7 @@ extension BusStopsViewController: UITableViewDelegate, UITableViewDataSource {
             cell.detailLabel_destinations.text = ((String(localized: "destination")) + destinationlist)
             cell.detailLabel_destinations.attributedText = addBoldText(fullString: cell.detailLabel_destinations.text! as NSString, boldPartOfString: (String(localized: "destination")) as NSString)
             cell.detailLabel_services.attributedText = addBoldText(fullString: cell.detailLabel_services.text! as NSString, boldPartOfString: (String(localized: "service")) as NSString)
-            cell.imagePlace.image = UIImage(systemName: "bus")?.withTintColor(.systemOrange, renderingMode: .alwaysOriginal)
+            cell.imagePlace.image = UIImage(systemName: "bus")?.withTintColor(.systemBlue, renderingMode: .alwaysOriginal)
             return cell
         }
     }

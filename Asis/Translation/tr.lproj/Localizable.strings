@@ -67,3 +67,4 @@
 "tryAgainAlertView" = "Arama parametrelerini değiştirerek tekrar deneyin";
 "cancelButton" = "Vazgeç";
 "min" = "dk";
+"routesButton" = "Rota: ";

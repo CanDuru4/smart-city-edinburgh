@@ -67,3 +67,4 @@
 "tryAgainAlertView" = "Try again with changing search parameters";
 "cancelButton" = "Cancel";
 "min" = "min";
+"routesButton" = "Route: ";

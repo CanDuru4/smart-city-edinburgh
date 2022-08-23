@@ -70,10 +70,6 @@ class GetBaseData {
     
 //MARK: Time Data
     func getTimeBaseData(endPoint: String) {
-        print("-------------------------------")
-        print("URL: \(self.baseUrl + endPoint)")
-        print("-------------------------------")
-
         AF.request(self.baseUrl + endPoint, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: nil, interceptor: nil).response { (TimeresponseData) in
             guard let data = TimeresponseData.data else {
                 self.callTimeback?(nil, false, "")
@@ -85,7 +81,9 @@ class GetBaseData {
                 
             } catch {
                 self.callTimeback?(nil, false, error.localizedDescription)
+                print("-------------------------------")
                 print(String(describing: error))
+                print("-------------------------------")
             }
         }
     }
