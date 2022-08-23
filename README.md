@@ -21,8 +21,7 @@
 
 - [x] Live Bus Locations (updated every 15 seconds)
 - [x] View All Bus Stops
-- [x] Search in All Stops![image](https://user-images.githubusercontent.com/73294429/186247834-dd5a82ce-e943-424f-9d7b-75e1f33b3eeb.png)
-
+- [x] Search in All Stops
 - [x] Search for location and create public transportation route
 - [x] Add NFC card and read balance
 
@@ -62,7 +61,7 @@ You can use [CocoaPods](http://cocoapods.org/) to install `SideMenu, Alamofire, 
 </p>
 
 <p align="center">
-<img src= "https://user-images.githubusercontent.com/73294429/186215893-1b393726-bf95-4272-a13c-2d41aa0399fd.png" width="400" >
+<img src= "https://user-images.githubusercontent.com/73294429/186249659-aeace6de-b1a3-4542-beea-f927abb4a843.png" width="400" >
 <img src= "https://user-images.githubusercontent.com/73294429/186215775-8fd31174-4461-49c3-8d89-c1f399e91277.png" width="400" >
 </p>
 
