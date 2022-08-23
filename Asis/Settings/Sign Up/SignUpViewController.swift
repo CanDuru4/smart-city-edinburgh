@@ -108,7 +108,7 @@ class SignUpViewController: UIViewController {
             
             //MARK: Image Constraints
             imageView.centerXAnchor.constraint(equalTo: nameField.centerXAnchor),
-            imageView.bottomAnchor.constraint(equalTo: nameField.topAnchor),
+            imageView.bottomAnchor.constraint(equalTo: nameField.topAnchor, constant: -50),
             imageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 50),
             imageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -50),
             

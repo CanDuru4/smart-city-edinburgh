@@ -1,4 +1,3 @@
-
 [![Swift Version][swift-image]][swift-url]
 [![Platform](https://img.shields.io/cocoapods/p/LFAlertController.svg?style=flat)](http://cocoapods.org/pods/LFAlertController)
 
@@ -6,8 +5,8 @@
 <br />
 <p align="center">
   <a href="https://canduru.net">
-    <img src="https://user-images.githubusercontent.com/73294429/186216899-4e726e02-5377-441f-ac22-3793989b6961.png" alt="Logo" width="300" height="122">
-
+    <img src="https://user-images.githubusercontent.com/73294429/186248765-a5b646f6-77fe-4bea-9638-50bb746c01f2.png" alt="Logo" width="221" height="90">
+    <img src="https://user-images.githubusercontent.com/73294429/186247733-fef260b6-0d34-4123-a54e-86eb9a8217fa.png" alt="Logo" width="221" height="90">
   </a>
   <p align="center">
     This app created with Swift to iOS platform using "Transport For Edinburgh" api. User can view live bus locations and all bus locations, add card with NFC reading, and set personal info.
@@ -22,7 +21,8 @@
 
 - [x] Live Bus Locations (updated every 15 seconds)
 - [x] View All Bus Stops
-- [x] Search in All Stops
+- [x] Search in All Stops![image](https://user-images.githubusercontent.com/73294429/186247834-dd5a82ce-e943-424f-9d7b-75e1f33b3eeb.png)
+
 - [x] Search for location and create public transportation route
 - [x] Add NFC card and read balance
 
