@@ -1,5 +1,6 @@
+
 [![Swift Version][swift-image]][swift-url]
-[![Platform](https://img.shields.io/cocoapods/p/LFAlertController.svg?style=flat)]
+[![Platform](https://img.shields.io/cocoapods/p/LFAlertController.svg?style=flat)](http://cocoapods.org/pods/LFAlertController)
 
 # Smart City: Edinburgh
 <br />
@@ -12,20 +13,8 @@
   </p>
 </p>
 
-<p align="row">
-<img src= "https://media.giphy.com/media/kk0YOBKblQC24qurWe/giphy.gif" width="400" >
-</p>
-<p align="row">
-<img src= "https://ibb.co/tL0BSdq" width="400" >
-<img src= "https://ibb.co/P4CjNZy" width="400" >
-</p>
-<p align="row">
-<img src= "https://ibb.co/NmyFBsQ" width="400" >
-<img src= "https://ibb.co/yFGPbD8" width="400" >
-</p>
-<p align="row">
-<img src= "https://ibb.co/vLkCTpq" width="400" >
-<img src= "https://ibb.co/7tbWxSv" width="400" >
+<p align="center">
+    <img src= "https://media.giphy.com/media/MhA5ZFImHOKE7Ji04H/giphy.gif" width="400" >
 </p>
 
 ## Features
@@ -58,6 +47,21 @@ You can use [CocoaPods](http://cocoapods.org/) to install `SideMenu, Alamofire, 
   pod 'Firebase/Database'
   pod 'FloatingPanel'
 ```
+## Photos from Application
+<p align="center">
+<img src= "https://user-images.githubusercontent.com/73294429/186215025-a5e40cdb-2bf1-48dd-9b70-35745e120e63.png" width="400" >
+<img src= "https://user-images.githubusercontent.com/73294429/186215478-dacfe7a4-2358-4831-b046-50578876b6d2.png" width="400" >
+</p>
+
+<p align="center">
+<img src= "https://user-images.githubusercontent.com/73294429/186215800-73a818a7-8d0a-42cd-b352-35985c415794.png" width="400" >
+<img src= "https://user-images.githubusercontent.com/73294429/186215859-0ef4b070-48e7-4876-a93c-223eb37a8b25.png" width="400" >
+</p>
+
+<p align="center">
+<img src= "https://user-images.githubusercontent.com/73294429/186215893-1b393726-bf95-4272-a13c-2d41aa0399fd.png" width="400" >
+<img src= "https://user-images.githubusercontent.com/73294429/186215775-8fd31174-4461-49c3-8d89-c1f399e91277.png" width="400" >
+</p>
 
 ## Contribute
 
@@ -65,7 +69,7 @@ I would love you for the contribution to **The Transport for Edinburgh Open Data
 
 ## Meta
 
-Your Name – [@YourTwitter](https://twitter.com/dbader_org) – YourEmail@example.com
+Can Duru – canduru2004@gmail.com, can@canduru.net
 
 
 [https://github.com/CanDuru4](https://github.com/CanDuru4)
