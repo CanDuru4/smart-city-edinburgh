@@ -8,7 +8,6 @@
 //MARK: Import
 import UIKit
 import SideMenu
-import CreditCardView
 import CoreNFC
 import FirebaseAuth
 import FirebaseFirestore
@@ -93,7 +92,7 @@ class CardViewController: UIViewController, NFCTagReaderSessionDelegate {
         let addCardButton = UIButton(type: .custom)
         addCardButton.setTitle(String(localized: "addCardButton"), for: .normal)
         addCardButton.tintColor = .black
-        addCardButton.backgroundColor = .systemOrange
+        addCardButton.backgroundColor = .systemBlue
         addCardButton.addTarget(self, action: #selector(pressed), for: .touchUpInside)
         view.addSubview(addCardButton)
     

@@ -41,26 +41,28 @@ class LoginViewController: UIViewController {
         
         
         //MARK: Image Features
-        let imageAsis = UIImage(named: "can-duru-ana-logo")?.resized(to: CGSize(width: 600, height: 600))
-        let imageView = UIImageView(image: imageAsis)
+        let imageCan = UIImage(named: "can-duru-ana-logo")
+        let imageView = UIImageView(image: imageCan)
         imageView.clipsToBounds = true
         imageView.contentMode = UIView.ContentMode.scaleAspectFit
         view.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
 
         //MARK: Email Field Features
-        emailField.backgroundColor = .gray
         emailField.placeholder = String(localized: "emailPlaceHolder")
         emailField.borderStyle = .roundedRect
+        emailField.layer.borderColor = CGColor(red: 13/255, green: 95/255, blue: 255/255, alpha: 1)
+        emailField.layer.borderWidth = CGFloat(1)
         emailField.autocorrectionType = .no
         emailField.autocapitalizationType = .none
         view.addSubview(emailField)
         emailField.translatesAutoresizingMaskIntoConstraints = false
 
         //MARK: Password Field Features
-        passwordField.backgroundColor = .gray
         passwordField.placeholder = String(localized: "passwordPlaceHolder")
         passwordField.borderStyle = .roundedRect
+        passwordField.layer.borderColor = CGColor(red: 13/255, green: 95/255, blue: 255/255, alpha: 1)
+        passwordField.layer.borderWidth = CGFloat(1)
         view.addSubview(passwordField)
         passwordField.isSecureTextEntry = true
         passwordField.autocorrectionType = .no
@@ -79,7 +81,7 @@ class LoginViewController: UIViewController {
         
         //MARK: No Account Button Features
         noAccountButton.setTitle(String(localized: "createAccountButton"), for: .normal)
-        noAccountButton.setTitleColor(.systemOrange, for: .normal)
+        noAccountButton.setTitleColor(.systemBlue, for: .normal)
         noAccountButton.clipsToBounds = true
         view.addSubview(noAccountButton)
         noAccountButton.addTarget(self, action: #selector(transitiontoSignUp), for: .touchUpInside)
@@ -99,7 +101,7 @@ class LoginViewController: UIViewController {
             
             //MARK: Image Constraints
             imageView.centerXAnchor.constraint(equalTo: emailField.centerXAnchor),
-            imageView.bottomAnchor.constraint(equalTo: emailField.topAnchor, constant: -20),
+            imageView.bottomAnchor.constraint(equalTo: emailField.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 50),
             imageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -50),
             

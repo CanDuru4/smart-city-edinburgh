@@ -67,3 +67,4 @@
 "tryAgainAlertView" = "Попробуйте еще раз, изменив параметры поиска";
 "cancelButton" = "Отмена";
 "min" = "мин";
+"routesButton" = "Маршрут: ";

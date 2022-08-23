@@ -14,6 +14,8 @@
 		1F042ECB28A7722C00C72FAF /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F042EBF28A7722C00C72FAF /* Localizable.strings */; };
 		1F042ECC28A7722C00C72FAF /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F042EC228A7722C00C72FAF /* Localizable.strings */; };
 		1F042ECD28A7722C00C72FAF /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F042EC528A7722C00C72FAF /* Localizable.strings */; };
+		1F0D73F128B50CDB004F53C3 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 1F0D73F028B50CDB004F53C3 /* CHANGELOG.md */; };
+		1F0D73F328B50F55004F53C3 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 1F0D73F228B50F55004F53C3 /* README.md */; };
 		1F0EF77128991D6F0053F4DB /* GetBaseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0EF77028991D6F0053F4DB /* GetBaseData.swift */; };
 		1F0EF77328992CEF0053F4DB /* StopsDataSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0EF77228992CEE0053F4DB /* StopsDataSetup.swift */; };
 		1F0EF775289AB2B40053F4DB /* BusStopTableViewCellSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0EF774289AB2B40053F4DB /* BusStopTableViewCellSetup.swift */; };
@@ -47,9 +49,13 @@
 		1FD82A1E28AF88FC00377D08 /* ServiceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD82A1D28AF88FC00377D08 /* ServiceData.swift */; };
 		1FE0863628A4CE860054D965 /* PersonalInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0863528A4CE860054D965 /* PersonalInfoViewController.swift */; };
 		1FE0863828A4CEDC0054D965 /* FAQViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0863728A4CEDC0054D965 /* FAQViewController.swift */; };
+		1FE5614A28B4CD3F00AE2216 /* CCBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE5614928B4CD3F00AE2216 /* CCBackgroundView.swift */; };
+		1FE5614C28B4CD4900AE2216 /* CCContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE5614B28B4CD4900AE2216 /* CCContentView.swift */; };
+		1FE5614E28B4CD5600AE2216 /* CreditCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE5614D28B4CD5600AE2216 /* CreditCardView.swift */; };
 		1FF3355A28A27F65007F3D29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1FF3355928A27F65007F3D29 /* GoogleService-Info.plist */; };
 		1FFC05FA28B11D19007BC964 /* can-duru-menu-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FFC05F828B11D19007BC964 /* can-duru-menu-logo.png */; };
 		1FFC05FB28B11D19007BC964 /* can-duru-ana-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FFC05F928B11D19007BC964 /* can-duru-ana-logo.png */; };
+		56E1A1155BA747ABA013B12C /* Pods_Asis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 661740743F31E34DDCCD4105 /* Pods_Asis.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +66,8 @@
 		1F042EC028A7722C00C72FAF /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = Localizable.strings; sourceTree = "<group>"; };
 		1F042EC328A7722C00C72FAF /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = Localizable.strings; sourceTree = "<group>"; };
 		1F042EC628A7722C00C72FAF /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Localizable.strings; sourceTree = "<group>"; };
+		1F0D73F028B50CDB004F53C3 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		1F0D73F228B50F55004F53C3 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1F0EF77028991D6F0053F4DB /* GetBaseData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetBaseData.swift; sourceTree = "<group>"; };
 		1F0EF77228992CEE0053F4DB /* StopsDataSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopsDataSetup.swift; sourceTree = "<group>"; };
 		1F0EF774289AB2B40053F4DB /* BusStopTableViewCellSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStopTableViewCellSetup.swift; sourceTree = "<group>"; };
@@ -96,9 +104,15 @@
 		1FD82A1D28AF88FC00377D08 /* ServiceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceData.swift; sourceTree = "<group>"; };
 		1FE0863528A4CE860054D965 /* PersonalInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoViewController.swift; sourceTree = "<group>"; };
 		1FE0863728A4CEDC0054D965 /* FAQViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQViewController.swift; sourceTree = "<group>"; };
+		1FE5614928B4CD3F00AE2216 /* CCBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CCBackgroundView.swift; sourceTree = "<group>"; };
+		1FE5614B28B4CD4900AE2216 /* CCContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CCContentView.swift; sourceTree = "<group>"; };
+		1FE5614D28B4CD5600AE2216 /* CreditCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditCardView.swift; sourceTree = "<group>"; };
 		1FF3355928A27F65007F3D29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1FFC05F828B11D19007BC964 /* can-duru-menu-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "can-duru-menu-logo.png"; sourceTree = "<group>"; };
 		1FFC05F928B11D19007BC964 /* can-duru-ana-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "can-duru-ana-logo.png"; sourceTree = "<group>"; };
+		661740743F31E34DDCCD4105 /* Pods_Asis.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Asis.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8565F4AF168039303F292DFB /* Pods-Asis.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Asis.release.xcconfig"; path = "Target Support Files/Pods-Asis/Pods-Asis.release.xcconfig"; sourceTree = "<group>"; };
+		C09BCB388EDF794657B36F2B /* Pods-Asis.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Asis.debug.xcconfig"; path = "Target Support Files/Pods-Asis/Pods-Asis.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,12 +120,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56E1A1155BA747ABA013B12C /* Pods_Asis.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0EB6F36899460DCFCE2EE23A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				661740743F31E34DDCCD4105 /* Pods_Asis.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		1F042EB128A7720700C72FAF /* Translation */ = {
 			isa = PBXGroup;
 			children = (
@@ -185,10 +208,13 @@
 		1F0F1E752897BA9F00695807 = {
 			isa = PBXGroup;
 			children = (
+				1F0D73F028B50CDB004F53C3 /* CHANGELOG.md */,
+				1F0D73F228B50F55004F53C3 /* README.md */,
 				1FBBBA8E28ACEEEB00701F0C /* Images */,
 				1F0F1E802897BA9F00695807 /* Asis */,
 				1F0F1E7F2897BA9F00695807 /* Products */,
 				C7689E43FABFD17A04EBE192 /* Pods */,
+				0EB6F36899460DCFCE2EE23A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -243,6 +269,7 @@
 		1F31E0B02898FA69003693C8 /* Card */ = {
 			isa = PBXGroup;
 			children = (
+				1FE5614F28B4CDA900AE2216 /* CreditCardView */,
 				1F31E0B12898FA7B003693C8 /* CardViewController.swift */,
 			);
 			path = Card;
@@ -333,9 +360,21 @@
 			path = Images;
 			sourceTree = "<group>";
 		};
+		1FE5614F28B4CDA900AE2216 /* CreditCardView */ = {
+			isa = PBXGroup;
+			children = (
+				1FE5614928B4CD3F00AE2216 /* CCBackgroundView.swift */,
+				1FE5614B28B4CD4900AE2216 /* CCContentView.swift */,
+				1FE5614D28B4CD5600AE2216 /* CreditCardView.swift */,
+			);
+			path = CreditCardView;
+			sourceTree = "<group>";
+		};
 		C7689E43FABFD17A04EBE192 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
+				C09BCB388EDF794657B36F2B /* Pods-Asis.debug.xcconfig */,
+				8565F4AF168039303F292DFB /* Pods-Asis.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -347,9 +386,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F0F1E952897BAA000695807 /* Build configuration list for PBXNativeTarget "Asis" */;
 			buildPhases = (
+				ACB6F7E014E813F4AFFF72BE /* [CP] Check Pods Manifest.lock */,
 				1F0F1E7A2897BA9F00695807 /* Sources */,
 				1F0F1E7B2897BA9F00695807 /* Frameworks */,
 				1F0F1E7C2897BA9F00695807 /* Resources */,
+				BFECED9672847DC9986AAF75 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -413,6 +454,8 @@
 				1F042ECA28A7722C00C72FAF /* Localizable.strings in Resources */,
 				1F042EC828A7722C00C72FAF /* Localizable.strings in Resources */,
 				1FFC05FB28B11D19007BC964 /* can-duru-ana-logo.png in Resources */,
+				1F0D73F128B50CDB004F53C3 /* CHANGELOG.md in Resources */,
+				1F0D73F328B50F55004F53C3 /* README.md in Resources */,
 				1F042ECD28A7722C00C72FAF /* Localizable.strings in Resources */,
 				1F042ECB28A7722C00C72FAF /* Localizable.strings in Resources */,
 				1FF3355A28A27F65007F3D29 /* GoogleService-Info.plist in Resources */,
@@ -420,6 +463,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		ACB6F7E014E813F4AFFF72BE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Asis-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BFECED9672847DC9986AAF75 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Asis/Pods-Asis-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Asis/Pods-Asis-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Asis/Pods-Asis-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1F0F1E7A2897BA9F00695807 /* Sources */ = {
@@ -437,6 +522,7 @@
 				1F31E0B52898FA8C003693C8 /* SettingsViewController.swift in Sources */,
 				1F7FECD128ABB4770025031D /* JourneyTımeDataSetup.swift in Sources */,
 				1F64ABC028A110D600FEB09C /* BusDataSetup.swift in Sources */,
+				1FE5614E28B4CD5600AE2216 /* CreditCardView.swift in Sources */,
 				1F0EF77328992CEF0053F4DB /* StopsDataSetup.swift in Sources */,
 				1F0F9C6C28A290E3002E6E13 /* SignUpViewController.swift in Sources */,
 				1F0F9C6E28A29AE4002E6E13 /* LoginViewController.swift in Sources */,
@@ -444,6 +530,7 @@
 				1F7FECCD28AA34E20025031D /* HowToGoSearchTableCellSetup.swift in Sources */,
 				1F31E0BD2898FB05003693C8 /* AllStopsViewController.swift in Sources */,
 				1FBBBA9428ACF20D00701F0C /* FloatingPanelTableViewController.swift in Sources */,
+				1FE5614A28B4CD3F00AE2216 /* CCBackgroundView.swift in Sources */,
 				1F7B9C6528AF80650036336A /* LoadingViewController.swift in Sources */,
 				1FB9334C28980FFA009C1FAA /* LocationManager.swift in Sources */,
 				1F0EF775289AB2B40053F4DB /* BusStopTableViewCellSetup.swift in Sources */,
@@ -452,6 +539,7 @@
 				1FBBBA9628ACF22800701F0C /* FloatingTableViewCell.swift in Sources */,
 				1F72674D2898F97400C0AAE6 /* BusStopsViewController.swift in Sources */,
 				1F0F1E822897BA9F00695807 /* AppDelegate.swift in Sources */,
+				1FE5614C28B4CD4900AE2216 /* CCContentView.swift in Sources */,
 				1F0F1E992897C7AC00695807 /* TabBarViewController.swift in Sources */,
 				1F31E0BB2898FAED003693C8 /* LanguageViewController.swift in Sources */,
 				1FB0A74228A4DF1500CAE38A /* SettingsTableViewCell.swift in Sources */,
@@ -646,6 +734,7 @@
 		};
 		1F0F1E962897BAA000695807 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C09BCB388EDF794657B36F2B /* Pods-Asis.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -670,7 +759,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.CanDuru.Asis;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -681,6 +770,7 @@
 		};
 		1F0F1E972897BAA000695807 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8565F4AF168039303F292DFB /* Pods-Asis.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -705,7 +795,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.CanDuru.Asis;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

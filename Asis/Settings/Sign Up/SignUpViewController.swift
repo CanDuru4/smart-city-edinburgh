@@ -42,34 +42,37 @@ class SignUpViewController: UIViewController {
         
         
         //MARK: Image Feature
-        let imageAsis = UIImage(named: "can-duru-ana-logo")?.resized(to: CGSize(width: 600, height: 600))
-        let imageView = UIImageView(image: imageAsis)
+        let imageCan = UIImage(named: "can-duru-ana-logo")
+        let imageView = UIImageView(image: imageCan)
         imageView.clipsToBounds = true
         imageView.contentMode = UIView.ContentMode.scaleAspectFit
         view.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
 
         //MARK: Name Field Feature
-        nameField.backgroundColor = .gray
         nameField.placeholder = String(localized: "namePlaceHolder")
         nameField.borderStyle = .roundedRect
+        nameField.layer.borderColor = CGColor(red: 13/255, green: 95/255, blue: 255/255, alpha: 1)
+        nameField.layer.borderWidth = CGFloat(1)
         nameField.autocorrectionType = .no
         view.addSubview(nameField)
         nameField.translatesAutoresizingMaskIntoConstraints = false
         
         //MARK: Email Field Feature
-        emailField.backgroundColor = .gray
         emailField.placeholder = String(localized: "emailPlaceHolder")
         emailField.borderStyle = .roundedRect
+        emailField.layer.borderColor = CGColor(red: 13/255, green: 95/255, blue: 255/255, alpha: 1)
+        emailField.layer.borderWidth = CGFloat(1)
         emailField.autocorrectionType = .no
         emailField.autocapitalizationType = .none
         view.addSubview(emailField)
         emailField.translatesAutoresizingMaskIntoConstraints = false
 
         //MARK: Password Field Feature
-        passwordField.backgroundColor = .gray
         passwordField.placeholder = String(localized: "passwordPlaceHolder")
         passwordField.borderStyle = .roundedRect
+        passwordField.layer.borderColor = CGColor(red: 13/255, green: 95/255, blue: 255/255, alpha: 1)
+        passwordField.layer.borderWidth = CGFloat(1)
         view.addSubview(passwordField)
         passwordField.isSecureTextEntry = true
         passwordField.autocorrectionType = .no
@@ -77,9 +80,10 @@ class SignUpViewController: UIViewController {
         passwordField.translatesAutoresizingMaskIntoConstraints = false
         
         //MARK: Password Authenticate Field Feature
-        passwordAuthenticateField.backgroundColor = .gray
         passwordAuthenticateField.placeholder = String(localized: "authenticatePlaceHolder")
         passwordAuthenticateField.borderStyle = .roundedRect
+        passwordAuthenticateField.layer.borderColor = CGColor(red: 13/255, green: 95/255, blue: 255/255, alpha: 1)
+        passwordAuthenticateField.layer.borderWidth = CGFloat(1)
         view.addSubview(passwordAuthenticateField)
         passwordAuthenticateField.isSecureTextEntry = true
         passwordAuthenticateField.autocorrectionType = .no
@@ -104,7 +108,7 @@ class SignUpViewController: UIViewController {
             
             //MARK: Image Constraints
             imageView.centerXAnchor.constraint(equalTo: nameField.centerXAnchor),
-            imageView.bottomAnchor.constraint(equalTo: nameField.topAnchor, constant: -20),
+            imageView.bottomAnchor.constraint(equalTo: nameField.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 50),
             imageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -50),
             
@@ -175,7 +179,8 @@ class SignUpViewController: UIViewController {
                 }
                 else {
                     let db = Firestore.firestore()
-                    db.collection("users").addDocument(data: ["name":name, "cardnumber":"", "balance": "", "uid": result!.user.uid]) { (error) in
+                    let randomInt = Int.random(in: 0..<90)
+                    db.collection("users").addDocument(data: ["name":name, "cardnumber":"", "balance": String(randomInt), "uid": result!.user.uid]) { (error) in
                         if error != nil {
                             let alert = UIAlertController(title: String(localized: "dataError"), message: "", preferredStyle: .alert)
                             alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))

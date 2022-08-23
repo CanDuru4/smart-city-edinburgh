@@ -131,7 +131,6 @@ class SettingsViewController: UIViewController {
         let colorFontAttribute = [NSAttributedString.Key.foregroundColor: UIColor.black]
         let coloredString = NSMutableAttributedString(string: fullString as String, attributes:nonColorFontAttribute)
         coloredString.addAttributes(colorFontAttribute, range: fullString.range(of: colorPartOfString as String))
-        print("")
         return coloredString
     }
 }

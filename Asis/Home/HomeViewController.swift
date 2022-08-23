@@ -40,7 +40,8 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     var servicesArray:[Service] = []
     var selectedServiceRouteCoordinates: [CLLocationCoordinate2D] = []
     var selectedServiceRouteStopIDs: [Int] = []
-    
+    var busname: String!
+
     //MARK: Loading View Setup
     let loadingVC = LoadingViewController()
 
@@ -123,12 +124,10 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                         selectedBusDataRepeat(selectedservice: walkingtimecheck.services)
                         timer.invalidate()
                         
-                        //MARK: Polylines
+                        //MARK: Polylines Set Up
                         wait.enter()
-                        print("Services count: \(servicesArray.count)")
                         for services in servicesArray {
                             if continue_mark == true {
-                                print("Service name: \(services.name), olması gereken: \(walkingtimecheck.services)")
                                 if services.name == walkingtimecheck.services {
                                     if services.routes.count == 0 {
                                         let servicecoordinates = CLLocationCoordinate2DMake(walkingtimecheck.departureCoordinates.coordinate.latitude, walkingtimecheck.departureCoordinates.coordinate.longitude);
@@ -141,30 +140,18 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                                                 for serviceCoordinates in (0..<serviceRoutes.points.count) {
                                                     if Int(serviceRoutes.points[serviceCoordinates].stopID ?? "") == walkingtimecheck.departureID {
                                                         let servicecoordinates = CLLocationCoordinate2DMake(serviceRoutes.points[serviceCoordinates].latitude, serviceRoutes.points[serviceCoordinates].longitude);
-                                                        print("---------------------------------")
-                                                        print("baş Eklendi:\(servicecoordinates), count: \(routeCoordinates.count)")
                                                         routeCoordinates.append(servicecoordinates)
-                                                        print("count: \(routeCoordinates.count)")
-                                                        print("---------------------------------")
                                                         start_number = serviceCoordinates
                                                     }
                                                     if serviceCoordinates > start_number {
                                                         if Int(serviceRoutes.points[serviceCoordinates].stopID ?? "") == walkingtimecheck.destinationID {
                                                             let servicecoordinates = CLLocationCoordinate2DMake(serviceRoutes.points[serviceCoordinates].latitude, serviceRoutes.points[serviceCoordinates].longitude);
-                                                            print("---------------------------------")
-                                                            print("son Eklendi:\(servicecoordinates), count: \(routeCoordinates.count)")
                                                             routeCoordinates.append(servicecoordinates)
-                                                            print("count: \(routeCoordinates.count)")
-                                                            print("---------------------------------")
                                                             continue_mark = false
                                                             break
                                                         } else{
                                                             let servicecoordinates = CLLocationCoordinate2DMake(serviceRoutes.points[serviceCoordinates].latitude, serviceRoutes.points[serviceCoordinates].longitude);
-                                                            print("---------------------------------")
-                                                            print("Ara Eklendi:\(servicecoordinates), count: \(routeCoordinates.count)")
                                                             routeCoordinates.append(servicecoordinates)
-                                                            print("count: \(routeCoordinates.count)")
-                                                            print("---------------------------------")
                                                         }
                                                     }
                                                 }
@@ -175,18 +162,6 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                             }
                         }
                         wait.leave()
-                        wait.notify(queue: .main) {
-                            self.polyLines(currentLocationLatitude: self.user_latitude,
-                                      currentLocationLongitude: self.user_longitude,
-                                      startStopLatitude: self.routeCoordinates[0].latitude, //Hata veriyor
-                                      startStopLongitude: self.routeCoordinates[0].longitude,
-                                      finalStopLatitude: self.routeCoordinates[self.routeCoordinates.count-1].latitude,
-                                      finalStopLongitude: self.routeCoordinates[self.routeCoordinates.count-1].longitude,
-                                      busRouteCoordinates: self.routeCoordinates,
-                                      destinationLatitude: self.selectedItemCoordination.latitude,
-                                      destinationLongitude: self.selectedItemCoordination.longitude,
-                                      polymapView: self.map)
-                        }
                         
                         //MARK: Table Data
                         let totalduration = Int(walkingtimecheck.walkingtodestination + walkingtimecheck.walkingfromcurrent + Double(walkingtimecheck.routetime))
@@ -215,6 +190,21 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                     }
                 }
                 
+                //MARK: Polyline Mark
+                if continue_mark == false {
+                    self.polyLines(currentLocationLatitude: self.user_latitude,
+                              currentLocationLongitude: self.user_longitude,
+                              startStopLatitude: self.routeCoordinates[0].latitude, //Hata veriyor
+                              startStopLongitude: self.routeCoordinates[0].longitude,
+                              finalStopLatitude: self.routeCoordinates[self.routeCoordinates.count-1].latitude,
+                              finalStopLongitude: self.routeCoordinates[self.routeCoordinates.count-1].longitude,
+                              busRouteCoordinates: self.routeCoordinates,
+                              destinationLatitude: self.selectedItemCoordination.latitude,
+                              destinationLongitude: self.selectedItemCoordination.longitude,
+                              polymapView: self.map)
+                }
+                
+                //MARK: No Possible Routes Error
                 if repeat_routes == routesArray.count {
                     if alert == true {
                         minutesFor15Button.isHidden = false
@@ -233,38 +223,55 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     }
 
         //MARK: Get Route Details
-    var times_alert = 0
-    var total_repeat = 0
+    var times_alert = -1
+    var total_repeat = -1
     var times:[Trip] = [] {
         didSet {
             total_repeat=total_repeat+1
-
+            
             if times.count == 0{
                 times_alert = times_alert+1
             }
-            if times_alert == self.suitableStopsAroundCurentLocationArray.count*self.suitableStopsAroundDestinationArray.count{
-                if times.count == 0 {
-                    dismiss(animated: true)
-                    minutesFor15Button.isHidden = false
-                    minutesFor30Button.isHidden = false
-                    minutesFor45Button.isHidden = false
-                    metersFor500Button.isHidden = false
-                    metersFor1000Button.isHidden = false
-                    metersFor1500Button.isHidden = false
-                    let alert = UIAlertController(title: String(localized: "routeTimeError"), message: "", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: String(localized: "tryAgainAlertView"), style: UIAlertAction.Style.default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
+            
+            if total_repeat != 0 {
+                if times_alert == self.suitableStopsAroundCurentLocationArray.count*self.suitableStopsAroundDestinationArray.count{
+                    if times.count == 0 {
+                        dismiss(animated: true)
+                        minutesFor15Button.isHidden = false
+                        minutesFor30Button.isHidden = false
+                        minutesFor45Button.isHidden = false
+                        metersFor500Button.isHidden = false
+                        metersFor1000Button.isHidden = false
+                        metersFor1500Button.isHidden = false
+                        let alert = UIAlertController(title: String(localized: "routeTimeError"), message: "", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: String(localized: "tryAgainAlertView"), style: UIAlertAction.Style.default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                    }
                 }
             }
+            
             let wait = DispatchGroup()
             if total_repeat == self.suitableStopsAroundCurentLocationArray.count*self.suitableStopsAroundDestinationArray.count{
-                if times.count != 0 {
-                    wait.enter()
-                    getRouteDetails()
-                    getStartandFinishCoordinates()
-                    self.count = 0
-                    getWalkingTime()
-                    wait.leave()
+                if total_repeat != 0 {
+                    if times.count != 0 {
+                        wait.enter()
+                        getRouteDetails()
+                        getStartandFinishCoordinates()
+                        self.count = 0
+                        getWalkingTime()
+                        wait.leave()
+                    } else {
+                        dismiss(animated: true)
+                        minutesFor15Button.isHidden = false
+                        minutesFor30Button.isHidden = false
+                        minutesFor45Button.isHidden = false
+                        metersFor500Button.isHidden = false
+                        metersFor1000Button.isHidden = false
+                        metersFor1500Button.isHidden = false
+                        let alert = UIAlertController(title: String(localized: "routeTimeError"), message: "", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: String(localized: "tryAgainAlertView"), style: UIAlertAction.Style.default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                    }
                 }
             }
         }
@@ -326,11 +333,6 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     var floatingPanel :FloatingPanelController!
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        for i in (0..<500) {
-//            let timestamp = Date().timeIntervalSince1970
-//            self.timeData(timestring: "stoptostop-timetable/?start_stop_id=36236489&finish_stop_id=36234253&date=\(timestamp)&duration=15")
-//        }
         
         view.backgroundColor = .systemBackground
         howToGoSearchTable.isHidden = true
@@ -413,6 +415,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
             howToGoSearchTable.reloadData()
         }
     }
+    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = nil
         howToGoSearchTable.isHidden = true
@@ -471,6 +474,9 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
         routeCoordinates = []
         continue_mark = true
         start_number = 99999999
+        repeat_routes = 0
+        total_repeat = -1
+        times_alert = -1
         times = []
         routesArray = []
         
@@ -500,17 +506,17 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
             if self.minute15check == true && self.meter500check == true {
                 group.enter()
                 for i in (0..<busstopsCount){
-                    if (((self.selectedItemCoordination.latitude)-0.001) < (self.stops[i].latitude!) &&
-                        (self.stops[i].latitude!) < ((self.selectedItemCoordination.latitude)+0.001) &&
-                        ((self.selectedItemCoordination.longitude)-0.001) < (self.stops[i].longitude!) &&
-                        (self.stops[i].longitude!) < ((self.selectedItemCoordination.longitude)+0.001)) {
+                    let selectedItem = CLLocation(latitude: (self.selectedItemCoordination.latitude), longitude: (self.selectedItemCoordination.longitude))
+                    let stopLocation = CLLocation(latitude: (self.stops[i].latitude!), longitude: (self.stops[i].longitude!))
+                    let distancetodestination = selectedItem.distance(from: stopLocation)
+                    //print("HATA BURADA OLUYOR: \(selectedItem), \(stopLocation), \(distancetodestination)")
+                    if distancetodestination < 110 {
                         self.suitableStopsAroundDestinationArray.append(self.stops[i])
                     }
-
-                    if (((userlatitude)-0.001) < (self.stops[i].latitude!) &&
-                        (self.stops[i].latitude!) < ((userlatitude)+0.001) &&
-                        ((userlongitude)-0.001) < (self.stops[i].longitude!) &&
-                        (self.stops[i].longitude!) < ((userlongitude)+0.001)){
+                    
+                    let userCoordination = CLLocation(latitude: (userlatitude), longitude: (userlongitude))
+                    let distancetocurrent = userCoordination.distance(from: stopLocation)
+                    if distancetocurrent < 110 {
                         self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
                     }
                 }
@@ -524,17 +530,17 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
             if self.minute30check == true && self.meter500check == true {
                 group.enter()
                 for i in (0..<busstopsCount){
-                    if (((self.selectedItemCoordination.latitude)-0.001) < (self.stops[i].latitude!) &&
-                        (self.stops[i].latitude!) < ((self.selectedItemCoordination.latitude)+0.001) &&
-                        ((self.selectedItemCoordination.longitude)-0.001) < (self.stops[i].longitude!) &&
-                        (self.stops[i].longitude!) < ((self.selectedItemCoordination.longitude)+0.001)) {
+                    let selectedItem = CLLocation(latitude: (self.selectedItemCoordination.latitude), longitude: (self.selectedItemCoordination.longitude))
+                    let stopLocation = CLLocation(latitude: (self.stops[i].latitude!), longitude: (self.stops[i].longitude!))
+                    let distancetodestination = selectedItem.distance(from: stopLocation)
+                    //print("HATA BURADA OLUYOR: \(selectedItem), \(stopLocation), \(distancetodestination)")
+                    if distancetodestination < 110 {
                         self.suitableStopsAroundDestinationArray.append(self.stops[i])
                     }
-
-                    if (((userlatitude)-0.001) < (self.stops[i].latitude!) &&
-                        (self.stops[i].latitude!) < ((userlatitude)+0.001) &&
-                        ((userlongitude)-0.001) < (self.stops[i].longitude!) &&
-                        (self.stops[i].longitude!) < ((userlongitude)+0.001)){
+                    
+                    let userCoordination = CLLocation(latitude: (userlatitude), longitude: (userlongitude))
+                    let distancetocurrent = userCoordination.distance(from: stopLocation)
+                    if distancetocurrent < 110 {
                         self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
                     }
                 }
@@ -548,17 +554,17 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
             if self.minute45check == true && self.meter500check == true {
                 group.enter()
                 for i in (0..<busstopsCount){
-                    if (((self.selectedItemCoordination.latitude)-0.001) < (self.stops[i].latitude!) &&
-                        (self.stops[i].latitude!) < ((self.selectedItemCoordination.latitude)+0.001) &&
-                        ((self.selectedItemCoordination.longitude)-0.001) < (self.stops[i].longitude!) &&
-                        (self.stops[i].longitude!) < ((self.selectedItemCoordination.longitude)+0.001)) {
+                    let selectedItem = CLLocation(latitude: (self.selectedItemCoordination.latitude), longitude: (self.selectedItemCoordination.longitude))
+                    let stopLocation = CLLocation(latitude: (self.stops[i].latitude!), longitude: (self.stops[i].longitude!))
+                    let distancetodestination = selectedItem.distance(from: stopLocation)
+                    //print("HATA BURADA OLUYOR: \(selectedItem), \(stopLocation), \(distancetodestination)")
+                    if distancetodestination < 110 {
                         self.suitableStopsAroundDestinationArray.append(self.stops[i])
                     }
-
-                    if (((userlatitude)-0.001) < (self.stops[i].latitude!) &&
-                        (self.stops[i].latitude!) < ((userlatitude)+0.001) &&
-                        ((userlongitude)-0.001) < (self.stops[i].longitude!) &&
-                        (self.stops[i].longitude!) < ((userlongitude)+0.001)){
+                    
+                    let userCoordination = CLLocation(latitude: (userlatitude), longitude: (userlongitude))
+                    let distancetocurrent = userCoordination.distance(from: stopLocation)
+                    if distancetocurrent < 110 {
                         self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
                     }
                 }
@@ -571,27 +577,23 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
             //MARK: 250 Meter and 15 Minute Search
             if self.minute15check == true && self.meter1000check == true {
                 group.enter()
-                print("boş dönebilir: \(self.selectedItemCoordination.latitude), 2: \(self.selectedItemCoordination.longitude)")
                 for i in (0..<busstopsCount){
-                    if (((self.selectedItemCoordination.latitude)-0.0025) < (self.stops[i].latitude!) &&
-                        (self.stops[i].latitude!) < ((self.selectedItemCoordination.latitude)+0.0025) &&
-                        ((self.selectedItemCoordination.longitude)-0.0025) < (self.stops[i].longitude!) &&
-                        (self.stops[i].longitude!) < ((self.selectedItemCoordination.longitude)+0.0025)) {
-                        print("append yapmaya çalışıyor: \(self.stops[i]), count: \(self.suitableStopsAroundDestinationArray.count)")
+                    let selectedItem = CLLocation(latitude: (self.selectedItemCoordination.latitude), longitude: (self.selectedItemCoordination.longitude))
+                    let stopLocation = CLLocation(latitude: (self.stops[i].latitude!), longitude: (self.stops[i].longitude!))
+                    let distancetodestination = selectedItem.distance(from: stopLocation)
+                    //print("HATA BURADA OLUYOR: \(selectedItem), \(stopLocation), \(distancetodestination)")
+                    if distancetodestination < 260 {
                         self.suitableStopsAroundDestinationArray.append(self.stops[i])
-                        print("after count: \(self.suitableStopsAroundDestinationArray.count)")
                     }
-
-                    if (((userlatitude)-0.0025) < (self.stops[i].latitude!) &&
-                        (self.stops[i].latitude!) < ((userlatitude)+0.0025) &&
-                        ((userlongitude)-0.0025) < (self.stops[i].longitude!) &&
-                        (self.stops[i].longitude!) < ((userlongitude)+0.0025)){
+                    
+                    let userCoordination = CLLocation(latitude: (userlatitude), longitude: (userlongitude))
+                    let distancetocurrent = userCoordination.distance(from: stopLocation)
+                    if distancetocurrent < 260 {
                         self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
                     }
                 }
                 group.leave()
                 group.notify(queue: .main) {
-                    print("Current: \(self.suitableStopsAroundCurentLocationArray), Dest: \(self.suitableStopsAroundDestinationArray)")
                     self.apiDecoder(minute: 15)
                 }
             }
@@ -600,17 +602,17 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
             if self.minute30check == true && self.meter1000check == true {
                 group.enter()
                 for i in (0..<busstopsCount){
-                    if (((self.selectedItemCoordination.latitude)-0.0025) < (self.stops[i].latitude!) &&
-                        (self.stops[i].latitude!) < ((self.selectedItemCoordination.latitude)+0.0025) &&
-                        ((self.selectedItemCoordination.longitude)-0.0025) < (self.stops[i].longitude!) &&
-                        (self.stops[i].longitude!) < ((self.selectedItemCoordination.longitude)+0.0025)) {
+                    let selectedItem = CLLocation(latitude: (self.selectedItemCoordination.latitude), longitude: (self.selectedItemCoordination.longitude))
+                    let stopLocation = CLLocation(latitude: (self.stops[i].latitude!), longitude: (self.stops[i].longitude!))
+                    let distancetodestination = selectedItem.distance(from: stopLocation)
+                    //print("HATA BURADA OLUYOR: \(selectedItem), \(stopLocation), \(distancetodestination)")
+                    if distancetodestination < 260 {
                         self.suitableStopsAroundDestinationArray.append(self.stops[i])
                     }
-
-                    if (((userlatitude)-0.0025) < (self.stops[i].latitude!) &&
-                        (self.stops[i].latitude!) < ((userlatitude)+0.0025) &&
-                        ((userlongitude)-0.0025) < (self.stops[i].longitude!) &&
-                        (self.stops[i].longitude!) < ((userlongitude)+0.0025)){
+                    
+                    let userCoordination = CLLocation(latitude: (userlatitude), longitude: (userlongitude))
+                    let distancetocurrent = userCoordination.distance(from: stopLocation)
+                    if distancetocurrent < 260 {
                         self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
                     }
                 }
@@ -625,17 +627,17 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
             if self.minute45check == true && self.meter1000check == true {
                 group.enter()
                 for i in (0..<busstopsCount){
-                    if (((self.selectedItemCoordination.latitude)-0.0025) < (self.stops[i].latitude!) &&
-                        (self.stops[i].latitude!) < ((self.selectedItemCoordination.latitude)+0.0025) &&
-                        ((self.selectedItemCoordination.longitude)-0.0025) < (self.stops[i].longitude!) &&
-                        (self.stops[i].longitude!) < ((self.selectedItemCoordination.longitude)+0.0025)) {
+                    let selectedItem = CLLocation(latitude: (self.selectedItemCoordination.latitude), longitude: (self.selectedItemCoordination.longitude))
+                    let stopLocation = CLLocation(latitude: (self.stops[i].latitude!), longitude: (self.stops[i].longitude!))
+                    let distancetodestination = selectedItem.distance(from: stopLocation)
+                    //print("HATA BURADA OLUYOR: \(selectedItem), \(stopLocation), \(distancetodestination)")
+                    if distancetodestination < 260 {
                         self.suitableStopsAroundDestinationArray.append(self.stops[i])
                     }
-
-                    if (((userlatitude)-0.0025) < (self.stops[i].latitude!) &&
-                        (self.stops[i].latitude!) < ((userlatitude)+0.0025) &&
-                        ((userlongitude)-0.0025) < (self.stops[i].longitude!) &&
-                        (self.stops[i].longitude!) < ((userlongitude)+0.0025)){
+                    
+                    let userCoordination = CLLocation(latitude: (userlatitude), longitude: (userlongitude))
+                    let distancetocurrent = userCoordination.distance(from: stopLocation)
+                    if distancetocurrent < 260 {
                         self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
                     }
                 }
@@ -649,18 +651,17 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
             if self.minute15check == true && self.meter1500check == true {
                 group.enter()
                 for i in (0..<busstopsCount){
-                    
-                    if (((self.selectedItemCoordination.latitude)-0.004) < (self.stops[i].latitude!) &&
-                        (self.stops[i].latitude!) < ((self.selectedItemCoordination.latitude)+0.004) &&
-                        ((self.selectedItemCoordination.longitude)-0.004) < (self.stops[i].longitude!) &&
-                        (self.stops[i].longitude!) < ((self.selectedItemCoordination.longitude)+0.004)) {
+                    let selectedItem = CLLocation(latitude: (self.selectedItemCoordination.latitude), longitude: (self.selectedItemCoordination.longitude))
+                    let stopLocation = CLLocation(latitude: (self.stops[i].latitude!), longitude: (self.stops[i].longitude!))
+                    let distancetodestination = selectedItem.distance(from: stopLocation)
+                    //print("HATA BURADA OLUYOR: \(selectedItem), \(stopLocation), \(distancetodestination)")
+                    if distancetodestination < 410 {
                         self.suitableStopsAroundDestinationArray.append(self.stops[i])
                     }
-
-                    if (((userlatitude)-0.004) < (self.stops[i].latitude!) &&
-                        (self.stops[i].latitude!) < ((userlatitude)+0.004) &&
-                        ((userlongitude)-0.004) < (self.stops[i].longitude!) &&
-                        (self.stops[i].longitude!) < ((userlongitude)+0.004)){
+                    
+                    let userCoordination = CLLocation(latitude: (userlatitude), longitude: (userlongitude))
+                    let distancetocurrent = userCoordination.distance(from: stopLocation)
+                    if distancetocurrent < 410 {
                         self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
                     }
                 }
@@ -674,17 +675,17 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
             if self.minute30check == true && self.meter1500check == true {
                 group.enter()
                 for i in (0..<busstopsCount){
-                    if (((self.selectedItemCoordination.latitude)-0.004) < (self.stops[i].latitude!) &&
-                        (self.stops[i].latitude!) < ((self.selectedItemCoordination.latitude)+0.004) &&
-                        ((self.selectedItemCoordination.longitude)-0.004) < (self.stops[i].longitude!) &&
-                        (self.stops[i].longitude!) < ((self.selectedItemCoordination.longitude)+0.004)) {
+                    let selectedItem = CLLocation(latitude: (self.selectedItemCoordination.latitude), longitude: (self.selectedItemCoordination.longitude))
+                    let stopLocation = CLLocation(latitude: (self.stops[i].latitude!), longitude: (self.stops[i].longitude!))
+                    let distancetodestination = selectedItem.distance(from: stopLocation)
+                    //print("HATA BURADA OLUYOR: \(selectedItem), \(stopLocation), \(distancetodestination)")
+                    if distancetodestination < 410 {
                         self.suitableStopsAroundDestinationArray.append(self.stops[i])
                     }
-
-                    if (((userlatitude)-0.004) < (self.stops[i].latitude!) &&
-                        (self.stops[i].latitude!) < ((userlatitude)+0.004) &&
-                        ((userlongitude)-0.004) < (self.stops[i].longitude!) &&
-                        (self.stops[i].longitude!) < ((userlongitude)+0.004)){
+                    
+                    let userCoordination = CLLocation(latitude: (userlatitude), longitude: (userlongitude))
+                    let distancetocurrent = userCoordination.distance(from: stopLocation)
+                    if distancetocurrent < 410 {
                         self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
                     }
                 }
@@ -698,17 +699,17 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
             if self.minute45check == true && self.meter1500check == true {
                 group.enter()
                 for i in (0..<busstopsCount){
-                    if (((self.selectedItemCoordination.latitude)-0.004) < (self.stops[i].latitude!) &&
-                        (self.stops[i].latitude!) < ((self.selectedItemCoordination.latitude)+0.004) &&
-                        ((self.selectedItemCoordination.longitude)-0.004) < (self.stops[i].longitude!) &&
-                        (self.stops[i].longitude!) < ((self.selectedItemCoordination.longitude)+0.004)) {
+                    let selectedItem = CLLocation(latitude: (self.selectedItemCoordination.latitude), longitude: (self.selectedItemCoordination.longitude))
+                    let stopLocation = CLLocation(latitude: (self.stops[i].latitude!), longitude: (self.stops[i].longitude!))
+                    let distancetodestination = selectedItem.distance(from: stopLocation)
+                    //print("HATA BURADA OLUYOR: \(selectedItem), \(stopLocation), \(distancetodestination)")
+                    if distancetodestination < 410 {
                         self.suitableStopsAroundDestinationArray.append(self.stops[i])
                     }
-
-                    if (((userlatitude)-0.004) < (self.stops[i].latitude!) &&
-                        (self.stops[i].latitude!) < ((userlatitude)+0.004) &&
-                        ((userlongitude)-0.004) < (self.stops[i].longitude!) &&
-                        (self.stops[i].longitude!) < ((userlongitude)+0.004)){
+                    
+                    let userCoordination = CLLocation(latitude: (userlatitude), longitude: (userlongitude))
+                    let distancetocurrent = userCoordination.distance(from: stopLocation)
+                    if distancetocurrent < 410 {
                         self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
                     }
                 }
@@ -860,6 +861,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     
     //MARK: Cancel Route Button
     func cancelRoute(){
+        
         for selectedItemAnnotation in self.map.annotations {
             if let selectedItemAnnotation = selectedItemAnnotation as? CustomPointAnnotation, selectedItemAnnotation.customidentifier == "howToGoAnnotation" {
                 self.map.removeAnnotation(selectedItemAnnotation)
@@ -876,6 +878,9 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
         metersFor500Button.isHidden = false
         metersFor1000Button.isHidden = false
         metersFor1500Button.isHidden = false
+        minute15()
+        meter500()
+        pressed()
         self.map.removeOverlays(self.map.overlays)
         
         BusData()
@@ -959,6 +964,8 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     
     //MARK: Service Route Coordinates
     func serviceLines(serviceName: String){
+        selectedServiceRouteCoordinates = []
+        selectedServiceRouteStopIDs = []
         if serviceName != ""{
             cancelServiceButton.isHidden = false
             minutesFor15Button.isHidden = true
@@ -969,13 +976,141 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
             metersFor1500Button.isHidden = true
             for services in servicesArray {
                 if services.name == serviceName {
-                    for serviceRoutes in services.routes{
-                        for serviceCoordinates in serviceRoutes.points {
-                            if serviceCoordinates.stopID != nil {
-                                selectedServiceRouteStopIDs.append(Int(serviceCoordinates.stopID ?? "0") ?? 0)
+                    let routenumber = services.routes.count-1
+                    
+                    //MARK: Selected Route Number
+                    if routenumber == 0{
+                        
+                    }
+                    if routenumber == 1{
+                        route1.isHidden = false
+                        route2.isHidden = false
+                    }
+                    if routenumber == 2{
+                        route1.isHidden = false
+                        route2.isHidden = false
+                        route3.isHidden = false
+                    }
+                    if routenumber == 3{
+                        route1.isHidden = false
+                        route2.isHidden = false
+                        route3.isHidden = false
+                        route4.isHidden = false
+                    }
+                    
+                    //MARK: Selected Route Marking
+                    if services.routes.count != 0{
+                        
+                        
+                        //MARK: Route 1
+                        if route1check == true{
+                            if map.overlays.isEmpty {
+                                
+                            } else{
+                                map.removeOverlays(map.overlays)
+                                for ServiceStopAnnotation in self.map.annotations {
+                                    if let ServiceStopAnnotation = ServiceStopAnnotation as? CustomPointAnnotation, ServiceStopAnnotation.customidentifier == "busStopAnnotation" {
+                                        map.removeAnnotation(ServiceStopAnnotation)
+                                    }
+                                }
+                                for BusAnnotation in self.map.annotations {
+                                    if let BusAnnotation = BusAnnotation as? CustomPointAnnotation, BusAnnotation.customidentifier == "selectedBusAnnotation" {
+                                        map.removeAnnotation(BusAnnotation)
+                                    }
+                                }
                             }
-                            let servicecoordinates = CLLocationCoordinate2DMake(serviceCoordinates.latitude, serviceCoordinates.longitude);
-                            selectedServiceRouteCoordinates.append(servicecoordinates)
+                            let serviceRoutes = services.routes[0]
+                            for serviceCoordinates in serviceRoutes.points {
+                                if serviceCoordinates.stopID != nil {
+                                    selectedServiceRouteStopIDs.append(Int(serviceCoordinates.stopID ?? "0") ?? 0)
+                                }
+                                let servicecoordinates = CLLocationCoordinate2DMake(serviceCoordinates.latitude, serviceCoordinates.longitude);
+                                selectedServiceRouteCoordinates.append(servicecoordinates)
+                            }
+                        }
+                        
+                        //MARK: Route 2
+                        if route2check == true{
+                            if map.overlays.isEmpty {
+                                
+                            } else{
+                                map.removeOverlays(map.overlays)
+                                for ServiceStopAnnotation in map.annotations {
+                                    if let ServiceStopAnnotation = ServiceStopAnnotation as? CustomPointAnnotation, ServiceStopAnnotation.customidentifier == "busStopAnnotation" {
+                                        map.removeAnnotation(ServiceStopAnnotation)
+                                    }
+                                }
+                                for BusAnnotation in self.map.annotations {
+                                    if let BusAnnotation = BusAnnotation as? CustomPointAnnotation, BusAnnotation.customidentifier == "selectedBusAnnotation" {
+                                        map.removeAnnotation(BusAnnotation)
+                                    }
+                                }
+                                
+                            }
+                            let serviceRoutes = services.routes[1]
+                            for serviceCoordinates in serviceRoutes.points {
+                                if serviceCoordinates.stopID != nil {
+                                    selectedServiceRouteStopIDs.append(Int(serviceCoordinates.stopID ?? "0") ?? 0)
+                                }
+                                let servicecoordinates = CLLocationCoordinate2DMake(serviceCoordinates.latitude, serviceCoordinates.longitude);
+                                selectedServiceRouteCoordinates.append(servicecoordinates)
+                            }
+                        }
+                        
+                        //MARK: Route 3
+                        if route3check == true{
+                            if self.map.overlays.isEmpty {
+                                
+                            } else{
+                                self.map.removeOverlays(self.map.overlays)
+                                for ServiceStopAnnotation in self.map.annotations {
+                                    if let ServiceStopAnnotation = ServiceStopAnnotation as? CustomPointAnnotation, ServiceStopAnnotation.customidentifier == "busStopAnnotation" {
+                                        self.map.removeAnnotation(ServiceStopAnnotation)
+                                    }
+                                }
+                                for BusAnnotation in self.map.annotations {
+                                    if let BusAnnotation = BusAnnotation as? CustomPointAnnotation, BusAnnotation.customidentifier == "selectedBusAnnotation" {
+                                        self.map.removeAnnotation(BusAnnotation)
+                                    }
+                                }
+                                
+                            }
+                            let serviceRoutes = services.routes[2]
+                            for serviceCoordinates in serviceRoutes.points {
+                                if serviceCoordinates.stopID != nil {
+                                    selectedServiceRouteStopIDs.append(Int(serviceCoordinates.stopID ?? "0") ?? 0)
+                                }
+                                let servicecoordinates = CLLocationCoordinate2DMake(serviceCoordinates.latitude, serviceCoordinates.longitude);
+                                selectedServiceRouteCoordinates.append(servicecoordinates)
+                            }
+                        }
+                        
+                        //MARK: Route 4
+                        if route4check == true{
+                            if self.map.overlays.isEmpty {
+                                
+                            } else{
+                                self.map.removeOverlays(self.map.overlays)
+                                for ServiceStopAnnotation in self.map.annotations {
+                                    if let ServiceStopAnnotation = ServiceStopAnnotation as? CustomPointAnnotation, ServiceStopAnnotation.customidentifier == "busStopAnnotation" {
+                                        self.map.removeAnnotation(ServiceStopAnnotation)
+                                    }
+                                }
+                                for BusAnnotation in self.map.annotations {
+                                    if let BusAnnotation = BusAnnotation as? CustomPointAnnotation, BusAnnotation.customidentifier == "selectedBusAnnotation" {
+                                        self.map.removeAnnotation(BusAnnotation)
+                                    }
+                                }
+                                
+                            }
+                            let serviceRoutes = services.routes[3]
+                            for serviceCoordinates in serviceRoutes.points {
+                                if serviceCoordinates.stopID != nil {
+                                    selectedServiceRouteStopIDs.append(Int(serviceCoordinates.stopID ?? "0") ?? 0)
+                                }
+                                let servicecoordinates = CLLocationCoordinate2DMake(serviceCoordinates.latitude, serviceCoordinates.longitude);
+                                selectedServiceRouteCoordinates.append(servicecoordinates)
+                            }
                         }
                     }
                 }
@@ -995,11 +1130,10 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     //MARK: Service Route Polyline
     var servicePolyline: MKPolyline?
     func servicePolyLine(selectedServiceRouteCoordinates: [CLLocationCoordinate2D], stopID: [Int], servicepPolyMapView: MKMapView){
-        
         let servicepolyline = MKPolyline(coordinates: selectedServiceRouteCoordinates, count: selectedServiceRouteCoordinates.count)
-        servicePolyline = servicepolyline
+        self.servicePolyline = servicepolyline
         servicepPolyMapView.addOverlay(servicepolyline)
-        for busStops in stops {
+        for busStops in self.stops {
             for stopIDs in stopID{
                 if busStops.stopID == stopIDs {
                     let coordinate = CLLocationCoordinate2DMake(busStops.latitude!, busStops.longitude!)
@@ -1007,7 +1141,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                     busStopAnnotation.coordinate = coordinate
                     busStopAnnotation.title = busStops.name
                     busStopAnnotation.customidentifier = "busStopAnnotation"
-                    map.addAnnotation(busStopAnnotation)
+                    self.map.addAnnotation(busStopAnnotation)
                 }
             }
         }
@@ -1033,6 +1167,14 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                 self.map.removeAnnotation(BusAnnotation)
             }
         }
+        route1.isHidden = true
+        route2.isHidden = true
+        route3.isHidden = true
+        route4.isHidden = true
+        route1check = true
+        route2check = false
+        route3check = false
+        route4check = false
         BusData()
         BusDataRepeat()
     }
@@ -1071,6 +1213,10 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     let minutesFor15Button = UIButton(type: .custom)
     let minutesFor30Button = UIButton(type: .custom)
     let minutesFor45Button = UIButton(type: .custom)
+    let route1 = UIButton(type: .custom)
+    let route2 = UIButton(type: .custom)
+    let route3 = UIButton(type: .custom)
+    let route4 = UIButton(type: .custom)
     let metersFor500Button = UIButton(type: .custom)
     let metersFor1000Button = UIButton(type: .custom)
     let metersFor1500Button = UIButton(type: .custom)
@@ -1081,6 +1227,10 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     var meter500check = true
     var meter1000check = false
     var meter1500check = false
+    var route1check = true
+    var route2check = false
+    var route3check = false
+    var route4check = false
     func setButton(){
         
         
@@ -1204,6 +1354,59 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
         NSLayoutConstraint.activate([cancelServiceButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10), cancelServiceButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10), cancelServiceButton.widthAnchor.constraint(equalToConstant: 60), cancelServiceButton.heightAnchor.constraint(equalToConstant: 25)])
         cancelServiceButton.layer.cornerRadius = 8
         cancelServiceButton.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+    
+        //MARK: Route 1 Button
+        route1.backgroundColor = UIColor(red: 10/255, green: 96/255, blue: 254/255, alpha: 0.5)
+        route1.setTitle("\(String(localized: "routesButton")) 1", for: .normal)
+        route1.setTitleColor(.black, for: .normal)
+        route1.titleLabel?.font = route1.titleLabel?.font.withSize(14)
+        route1.addTarget(self, action: #selector(route1Function), for: .touchUpInside)
+        view.addSubview(route1)
+        
+        route1.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([route1.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10), route1.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10), route1.widthAnchor.constraint(equalToConstant: 80), route1.heightAnchor.constraint(equalToConstant: 25)])
+        route1.layer.cornerRadius = 8
+        route1.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
+        
+        //MARK: Route 2 Button
+        route2.backgroundColor = UIColor(white: 1, alpha: 0.8)
+        route2.setTitle("2", for: .normal)
+        route2.setTitleColor(.black, for: .normal)
+        route2.titleLabel?.font = route2.titleLabel?.font.withSize(14)
+        route2.addTarget(self, action: #selector(route2Function), for: .touchUpInside)
+        view.addSubview(route2)
+        
+        route2.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([route2.leadingAnchor.constraint(equalTo: route1.trailingAnchor), route2.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10), route2.widthAnchor.constraint(equalToConstant: 30), route2.heightAnchor.constraint(equalToConstant: 25)])
+        
+        //MARK: Route 3 Button
+        route3.backgroundColor = UIColor(white: 1, alpha: 0.8)
+        route3.setTitle("3", for: .normal)
+        route3.setTitleColor(.black, for: .normal)
+        route3.titleLabel?.font = route3.titleLabel?.font.withSize(14)
+        route3.addTarget(self, action: #selector(route3Function), for: .touchUpInside)
+        view.addSubview(route3)
+        
+        route3.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([route3.leadingAnchor.constraint(equalTo: route2.trailingAnchor), route3.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10), route3.widthAnchor.constraint(equalToConstant: 30), route3.heightAnchor.constraint(equalToConstant: 25)])
+        
+        //MARK: Route 4 Button
+        route4.backgroundColor = UIColor(white: 1, alpha: 0.8)
+        route4.setTitle("4", for: .normal)
+        route4.setTitleColor(.black, for: .normal)
+        route4.titleLabel?.font = route4.titleLabel?.font.withSize(14)
+        route4.addTarget(self, action: #selector(route4Function), for: .touchUpInside)
+        view.addSubview(route4)
+        route4.layer.cornerRadius = 8
+        route4.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
+        
+        route4.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([route4.leadingAnchor.constraint(equalTo: route3.trailingAnchor), route4.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10), route4.widthAnchor.constraint(equalToConstant: 30), route4.heightAnchor.constraint(equalToConstant: 25)])
+    
+        route1.isHidden = true
+        route2.isHidden = true
+        route3.isHidden = true
+        route4.isHidden = true
     }
     
     //MARK: Current Location Button Action
@@ -1293,6 +1496,57 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
         meter1500check = true
     }
     
+    //MARK: Route 1 Button Action
+    @objc func route1Function() {
+        route1.backgroundColor = UIColor(red: 10/255, green: 96/255, blue: 254/255, alpha: 0.5)
+        route2.backgroundColor = UIColor(white: 1, alpha: 0.8)
+        route3.backgroundColor = UIColor(white: 1, alpha: 0.8)
+        route4.backgroundColor = UIColor(white: 1, alpha: 0.8)
+        route1check = true
+        route2check = false
+        route3check = false
+        route4check = false
+        serviceLines(serviceName: busname)
+    }
+    
+    //MARK: Route 2 Button Action
+    @objc func route2Function() {
+        route1.backgroundColor = UIColor(white: 1, alpha: 0.8)
+        route2.backgroundColor = UIColor(red: 10/255, green: 96/255, blue: 254/255, alpha: 0.5)
+        route3.backgroundColor = UIColor(white: 1, alpha: 0.8)
+        route4.backgroundColor = UIColor(white: 1, alpha: 0.8)
+        route1check = false
+        route2check = true
+        route3check = false
+        route4check = false
+        serviceLines(serviceName: busname)
+    }
+    
+    //MARK: Route 3 Button Action
+    @objc func route3Function() {
+        route1.backgroundColor = UIColor(white: 1, alpha: 0.8)
+        route2.backgroundColor = UIColor(white: 1, alpha: 0.8)
+        route3.backgroundColor = UIColor(red: 10/255, green: 96/255, blue: 254/255, alpha: 0.5)
+        route4.backgroundColor = UIColor(white: 1, alpha: 0.8)
+        route1check = false
+        route2check = false
+        route3check = true
+        route4check = false
+        serviceLines(serviceName: busname)
+    }
+    
+    //MARK: Route 4 Button Action
+    @objc func route4Function() {
+        route1.backgroundColor = UIColor(white: 1, alpha: 0.8)
+        route2.backgroundColor = UIColor(white: 1, alpha: 0.8)
+        route3.backgroundColor = UIColor(white: 1, alpha: 0.8)
+        route4.backgroundColor = UIColor(red: 10/255, green: 96/255, blue: 254/255, alpha: 0.5)
+        route1check = false
+        route2check = false
+        route3check = false
+        route4check = true
+        serviceLines(serviceName: busname)
+    }
     
 //MARK: Bus Location Annotation
     var BusAnnotation: CustomPointAnnotation!
@@ -1454,10 +1708,10 @@ extension HomeViewController : MKMapViewDelegate {
     
     //MARK: Select Annotation
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView)  {
-        
         let annotation = view.annotation as? CustomPointAnnotation
         
         if annotation?.customidentifier == "busAnnotation" {
+            busname = annotation?.title ?? ""
             serviceLines(serviceName: annotation?.title ?? "")
         }
     }
@@ -1465,7 +1719,7 @@ extension HomeViewController : MKMapViewDelegate {
     
     
     //MARK: Polyline Addition
-    func mapView(_ mapView : MKMapView , rendererFor overlay: MKOverlay) ->MKOverlayRenderer! {
+    func mapView(_ mapView : MKMapView , rendererFor overlay: MKOverlay) ->MKOverlayRenderer {
 
         if overlay is MKPolyline {
             if ( toFirst  != nil) && (toFinal != nil ) && (toDestination != nil ) {
@@ -1502,7 +1756,7 @@ extension HomeViewController : MKMapViewDelegate {
                 }
             }
         }
-        return nil
+        return MKOverlayRenderer()
     }
 }
 
