@@ -101,7 +101,7 @@ class LoginViewController: UIViewController {
             
             //MARK: Image Constraints
             imageView.centerXAnchor.constraint(equalTo: emailField.centerXAnchor),
-            imageView.bottomAnchor.constraint(equalTo: emailField.topAnchor),
+            imageView.bottomAnchor.constraint(equalTo: emailField.topAnchor, constant: -50),
             imageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 50),
             imageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -50),
             
