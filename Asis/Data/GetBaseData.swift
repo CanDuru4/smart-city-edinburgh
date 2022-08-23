@@ -71,7 +71,7 @@ class GetBaseData {
 //MARK: Time Data
     func getTimeBaseData(endPoint: String) {
         print("-------------------------------")
-        print("url: \(self.baseUrl + endPoint)")
+        print("URL: \(self.baseUrl + endPoint)")
         print("-------------------------------")
 
         AF.request(self.baseUrl + endPoint, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: nil, interceptor: nil).response { (TimeresponseData) in

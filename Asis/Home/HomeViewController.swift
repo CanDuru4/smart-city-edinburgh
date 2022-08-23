@@ -71,12 +71,14 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     var start_number = 99999999
     var repeat_routes = 0
     let wait2 = DispatchGroup()
+    var sorted_array: [Routes] = []
     var routesArray: [Routes] = [] {
         didSet{
             //MARK: Check All Elements Filled
             var check = false
             for times in (0..<routesArray.count) {
                 if routesArray[times].walkingtodestination != 0 || routesArray[times].walkingfromcurrent != 0 {
+                    sorted_array = routesArray.sorted(by: { $0.totalwalk < $1.totalwalk })
                     alert = true
                     check = true
                 } else{
@@ -88,8 +90,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
             if check == true{
                 //MARK: Dismiss Loading View
                 dismiss(animated: true)
-
-                for walkingtimecheck in routesArray{
+                for walkingtimecheck in sorted_array{
                     repeat_routes = repeat_routes+1
                     //MARK: Format Date
                     let dateFormatter = DateFormatter()
@@ -124,42 +125,46 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                         
                         //MARK: Polylines
                         wait.enter()
+                        print("Services count: \(servicesArray.count)")
                         for services in servicesArray {
                             if continue_mark == true {
+                                print("Service name: \(services.name), olması gereken: \(walkingtimecheck.services)")
                                 if services.name == walkingtimecheck.services {
                                     if services.routes.count == 0 {
                                         let servicecoordinates = CLLocationCoordinate2DMake(walkingtimecheck.departureCoordinates.coordinate.latitude, walkingtimecheck.departureCoordinates.coordinate.longitude);
-                                        wait2.enter()
                                         routeCoordinates.append(servicecoordinates)
-                                        wait2.leave()
                                         let servicecoordinates2 = CLLocationCoordinate2DMake(walkingtimecheck.destinationCoordinates.coordinate.latitude, walkingtimecheck.destinationCoordinates.coordinate.longitude);
-                                        wait2.enter()
                                         routeCoordinates.append(servicecoordinates2)
-                                        wait2.leave()
                                     } else{
                                         for serviceRoutes in services.routes{
                                             if continue_mark == true{
                                                 for serviceCoordinates in (0..<serviceRoutes.points.count) {
                                                     if Int(serviceRoutes.points[serviceCoordinates].stopID ?? "") == walkingtimecheck.departureID {
                                                         let servicecoordinates = CLLocationCoordinate2DMake(serviceRoutes.points[serviceCoordinates].latitude, serviceRoutes.points[serviceCoordinates].longitude);
-                                                        wait2.enter()
+                                                        print("---------------------------------")
+                                                        print("baş Eklendi:\(servicecoordinates), count: \(routeCoordinates.count)")
                                                         routeCoordinates.append(servicecoordinates)
+                                                        print("count: \(routeCoordinates.count)")
+                                                        print("---------------------------------")
                                                         start_number = serviceCoordinates
-                                                        wait2.leave()
                                                     }
                                                     if serviceCoordinates > start_number {
                                                         if Int(serviceRoutes.points[serviceCoordinates].stopID ?? "") == walkingtimecheck.destinationID {
                                                             let servicecoordinates = CLLocationCoordinate2DMake(serviceRoutes.points[serviceCoordinates].latitude, serviceRoutes.points[serviceCoordinates].longitude);
-                                                            wait2.enter()
+                                                            print("---------------------------------")
+                                                            print("son Eklendi:\(servicecoordinates), count: \(routeCoordinates.count)")
                                                             routeCoordinates.append(servicecoordinates)
-                                                            wait2.leave()
+                                                            print("count: \(routeCoordinates.count)")
+                                                            print("---------------------------------")
                                                             continue_mark = false
                                                             break
                                                         } else{
                                                             let servicecoordinates = CLLocationCoordinate2DMake(serviceRoutes.points[serviceCoordinates].latitude, serviceRoutes.points[serviceCoordinates].longitude);
-                                                            wait2.enter()
+                                                            print("---------------------------------")
+                                                            print("Ara Eklendi:\(servicecoordinates), count: \(routeCoordinates.count)")
                                                             routeCoordinates.append(servicecoordinates)
-                                                            wait2.leave()
+                                                            print("count: \(routeCoordinates.count)")
+                                                            print("---------------------------------")
                                                         }
                                                     }
                                                 }
@@ -173,7 +178,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                         wait.notify(queue: .main) {
                             self.polyLines(currentLocationLatitude: self.user_latitude,
                                       currentLocationLongitude: self.user_longitude,
-                                      startStopLatitude: self.routeCoordinates[0].latitude,
+                                      startStopLatitude: self.routeCoordinates[0].latitude, //Hata veriyor
                                       startStopLongitude: self.routeCoordinates[0].longitude,
                                       finalStopLatitude: self.routeCoordinates[self.routeCoordinates.count-1].latitude,
                                       finalStopLongitude: self.routeCoordinates[self.routeCoordinates.count-1].longitude,
@@ -566,12 +571,15 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
             //MARK: 250 Meter and 15 Minute Search
             if self.minute15check == true && self.meter1000check == true {
                 group.enter()
+                print("boş dönebilir: \(self.selectedItemCoordination.latitude), 2: \(self.selectedItemCoordination.longitude)")
                 for i in (0..<busstopsCount){
                     if (((self.selectedItemCoordination.latitude)-0.0025) < (self.stops[i].latitude!) &&
                         (self.stops[i].latitude!) < ((self.selectedItemCoordination.latitude)+0.0025) &&
                         ((self.selectedItemCoordination.longitude)-0.0025) < (self.stops[i].longitude!) &&
                         (self.stops[i].longitude!) < ((self.selectedItemCoordination.longitude)+0.0025)) {
+                        print("append yapmaya çalışıyor: \(self.stops[i]), count: \(self.suitableStopsAroundDestinationArray.count)")
                         self.suitableStopsAroundDestinationArray.append(self.stops[i])
+                        print("after count: \(self.suitableStopsAroundDestinationArray.count)")
                     }
 
                     if (((userlatitude)-0.0025) < (self.stops[i].latitude!) &&
@@ -583,6 +591,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
                 }
                 group.leave()
                 group.notify(queue: .main) {
+                    print("Current: \(self.suitableStopsAroundCurentLocationArray), Dest: \(self.suitableStopsAroundDestinationArray)")
                     self.apiDecoder(minute: 15)
                 }
             }
@@ -640,6 +649,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
             if self.minute15check == true && self.meter1500check == true {
                 group.enter()
                 for i in (0..<busstopsCount){
+                    
                     if (((self.selectedItemCoordination.latitude)-0.004) < (self.stops[i].latitude!) &&
                         (self.stops[i].latitude!) < ((self.selectedItemCoordination.latitude)+0.004) &&
                         ((self.selectedItemCoordination.longitude)-0.004) < (self.stops[i].longitude!) &&
@@ -832,7 +842,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
         directionsfromcurrent.calculate {(response, error) -> Void in
             guard let response = response else {
                if let _ = error {
-                   completion(Double(0))
+                   completion(Double(9999))
 //                   String(localized: "walkingRouteError")
 //                   let alert = UIAlertController(title: String(localized: "walkingRouteError"), message: "", preferredStyle: .alert)
 //                   alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
