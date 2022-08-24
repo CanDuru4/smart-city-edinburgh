@@ -1173,6 +1173,9 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
         route4.isHidden = true
         route1check = true
         route1.backgroundColor = UIColor(red: 10/255, green: 96/255, blue: 254/255, alpha: 0.5)
+        route2.backgroundColor = UIColor(white: 1, alpha: 0.8)
+        route3.backgroundColor = UIColor(white: 1, alpha: 0.8)
+        route4.backgroundColor = UIColor(white: 1, alpha: 0.8)
         route2check = false
         route3check = false
         route4check = false
