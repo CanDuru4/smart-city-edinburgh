@@ -105,4 +105,6 @@ iOSInjectionProject/
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
+
+**/Asis/GoogleService-Info.plist
 # End of https://www.toptal.com/developers/gitignore/api/swift,cocoapods,xcode

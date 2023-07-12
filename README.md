@@ -5,7 +5,7 @@
 <br />
 <p align="center">
   <a href="https://canduru.net">
-    <img src="https://github.com/CanDuru4/Smart-City-Edinburgh/assets/73294429/505e94f0-b743-47e4-9eda-447c82a25c8c" alt="Logo" width="221" height="90">
+    <img src="https://i.ibb.co/rHFr92y/Original-resized.png" alt="Logo" width="221" height="90">
     <img src="https://user-images.githubusercontent.com/73294429/186247733-fef260b6-0d34-4123-a54e-86eb9a8217fa.png" alt="Logo" width="221" height="90">
   </a>
   <p align="center">
