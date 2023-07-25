@@ -76,7 +76,7 @@ class SignUpViewController: UIViewController {
         view.addSubview(passwordField)
         passwordField.isSecureTextEntry = true
         passwordField.autocorrectionType = .no
-        emailField.autocapitalizationType = .none
+        passwordField.autocapitalizationType = .none
         passwordField.translatesAutoresizingMaskIntoConstraints = false
         
         //MARK: Password Authenticate Field Feature
