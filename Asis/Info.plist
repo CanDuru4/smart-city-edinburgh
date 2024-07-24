@@ -2,14 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Please allow app to use your location to find routes.</string>
 	<key>NFCReaderUsageDescription</key>
 	<string>Please allow app to use NFC to identify your card.</string>
-	<key>INIntentsSupported</key>
-	<array>
-		<string>Portrait (bottom home button)</string>
-	</array>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Please allow app to use your location to find routes.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
