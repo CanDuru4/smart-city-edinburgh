@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D1CA5BEE790FEC520A3A667 /* Pods_Asis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B17E945BB8EEB11537E66270 /* Pods_Asis.framework */; };
 		1F042EC728A7722C00C72FAF /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F042EB328A7722A00C72FAF /* Localizable.strings */; };
 		1F042EC828A7722C00C72FAF /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F042EB628A7722B00C72FAF /* Localizable.strings */; };
 		1F042EC928A7722C00C72FAF /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F042EB928A7722B00C72FAF /* Localizable.strings */; };
@@ -55,7 +56,6 @@
 		1FE5614E28B4CD5600AE2216 /* CreditCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE5614D28B4CD5600AE2216 /* CreditCardView.swift */; };
 		1FF3355A28A27F65007F3D29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1FF3355928A27F65007F3D29 /* GoogleService-Info.plist */; };
 		1FFC05FA28B11D19007BC964 /* can-duru-menu-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FFC05F828B11D19007BC964 /* can-duru-menu-logo.png */; };
-		C13FDD177057922C97A4443E /* Pods_Asis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BB461E6CD14C1B2DB4AD187 /* Pods_Asis.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -110,9 +110,9 @@
 		1FE5614D28B4CD5600AE2216 /* CreditCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditCardView.swift; sourceTree = "<group>"; };
 		1FF3355928A27F65007F3D29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1FFC05F828B11D19007BC964 /* can-duru-menu-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "can-duru-menu-logo.png"; sourceTree = "<group>"; };
-		5553084A3837921A9BB55500 /* Pods-Asis.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Asis.release.xcconfig"; path = "Target Support Files/Pods-Asis/Pods-Asis.release.xcconfig"; sourceTree = "<group>"; };
-		9BB461E6CD14C1B2DB4AD187 /* Pods_Asis.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Asis.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		AA450BFF43C272431521D0F2 /* Pods-Asis.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Asis.debug.xcconfig"; path = "Target Support Files/Pods-Asis/Pods-Asis.debug.xcconfig"; sourceTree = "<group>"; };
+		A69A4EE0F34B3159A5A43504 /* Pods-Asis.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Asis.debug.xcconfig"; path = "Target Support Files/Pods-Asis/Pods-Asis.debug.xcconfig"; sourceTree = "<group>"; };
+		B17E945BB8EEB11537E66270 /* Pods_Asis.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Asis.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FDC0FC488A1F5A33506EC151 /* Pods-Asis.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Asis.release.xcconfig"; path = "Target Support Files/Pods-Asis/Pods-Asis.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,7 +120,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C13FDD177057922C97A4443E /* Pods_Asis.framework in Frameworks */,
+				0D1CA5BEE790FEC520A3A667 /* Pods_Asis.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,7 +206,7 @@
 				1F0F1E802897BA9F00695807 /* Asis */,
 				1F0F1E7F2897BA9F00695807 /* Products */,
 				C7689E43FABFD17A04EBE192 /* Pods */,
-				BF55B094CA9E561A1E3F4F8C /* Frameworks */,
+				1FFFC1626B4E84BE3F25070E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -362,10 +362,10 @@
 			path = CreditCardView;
 			sourceTree = "<group>";
 		};
-		BF55B094CA9E561A1E3F4F8C /* Frameworks */ = {
+		1FFFC1626B4E84BE3F25070E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9BB461E6CD14C1B2DB4AD187 /* Pods_Asis.framework */,
+				B17E945BB8EEB11537E66270 /* Pods_Asis.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -373,8 +373,8 @@
 		C7689E43FABFD17A04EBE192 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				AA450BFF43C272431521D0F2 /* Pods-Asis.debug.xcconfig */,
-				5553084A3837921A9BB55500 /* Pods-Asis.release.xcconfig */,
+				A69A4EE0F34B3159A5A43504 /* Pods-Asis.debug.xcconfig */,
+				FDC0FC488A1F5A33506EC151 /* Pods-Asis.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -386,11 +386,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F0F1E952897BAA000695807 /* Build configuration list for PBXNativeTarget "Asis" */;
 			buildPhases = (
-				561028F0C744EBB2BC933D20 /* [CP] Check Pods Manifest.lock */,
+				DE792A81F8492ECEC676050F /* [CP] Check Pods Manifest.lock */,
 				1F0F1E7A2897BA9F00695807 /* Sources */,
 				1F0F1E7B2897BA9F00695807 /* Frameworks */,
 				1F0F1E7C2897BA9F00695807 /* Resources */,
-				C02EDC1CC7A42EAD39252D57 /* [CP] Copy Pods Resources */,
+				449608E6207BA1AC0DAC8CDB /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -465,7 +465,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		561028F0C744EBB2BC933D20 /* [CP] Check Pods Manifest.lock */ = {
+		449608E6207BA1AC0DAC8CDB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Asis/Pods-Asis-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Asis/Pods-Asis-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Asis/Pods-Asis-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DE792A81F8492ECEC676050F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -485,23 +502,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C02EDC1CC7A42EAD39252D57 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Asis/Pods-Asis-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Asis/Pods-Asis-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Asis/Pods-Asis-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -734,7 +734,7 @@
 		};
 		1F0F1E962897BAA000695807 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AA450BFF43C272431521D0F2 /* Pods-Asis.debug.xcconfig */;
+			baseConfigurationReference = A69A4EE0F34B3159A5A43504 /* Pods-Asis.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -776,7 +776,7 @@
 		};
 		1F0F1E972897BAA000695807 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5553084A3837921A9BB55500 /* Pods-Asis.release.xcconfig */;
+			baseConfigurationReference = FDC0FC488A1F5A33506EC151 /* Pods-Asis.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
