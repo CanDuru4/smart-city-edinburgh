@@ -106,5 +106,41 @@ iOSInjectionProject/
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 
-**/Asis/GoogleService-Info.plist
+### Secrets and local configuration ###
+# Firebase / iOS credential files - never commit these
+GoogleService-Info.plist
+**/GoogleService-Info.plist
+Keys.plist
+**/Keys.plist
+Secrets.plist
+**/Secrets.plist
+
+# Generic secret material
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.mobileprovision
+*.cer
+*.certSigningRequest
+
+### OS and editor noise ###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+.idea/
+*.swp
+
+### Tooling / build outputs ###
+node_modules/
+dist/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
 # End of https://www.toptal.com/developers/gitignore/api/swift,cocoapods,xcode
