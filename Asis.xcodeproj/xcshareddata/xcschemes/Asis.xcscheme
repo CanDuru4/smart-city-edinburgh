@@ -28,6 +28,26 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4E6359698D8F77008A13168D"
+               BuildableName = "AsisTests.xctest"
+               BlueprintName = "AsisTests"
+               ReferencedContainer = "container:Asis.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DFAFBBB3B6EE8918B7D00D5B"
+               BuildableName = "AsisUITests.xctest"
+               BlueprintName = "AsisUITests"
+               ReferencedContainer = "container:Asis.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

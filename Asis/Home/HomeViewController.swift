@@ -28,6 +28,7 @@ struct Routes {
     var walkingtodestination: Double
     var services: String
     var totalwalk: Double
+    var departureDate: Date
 }
 
 class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelControllerDelegate {
@@ -40,7 +41,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     var servicesArray:[Service] = []
     var selectedServiceRouteCoordinates: [CLLocationCoordinate2D] = []
     var selectedServiceRouteStopIDs: [Int] = []
-    var busname: String!
+    var busname = ""
 
     //MARK: Loading View Setup
     let loadingVC = LoadingViewController()
@@ -67,216 +68,18 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     var suitableStopsAroundDestinationArray: [Stop] = []
     var suitableStopsAroundCurentLocationArray: [Stop] = []
     var routeCoordinates: [CLLocationCoordinate2D] = []
-    var alert: Bool!
-    var continue_mark = true
-    var start_number = 99999999
-    var repeat_routes = 0
-    let wait2 = DispatchGroup()
-    var sorted_array: [Routes] = []
-    var routesArray: [Routes] = [] {
-        didSet{
-            //MARK: Check All Elements Filled
-            var check = false
-            for times in (0..<routesArray.count) {
-                if routesArray[times].walkingtodestination != 0 || routesArray[times].walkingfromcurrent != 0 {
-                    sorted_array = routesArray.sorted(by: { $0.totalwalk < $1.totalwalk })
-                    alert = true
-                    check = true
-                } else{
-                    check = false
-                }
-            }
-            
-            //MARK: Floating Panel Cell Content
-            if check == true{
-                //MARK: Dismiss Loading View
-                dismiss(animated: true)
-                for walkingtimecheck in sorted_array{
-                    repeat_routes = repeat_routes+1
-                    //MARK: Format Date
-                    let dateFormatter = DateFormatter()
-                    let currentDateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "HH:mm"
-                    dateFormatter.timeZone = TimeZone(abbreviation: "GMT+00:00")
-                    currentDateFormatter.dateFormat = "HH:mm"
-                    currentDateFormatter.timeZone = TimeZone(abbreviation: "GMT+01:00")
-                    let currentDate = Date()
-                    let dateString = currentDateFormatter.string(from: currentDate)
-                    let departuredate = dateFormatter.date(from: dateString)
-                    let destinationdate = dateFormatter.date(from: walkingtimecheck.departureTime)
-                    let diffSeconds = destinationdate!.timeIntervalSinceReferenceDate - departuredate!.timeIntervalSinceReferenceDate
-                    let diffMinutes = diffSeconds / 60
-                    
-                    //MARK: Check Time for Walking
-                    if (diffMinutes) < (walkingtimecheck.walkingfromcurrent) {
-        
-                    } else {
-                        map.deselectAnnotation(selectedItemAnnotation, animated: true)
-                        alert = false
-                        
-                        //MARK: Selected Bus Service Annotation
-                        selectedBusLocation(selectedservice: walkingtimecheck.services)
-                        for BusAnnotation in self.map.annotations {
-                            if let BusAnnotation = BusAnnotation as? CustomPointAnnotation, BusAnnotation.customidentifier == "busAnnotation" {
-                                self.map.removeAnnotation(BusAnnotation)
-                            }
-                        }
-                        selectedBusDataRepeat(selectedservice: walkingtimecheck.services)
-                        timer.invalidate()
-                        
-                        //MARK: Polylines Set Up
-                        wait.enter()
-                        for services in servicesArray {
-                            if continue_mark == true {
-                                if services.name == walkingtimecheck.services {
-                                    if services.routes.count == 0 {
-                                        let servicecoordinates = CLLocationCoordinate2DMake(walkingtimecheck.departureCoordinates.coordinate.latitude, walkingtimecheck.departureCoordinates.coordinate.longitude);
-                                        routeCoordinates.append(servicecoordinates)
-                                        let servicecoordinates2 = CLLocationCoordinate2DMake(walkingtimecheck.destinationCoordinates.coordinate.latitude, walkingtimecheck.destinationCoordinates.coordinate.longitude);
-                                        routeCoordinates.append(servicecoordinates2)
-                                    } else{
-                                        for serviceRoutes in services.routes{
-                                            if continue_mark == true{
-                                                for serviceCoordinates in (0..<serviceRoutes.points.count) {
-                                                    if Int(serviceRoutes.points[serviceCoordinates].stopID ?? "") == walkingtimecheck.departureID {
-                                                        let servicecoordinates = CLLocationCoordinate2DMake(serviceRoutes.points[serviceCoordinates].latitude, serviceRoutes.points[serviceCoordinates].longitude);
-                                                        routeCoordinates.append(servicecoordinates)
-                                                        start_number = serviceCoordinates
-                                                    }
-                                                    if serviceCoordinates > start_number {
-                                                        if Int(serviceRoutes.points[serviceCoordinates].stopID ?? "") == walkingtimecheck.destinationID {
-                                                            let servicecoordinates = CLLocationCoordinate2DMake(serviceRoutes.points[serviceCoordinates].latitude, serviceRoutes.points[serviceCoordinates].longitude);
-                                                            routeCoordinates.append(servicecoordinates)
-                                                            continue_mark = false
-                                                            break
-                                                        } else{
-                                                            let servicecoordinates = CLLocationCoordinate2DMake(serviceRoutes.points[serviceCoordinates].latitude, serviceRoutes.points[serviceCoordinates].longitude);
-                                                            routeCoordinates.append(servicecoordinates)
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        wait.leave()
-                        
-                        //MARK: Table Data
-                        let totalduration = Int(walkingtimecheck.walkingtodestination + walkingtimecheck.walkingfromcurrent + Double(walkingtimecheck.routetime))
-                        if totalduration > 60 {
-                            let hour = Int(totalduration / 60)
-                            let minute = totalduration - (hour*60)
-                            dismiss(animated: true)
-                            floatingPanel.show()
-                            floatingpanelview.walkingToDestinationTime = Int(walkingtimecheck.walkingtodestination)
-                            floatingpanelview.walkingFromCurrentTime = Int(walkingtimecheck.walkingfromcurrent)
-                            floatingpanelview.routeTime = Int(walkingtimecheck.routetime)
-                            floatingpanelview.totaltime = ((String(hour)) + String(localized: "hours") + String((minute)) + String(localized: "minutes"))
-                            floatingpanelview.departuretime = walkingtimecheck.departureTime
-                            floatingpanelview.service = walkingtimecheck.services
-                        } else{
-                            dismiss(animated: true)
-                            floatingPanel.show()
-                            floatingpanelview.walkingToDestinationTime = Int(walkingtimecheck.walkingtodestination)
-                            floatingpanelview.walkingFromCurrentTime = Int(walkingtimecheck.walkingfromcurrent)
-                            floatingpanelview.routeTime = Int(walkingtimecheck.routetime)
-                            floatingpanelview.totaltime = String(totalduration) + String(localized: "minutes")
-                            floatingpanelview.departuretime = walkingtimecheck.departureTime
-                            floatingpanelview.service = walkingtimecheck.services
-                        }
-                        break
-                    }
-                }
-                
-                //MARK: Polyline Mark
-                if continue_mark == false {
-                    self.polyLines(currentLocationLatitude: self.user_latitude,
-                              currentLocationLongitude: self.user_longitude,
-                              startStopLatitude: self.routeCoordinates[0].latitude, //Hata veriyor
-                              startStopLongitude: self.routeCoordinates[0].longitude,
-                              finalStopLatitude: self.routeCoordinates[self.routeCoordinates.count-1].latitude,
-                              finalStopLongitude: self.routeCoordinates[self.routeCoordinates.count-1].longitude,
-                              busRouteCoordinates: self.routeCoordinates,
-                              destinationLatitude: self.selectedItemCoordination.latitude,
-                              destinationLongitude: self.selectedItemCoordination.longitude,
-                              polymapView: self.map)
-                }
-                
-                //MARK: No Possible Routes Error
-                if repeat_routes == routesArray.count {
-                    if alert == true {
-                        minutesFor15Button.isHidden = false
-                        minutesFor30Button.isHidden = false
-                        minutesFor45Button.isHidden = false
-                        metersFor500Button.isHidden = false
-                        metersFor1000Button.isHidden = false
-                        metersFor1500Button.isHidden = false
-                        let alert = UIAlertController(title: String(localized: "routeTimeError"), message: "", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
-                    }
-                }
-            }
-        }
-    }
+    private var routesArray: [Routes] = []
+    private var routeSearchID = UUID()
+    private var routeTimeout: DispatchWorkItem?
+    private var walkingDirections: [MKDirections] = []
+    private var timetableRequests: [GetBaseData] = []
+    private var selectedService: String?
+    private var localSearch: MKLocalSearch?
+    private var busRequestInFlight = false
+    private var busDataAvailable = false
+    private var stopsDataAvailable = false
+    private let transitStatus = UIButton(type: .system)
 
-        //MARK: Get Route Details
-    var times_alert = -1
-    var total_repeat = -1
-    var times:[Trip] = [] {
-        didSet {
-            total_repeat=total_repeat+1
-            
-            if times.count == 0{
-                times_alert = times_alert+1
-            }
-            
-            if total_repeat != 0 {
-                if times_alert == self.suitableStopsAroundCurentLocationArray.count*self.suitableStopsAroundDestinationArray.count{
-                    if times.count == 0 {
-                        dismiss(animated: true)
-                        minutesFor15Button.isHidden = false
-                        minutesFor30Button.isHidden = false
-                        minutesFor45Button.isHidden = false
-                        metersFor500Button.isHidden = false
-                        metersFor1000Button.isHidden = false
-                        metersFor1500Button.isHidden = false
-                        let alert = UIAlertController(title: String(localized: "routeTimeError"), message: "", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: String(localized: "tryAgainAlertView"), style: UIAlertAction.Style.default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
-                    }
-                }
-            }
-            
-            let wait = DispatchGroup()
-            if total_repeat == self.suitableStopsAroundCurentLocationArray.count*self.suitableStopsAroundDestinationArray.count{
-                if total_repeat != 0 {
-                    if times.count != 0 {
-                        wait.enter()
-                        getRouteDetails()
-                        getStartandFinishCoordinates()
-                        self.count = 0
-                        getWalkingTime()
-                        wait.leave()
-                    } else {
-                        dismiss(animated: true)
-                        minutesFor15Button.isHidden = false
-                        minutesFor30Button.isHidden = false
-                        minutesFor45Button.isHidden = false
-                        metersFor500Button.isHidden = false
-                        metersFor1000Button.isHidden = false
-                        metersFor1500Button.isHidden = false
-                        let alert = UIAlertController(title: String(localized: "routeTimeError"), message: "", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: String(localized: "tryAgainAlertView"), style: UIAlertAction.Style.default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
-                    }
-                }
-            }
-        }
-    }
-    
     //MARK: Table Setup
     lazy var howToGoSearchTable: UITableView = {
         let tb = UITableView()
@@ -294,24 +97,23 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     
     //MARK: Bus Data Setup
     var timer = Timer()
-    var busses:[Vehicle] = [] {
-        didSet{
-            //MARK: Annotate Bus Locations
-            for BusAnnotation in self.map.annotations {
-                if let BusAnnotation = BusAnnotation as? CustomPointAnnotation, BusAnnotation.customidentifier == "busAnnotation" {
-                    self.map.removeAnnotation(BusAnnotation)
-                }
+    var busses: [Vehicle] = [] {
+        didSet {
+            let old = map.annotations.compactMap { $0 as? CustomPointAnnotation }.filter {
+                $0.customidentifier == "busAnnotation" || $0.customidentifier == "selectedBusAnnotation"
             }
-            busLocations()
+            map.removeAnnotations(old)
+            if let selectedService { selectedBusLocation(selectedservice: selectedService) }
+            else { busLocations() }
         }
     }
-    
+
     //MARK: Stops Data Setup
     var stops:[Stop] = []
     
     //MARK: Side Menu Setup
     var menu: SideMenuNavigationController?
-    lazy var menuBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "sidebar.leading")?.withRenderingMode(.alwaysOriginal).withTintColor(.systemBlue), style: .done, target: self, action: #selector(menuBarButtonItemTapped))
+    lazy var menuBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "sidebar.leading")?.withRenderingMode(.alwaysOriginal).withTintColor(.systemBlue), style: .plain, target: self, action: #selector(menuBarButtonItemTapped))
     @objc
     func menuBarButtonItemTapped(){
          present(menu!, animated: true)
@@ -358,6 +160,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
         
         //MARK: Side Menu Load
         navigationItem.setLeftBarButton(menuBarButtonItem, animated: false)
+        menuBarButtonItem.accessibilityIdentifier = "openMenuButton"
         menu = SideMenuNavigationController(rootViewController: MenuListController())
         menu?.leftSide = true
         
@@ -376,6 +179,77 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
         floatingPanel.track(scrollView: floatingpanelview.tableView)
         floatingPanel.addPanel(toParent: self)
         floatingPanel.hide()
+        configureTransitStatus()
+        NotificationCenter.default.addObserver(self, selector: #selector(stopLiveUpdates), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(resumeLiveUpdates), name: UIApplication.willEnterForegroundNotification, object: nil)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        BusData()
+        BusDataRepeat()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        stopLiveUpdates()
+        localSearch?.cancel()
+    }
+
+    @objc private func stopLiveUpdates() {
+        timer.invalidate()
+        timerForSelectedBus.invalidate()
+        if routeTimeout != nil {
+            cancelPendingRouteSearch()
+            loadingVC.dismiss(animated: false)
+            setRouteControls(hidden: false)
+        }
+    }
+
+    @objc private func resumeLiveUpdates() {
+        guard viewIfLoaded?.window != nil else { return }
+        BusData()
+        BusDataRepeat()
+    }
+
+    private func configureTransitStatus() {
+        var statusConfiguration = UIButton.Configuration.plain()
+        statusConfiguration.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12)
+        transitStatus.configuration = statusConfiguration
+        transitStatus.translatesAutoresizingMaskIntoConstraints = false
+        transitStatus.titleLabel?.numberOfLines = 0
+        transitStatus.titleLabel?.font = .preferredFont(forTextStyle: .caption1)
+        transitStatus.titleLabel?.textAlignment = .center
+        transitStatus.backgroundColor = .systemBackground
+        transitStatus.layer.cornerRadius = 8
+        transitStatus.accessibilityIdentifier = "transitStatus"
+        transitStatus.addTarget(self, action: #selector(retryTransit), for: .touchUpInside)
+        transitStatus.setTitle(String(localized: "loadingTransit"), for: .normal)
+        view.addSubview(transitStatus)
+        NSLayoutConstraint.activate([
+            transitStatus.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 48),
+            transitStatus.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            transitStatus.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, constant: -80),
+            transitStatus.heightAnchor.constraint(greaterThanOrEqualToConstant: 44)
+        ])
+    }
+
+    private func updateTransitStatus() {
+        transitStatus.isHidden = busDataAvailable && stopsDataAvailable
+        transitStatus.setTitle(String(localized: "transitUnavailableRetry"), for: .normal)
+    }
+
+    @objc private func retryTransit() {
+        transitStatus.setTitle(String(localized: "loadingTransit"), for: .normal)
+        BusData()
+        BusStopsData()
+        serviceDataCall()
+    }
+
+    deinit {
+        timer.invalidate()
+        timerForSelectedBus.invalidate()
+        NotificationCenter.default.removeObserver(self)
     }
 
     
@@ -417,6 +291,8 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        localSearch?.cancel()
+        matchingItems = []
         searchBar.text = nil
         howToGoSearchTable.isHidden = true
         zoomInButton.isHidden = false
@@ -433,18 +309,19 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     
     //MARK: Address Seaarch
     func findLocations(with query: String) {
+        localSearch?.cancel()
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
+        request.region = map.region
         let search = MKLocalSearch(request: request)
-    
-        search.start { response, _ in
-            guard response != nil else {
-                return
-            }
-            self.matchingItems = response!.mapItems
+        localSearch = search
+        search.start { [weak self, weak search] response, _ in
+            guard let self, self.localSearch === search,
+                  self.searchController.searchBar.text == query else { return }
+            self.matchingItems = response?.mapItems ?? []
         }
     }
-    
+
     //MARK: Set Address
     func parseAddress(selectedItem:MKPlacemark) -> String {
         let firstSpace = (selectedItem.subThoroughfare != nil &&
@@ -468,399 +345,210 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     
     //MARK: Find Close Stops
     var selectedItemCoordination = CLLocationCoordinate2D()
-    @objc func makeRoad(){
-        suitableStopsAroundDestinationArray = []
-        suitableStopsAroundCurentLocationArray = []
-        routeCoordinates = []
-        continue_mark = true
-        start_number = 99999999
-        repeat_routes = 0
-        total_repeat = -1
-        times_alert = -1
-        times = []
+    @objc func makeRoad() {
+        cancelPendingRouteSearch()
+        guard stopsDataAvailable, !stops.isEmpty else {
+            showRouteError(String(localized: "transitUnavailable"))
+            return
+        }
+        let requestID = routeSearchID
         routesArray = []
-        
+        routeCoordinates = []
+        setRouteControls(hidden: true)
         loadingVC.modalPresentationStyle = .overCurrentContext
-        loadingVC.modalTransitionStyle = .crossDissolve
-        present(loadingVC, animated: true, completion: nil)
-        let busstopsCount = stops.count
-        var userlatitude: Double = 0
-        var userlongitude: Double = 0
-        minutesFor15Button.isHidden = true
-        minutesFor30Button.isHidden = true
-        minutesFor45Button.isHidden = true
-        metersFor500Button.isHidden = true
-        metersFor1000Button.isHidden = true
-        metersFor1500Button.isHidden = true
+        present(loadingVC, animated: false)
+        let timeout = DispatchWorkItem { [weak self] in
+            guard let self, self.routeSearchID == requestID else { return }
+            self.finishRouteSearch(error: String(localized: "routeSearchTimedOut"))
+        }
+        routeTimeout = timeout
+        DispatchQueue.main.asyncAfter(deadline: .now() + 45, execute: timeout)
+        LocationManager.shared.getUserLocation(onError: { [weak self] _ in
+            guard let self, self.routeSearchID == requestID else { return }
+            self.finishRouteSearch(error: String(localized: "locationUnavailable"))
+        }) { [weak self] location in
+            guard let self, self.routeSearchID == requestID else { return }
+            self.findJourneys(from: location, requestID: requestID)
+        }
+    }
 
-
-        LocationManager.shared.getUserLocation { [weak self] location in
-            guard let self = self else {
+    private func findJourneys(from location: CLLocation, requestID: UUID) {
+        let radius = meter500check ? 100.0 : (meter1000check ? 250.0 : 400.0)
+        let horizon = minute15check ? 15 : (minute30check ? 30 : 45)
+        let reference = Date()
+        let destination = CLLocation(latitude: selectedItemCoordination.latitude, longitude: selectedItemCoordination.longitude)
+        suitableStopsAroundCurentLocationArray = stops.filter { stop in
+            guard let latitude = stop.latitude, let longitude = stop.longitude, stop.hasValidCoordinate else { return false }
+            return location.distance(from: CLLocation(latitude: latitude, longitude: longitude)) <= radius
+        }
+        suitableStopsAroundDestinationArray = stops.filter { stop in
+            guard let latitude = stop.latitude, let longitude = stop.longitude, stop.hasValidCoordinate else { return false }
+            return destination.distance(from: CLLocation(latitude: latitude, longitude: longitude)) <= radius
+        }
+        guard !suitableStopsAroundCurentLocationArray.isEmpty, !suitableStopsAroundDestinationArray.isEmpty else {
+            finishRouteSearch(error: String(localized: "routeTimeError"))
+            return
+        }
+        let group = DispatchGroup()
+        var journeys: [Trip] = []
+        var failed = false
+        for start in suitableStopsAroundCurentLocationArray {
+            for finish in suitableStopsAroundDestinationArray where start.stopID != finish.stopID {
+                group.enter()
+                let request = GetBaseData()
+                timetableRequests.append(request)
+                request.timeCompletionHandler { [weak self] trips, success, _ in
+                    defer { group.leave() }
+                    guard let self, self.routeSearchID == requestID else { return }
+                    failed = failed || !success
+                    journeys.append(contentsOf: trips ?? [])
+                }
+                request.getTimeBaseData(endPoint: "stoptostop-timetable/?start_stop_id=\(start.stopID)&finish_stop_id=\(finish.stopID)&date=\(Int(reference.timeIntervalSince1970))&duration=\(horizon)")
+            }
+        }
+        group.notify(queue: .main) { [weak self] in
+            guard let self, self.routeSearchID == requestID else { return }
+            guard !failed else {
+                self.finishRouteSearch(error: String(localized: "transitUnavailable"))
                 return
             }
-            userlatitude = location.coordinate.latitude
-            userlongitude = location.coordinate.longitude
-            let group = DispatchGroup()
-            
-            //MARK: 100 Meter and 15 Minute Search
-            if self.minute15check == true && self.meter500check == true {
-                group.enter()
-                for i in (0..<busstopsCount){
-                    let selectedItem = CLLocation(latitude: (self.selectedItemCoordination.latitude), longitude: (self.selectedItemCoordination.longitude))
-                    let stopLocation = CLLocation(latitude: (self.stops[i].latitude!), longitude: (self.stops[i].longitude!))
-                    let distancetodestination = selectedItem.distance(from: stopLocation)
-                    //print("HATA BURADA OLUYOR: \(selectedItem), \(stopLocation), \(distancetodestination)")
-                    if distancetodestination < 110 {
-                        self.suitableStopsAroundDestinationArray.append(self.stops[i])
-                    }
-                    
-                    let userCoordination = CLLocation(latitude: (userlatitude), longitude: (userlongitude))
-                    let distancetocurrent = userCoordination.distance(from: stopLocation)
-                    if distancetocurrent < 110 {
-                        self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
-                    }
-                }
-                group.leave()
-                group.notify(queue: .main) {
-                    self.apiDecoder(minute: 15)
-                }
+            self.routesArray = journeys.compactMap { trip in
+                guard let first = trip.departures.first, let last = trip.departures.last,
+                      first.stopID != last.stopID,
+                      let duration = TransitTime.duration(from: first.time, to: last.time),
+                      let departure = TransitTime.departureDate(first.time, after: reference, within: horizon),
+                      let start = self.stops.first(where: { $0.stopID == first.stopID && $0.hasValidCoordinate }),
+                      let finish = self.stops.first(where: { $0.stopID == last.stopID && $0.hasValidCoordinate }),
+                      let startLat = start.latitude, let startLon = start.longitude,
+                      let finishLat = finish.latitude, let finishLon = finish.longitude else { return nil }
+                return Routes(departureID: first.stopID, departureName: first.name, departureTime: first.time,
+                    departureCoordinates: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: startLat, longitude: startLon)),
+                    destinationID: last.stopID, destinationName: last.name, destinationTime: last.time,
+                    destinationCoordinates: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: finishLat, longitude: finishLon)),
+                    routetime: duration, walkingfromcurrent: .infinity, walkingtodestination: .infinity,
+                    services: trip.serviceName, totalwalk: .infinity, departureDate: departure)
             }
-            
-            //MARK: 100 Meter and 30 Minute Search
-            if self.minute30check == true && self.meter500check == true {
-                group.enter()
-                for i in (0..<busstopsCount){
-                    let selectedItem = CLLocation(latitude: (self.selectedItemCoordination.latitude), longitude: (self.selectedItemCoordination.longitude))
-                    let stopLocation = CLLocation(latitude: (self.stops[i].latitude!), longitude: (self.stops[i].longitude!))
-                    let distancetodestination = selectedItem.distance(from: stopLocation)
-                    //print("HATA BURADA OLUYOR: \(selectedItem), \(stopLocation), \(distancetodestination)")
-                    if distancetodestination < 110 {
-                        self.suitableStopsAroundDestinationArray.append(self.stops[i])
-                    }
-                    
-                    let userCoordination = CLLocation(latitude: (userlatitude), longitude: (userlongitude))
-                    let distancetocurrent = userCoordination.distance(from: stopLocation)
-                    if distancetocurrent < 110 {
-                        self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
-                    }
-                }
-                group.leave()
-                group.notify(queue: .main) {
-                    self.apiDecoder(minute: 30)
-                }
-            }
-            
-            //MARK: 100 Meter and 45 Minute Search
-            if self.minute45check == true && self.meter500check == true {
-                group.enter()
-                for i in (0..<busstopsCount){
-                    let selectedItem = CLLocation(latitude: (self.selectedItemCoordination.latitude), longitude: (self.selectedItemCoordination.longitude))
-                    let stopLocation = CLLocation(latitude: (self.stops[i].latitude!), longitude: (self.stops[i].longitude!))
-                    let distancetodestination = selectedItem.distance(from: stopLocation)
-                    //print("HATA BURADA OLUYOR: \(selectedItem), \(stopLocation), \(distancetodestination)")
-                    if distancetodestination < 110 {
-                        self.suitableStopsAroundDestinationArray.append(self.stops[i])
-                    }
-                    
-                    let userCoordination = CLLocation(latitude: (userlatitude), longitude: (userlongitude))
-                    let distancetocurrent = userCoordination.distance(from: stopLocation)
-                    if distancetocurrent < 110 {
-                        self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
-                    }
-                }
-                group.leave()
-                group.notify(queue: .main) {
-                    self.apiDecoder(minute: 45)
-                }
-            }
-            
-            //MARK: 250 Meter and 15 Minute Search
-            if self.minute15check == true && self.meter1000check == true {
-                group.enter()
-                for i in (0..<busstopsCount){
-                    let selectedItem = CLLocation(latitude: (self.selectedItemCoordination.latitude), longitude: (self.selectedItemCoordination.longitude))
-                    let stopLocation = CLLocation(latitude: (self.stops[i].latitude!), longitude: (self.stops[i].longitude!))
-                    let distancetodestination = selectedItem.distance(from: stopLocation)
-                    //print("HATA BURADA OLUYOR: \(selectedItem), \(stopLocation), \(distancetodestination)")
-                    if distancetodestination < 260 {
-                        self.suitableStopsAroundDestinationArray.append(self.stops[i])
-                    }
-                    
-                    let userCoordination = CLLocation(latitude: (userlatitude), longitude: (userlongitude))
-                    let distancetocurrent = userCoordination.distance(from: stopLocation)
-                    if distancetocurrent < 260 {
-                        self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
-                    }
-                }
-                group.leave()
-                group.notify(queue: .main) {
-                    self.apiDecoder(minute: 15)
-                }
-            }
-            
-            //MARK: 250 Meter and 30 Minute Search
-            if self.minute30check == true && self.meter1000check == true {
-                group.enter()
-                for i in (0..<busstopsCount){
-                    let selectedItem = CLLocation(latitude: (self.selectedItemCoordination.latitude), longitude: (self.selectedItemCoordination.longitude))
-                    let stopLocation = CLLocation(latitude: (self.stops[i].latitude!), longitude: (self.stops[i].longitude!))
-                    let distancetodestination = selectedItem.distance(from: stopLocation)
-                    //print("HATA BURADA OLUYOR: \(selectedItem), \(stopLocation), \(distancetodestination)")
-                    if distancetodestination < 260 {
-                        self.suitableStopsAroundDestinationArray.append(self.stops[i])
-                    }
-                    
-                    let userCoordination = CLLocation(latitude: (userlatitude), longitude: (userlongitude))
-                    let distancetocurrent = userCoordination.distance(from: stopLocation)
-                    if distancetocurrent < 260 {
-                        self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
-                    }
-                }
-                group.leave()
-                group.notify(queue: .main) {
-                    self.apiDecoder(minute: 30)
-                }
-            }
-
-            
-            //MARK: 250 Meter and 45 Minute Search
-            if self.minute45check == true && self.meter1000check == true {
-                group.enter()
-                for i in (0..<busstopsCount){
-                    let selectedItem = CLLocation(latitude: (self.selectedItemCoordination.latitude), longitude: (self.selectedItemCoordination.longitude))
-                    let stopLocation = CLLocation(latitude: (self.stops[i].latitude!), longitude: (self.stops[i].longitude!))
-                    let distancetodestination = selectedItem.distance(from: stopLocation)
-                    //print("HATA BURADA OLUYOR: \(selectedItem), \(stopLocation), \(distancetodestination)")
-                    if distancetodestination < 260 {
-                        self.suitableStopsAroundDestinationArray.append(self.stops[i])
-                    }
-                    
-                    let userCoordination = CLLocation(latitude: (userlatitude), longitude: (userlongitude))
-                    let distancetocurrent = userCoordination.distance(from: stopLocation)
-                    if distancetocurrent < 260 {
-                        self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
-                    }
-                }
-                group.leave()
-                group.notify(queue: .main) {
-                    self.apiDecoder(minute: 45)
-                }
-            }
-
-            //MARK: 400 Meter and 15 Minute Search
-            if self.minute15check == true && self.meter1500check == true {
-                group.enter()
-                for i in (0..<busstopsCount){
-                    let selectedItem = CLLocation(latitude: (self.selectedItemCoordination.latitude), longitude: (self.selectedItemCoordination.longitude))
-                    let stopLocation = CLLocation(latitude: (self.stops[i].latitude!), longitude: (self.stops[i].longitude!))
-                    let distancetodestination = selectedItem.distance(from: stopLocation)
-                    //print("HATA BURADA OLUYOR: \(selectedItem), \(stopLocation), \(distancetodestination)")
-                    if distancetodestination < 410 {
-                        self.suitableStopsAroundDestinationArray.append(self.stops[i])
-                    }
-                    
-                    let userCoordination = CLLocation(latitude: (userlatitude), longitude: (userlongitude))
-                    let distancetocurrent = userCoordination.distance(from: stopLocation)
-                    if distancetocurrent < 410 {
-                        self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
-                    }
-                }
-                group.leave()
-                group.notify(queue: .main) {
-                    self.apiDecoder(minute: 15)
-                }
-            }
-
-            //MARK: 400 Meter and 30 Minute Search
-            if self.minute30check == true && self.meter1500check == true {
-                group.enter()
-                for i in (0..<busstopsCount){
-                    let selectedItem = CLLocation(latitude: (self.selectedItemCoordination.latitude), longitude: (self.selectedItemCoordination.longitude))
-                    let stopLocation = CLLocation(latitude: (self.stops[i].latitude!), longitude: (self.stops[i].longitude!))
-                    let distancetodestination = selectedItem.distance(from: stopLocation)
-                    //print("HATA BURADA OLUYOR: \(selectedItem), \(stopLocation), \(distancetodestination)")
-                    if distancetodestination < 410 {
-                        self.suitableStopsAroundDestinationArray.append(self.stops[i])
-                    }
-                    
-                    let userCoordination = CLLocation(latitude: (userlatitude), longitude: (userlongitude))
-                    let distancetocurrent = userCoordination.distance(from: stopLocation)
-                    if distancetocurrent < 410 {
-                        self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
-                    }
-                }
-                group.leave()
-                group.notify(queue: .main) {
-                    self.apiDecoder(minute: 30)
-                }
-            }
-            
-            //MARK: 400 Meter and 45 Minute Search
-            if self.minute45check == true && self.meter1500check == true {
-                group.enter()
-                for i in (0..<busstopsCount){
-                    let selectedItem = CLLocation(latitude: (self.selectedItemCoordination.latitude), longitude: (self.selectedItemCoordination.longitude))
-                    let stopLocation = CLLocation(latitude: (self.stops[i].latitude!), longitude: (self.stops[i].longitude!))
-                    let distancetodestination = selectedItem.distance(from: stopLocation)
-                    //print("HATA BURADA OLUYOR: \(selectedItem), \(stopLocation), \(distancetodestination)")
-                    if distancetodestination < 410 {
-                        self.suitableStopsAroundDestinationArray.append(self.stops[i])
-                    }
-                    
-                    let userCoordination = CLLocation(latitude: (userlatitude), longitude: (userlongitude))
-                    let distancetocurrent = userCoordination.distance(from: stopLocation)
-                    if distancetocurrent < 410 {
-                        self.suitableStopsAroundCurentLocationArray.append(self.stops[i])
-                    }
-                }
-                group.leave()
-                group.notify(queue: .main) {
-                    self.apiDecoder(minute: 45)
-                }
-            }
+            self.measureWalking(from: location, index: 0, requestID: requestID)
         }
     }
-    
-    //MARK: API Decoder
-    func apiDecoder(minute: Int){
-        if self.suitableStopsAroundCurentLocationArray.count == 0 || self.suitableStopsAroundDestinationArray.count == 0 {
-            dismiss(animated: true)
-            minutesFor15Button.isHidden = false
-            minutesFor30Button.isHidden = false
-            minutesFor45Button.isHidden = false
-            metersFor500Button.isHidden = false
-            metersFor1000Button.isHidden = false
-            metersFor1500Button.isHidden = false
-            let alert = UIAlertController(title: String(localized: "routeTimeError"), message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: String(localized: "tryAgainAlertView"), style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-            
-        } else {
-            for start in self.suitableStopsAroundCurentLocationArray {
-                for destination in self.suitableStopsAroundDestinationArray {
-                    let timestamp = Date().timeIntervalSince1970
-                    self.timeData(timestring: "stoptostop-timetable/?start_stop_id=\(start.stopID)&finish_stop_id=\(destination.stopID)&date=\(timestamp)&duration=\(minute)")
-                }
+
+    private func measureWalking(from location: CLLocation, index: Int, requestID: UUID) {
+        guard routeSearchID == requestID else { return }
+        guard routesArray.indices.contains(index) else {
+            chooseRoute(from: location)
+            return
+        }
+        let route = routesArray[index]
+        walkingTime(from: location.coordinate, to: route.departureCoordinates.coordinate) { [weak self] first in
+            guard let self, self.routeSearchID == requestID else { return }
+            self.walkingTime(from: route.destinationCoordinates.coordinate, to: self.selectedItemCoordination) { [weak self] second in
+                guard let self, self.routeSearchID == requestID else { return }
+                self.routesArray[index].walkingfromcurrent = first
+                self.routesArray[index].walkingtodestination = second
+                self.routesArray[index].totalwalk = first + second
+                self.measureWalking(from: location, index: index + 1, requestID: requestID)
             }
         }
     }
 
-    //MARK: Get Route Details
-    func getRouteDetails() {
-        for times in (0..<self.times.count) {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "HH:mm"
-            dateFormatter.timeZone = TimeZone(abbreviation: "GMT+00:00")
-            let departure = self.times[times].departures[0].time
-            let destination = self.times[times].departures[self.times[times].departures.count-1].time
-            let departuredate = dateFormatter.date(from: departure)
-            let destinationdate =  dateFormatter.date(from: destination)
-            let diffSeconds = destinationdate!.timeIntervalSinceReferenceDate - departuredate!.timeIntervalSinceReferenceDate
-            let diffMinutes = diffSeconds / 60
-            routesArray.append(Routes(departureID: self.times[times].departures[0].stopID,
-                                      departureName: self.times[times].departures[0].name,
-                                      departureTime: self.times[times].departures[0].time,
-                                      departureCoordinates: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0)),
-                                      destinationID: self.times[times].departures[self.times[times].departures.count-1].stopID,
-                                      destinationName: self.times[times].departures[self.times[times].departures.count-1].name,
-                                      destinationTime: self.times[times].departures[self.times[times].departures.count-1].time,
-                                      destinationCoordinates: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0)),
-                                      routetime: Int(diffMinutes),
-                                      walkingfromcurrent: 0,
-                                      walkingtodestination: 0,
-                                      services: self.times[times].serviceName,
-                                      totalwalk: 0.0))
-        }
-    }
-
-    //MARK: Get Start and Finish Stop Coordinates
-    func getStartandFinishCoordinates(){
-        for departure in suitableStopsAroundCurentLocationArray {
-            for suitable in (0..<routesArray.count) {
-                if departure.stopID == routesArray[suitable].departureID{
-                    routesArray[suitable].departureCoordinates = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: departure.latitude!, longitude: departure.longitude!), addressDictionary: nil)
-                }
-            }
-        }
-        for destination in suitableStopsAroundDestinationArray{
-            for suitable in (0..<routesArray.count){
-                if destination.stopID == routesArray[suitable].destinationID{
-                    routesArray[suitable].destinationCoordinates = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: destination.latitude!, longitude: destination.longitude!), addressDictionary: nil)
-                }
-            }
-        }
-    }
-    
-    //MARK: Get Walking Time
-    var count: Int = 0
-    var user_latitude = Double(0)
-    var user_longitude = Double(0)
-    func getWalkingTime(){
-        LocationManager.shared.getUserLocation { [weak self] location in
-            
-            guard let self = self else { return }
-            self.user_latitude = location.coordinate.latitude
-            self.user_longitude = location.coordinate.longitude
-            self.run(location: location, walkings: self.count) {
-                self.count += 1
-                if self.count < self.routesArray.count{
-                    self.getWalkingTime()
-                }
-            }
-        }
-    }
-    
-        //MARK: Repeat Request for Walking Time
-    func run(location: CLLocation, walkings: Int, completion: @escaping () -> ()){
-        
+    private func walkingTime(from start: CLLocationCoordinate2D, to finish: CLLocationCoordinate2D, completion: @escaping (Double) -> Void) {
         let request = MKDirections.Request()
-        let secondrequest = MKDirections.Request()
-        request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude), addressDictionary: nil))
-        request.destination = MKMapItem(placemark: self.routesArray[walkings].departureCoordinates)
-        request.requestsAlternateRoutes = true
+        request.source = MKMapItem(placemark: MKPlacemark(coordinate: start))
+        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: finish))
         request.transportType = .walking
+        let directions = MKDirections(request: request)
+        walkingDirections.append(directions)
+        directions.calculate { response, _ in
+            let minutes = response?.routes.map { $0.expectedTravelTime / 60 }.min() ?? .infinity
+            completion(minutes)
+        }
+    }
 
-        secondrequest.source = MKMapItem(placemark: self.routesArray[walkings].destinationCoordinates)
-        secondrequest.destination = MKMapItem(placemark: MKPlacemark(coordinate: self.selectedItemCoordination))
-        secondrequest.requestsAlternateRoutes = true
-        secondrequest.transportType = .walking
-        
-        self.walkings_calculator(request: request) { first_Double in
-            self.routesArray[walkings].walkingfromcurrent = first_Double
-            
-            self.walkings_calculator(request: secondrequest) { second_Double in
-                self.routesArray[walkings].walkingtodestination = second_Double
-                self.routesArray[walkings].totalwalk = first_Double + second_Double
-                completion()
+    private func chooseRoute(from location: CLLocation) {
+        let now = Date()
+        guard let route = routesArray.filter({
+            $0.totalwalk.isFinite && $0.departureDate.timeIntervalSince(now) >= $0.walkingfromcurrent * 60
+        }).min(by: { $0.totalwalk < $1.totalwalk }) else {
+            finishRouteSearch(error: String(localized: "routeTimeError"))
+            return
+        }
+        routeCoordinates = []
+        for service in servicesArray where service.name == route.services {
+            for variant in service.routes {
+                guard let start = variant.points.firstIndex(where: { Int($0.stopID ?? "") == route.departureID }),
+                      let finish = variant.points.indices.first(where: { $0 > start && Int(variant.points[$0].stopID ?? "") == route.destinationID }) else { continue }
+                routeCoordinates = variant.points[start...finish].map {
+                    CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude)
+                }.filter(CLLocationCoordinate2DIsValid)
+                break
+            }
+            if !routeCoordinates.isEmpty { break }
+        }
+        if routeCoordinates.count < 2 {
+            routeCoordinates = [route.departureCoordinates.coordinate, route.destinationCoordinates.coordinate]
+        }
+        map.removeOverlays(map.overlays)
+        polyLines(currentLocationLatitude: location.coordinate.latitude, currentLocationLongitude: location.coordinate.longitude,
+                  startStopLatitude: route.departureCoordinates.coordinate.latitude, startStopLongitude: route.departureCoordinates.coordinate.longitude,
+                  finalStopLatitude: route.destinationCoordinates.coordinate.latitude, finalStopLongitude: route.destinationCoordinates.coordinate.longitude,
+                  busRouteCoordinates: routeCoordinates, destinationLatitude: selectedItemCoordination.latitude,
+                  destinationLongitude: selectedItemCoordination.longitude, polymapView: map)
+        floatingpanelview.walkingFromCurrentTime = Int(ceil(route.walkingfromcurrent))
+        floatingpanelview.walkingToDestinationTime = Int(ceil(route.walkingtodestination))
+        floatingpanelview.routeTime = route.routetime
+        let total = Int(ceil(route.departureDate.timeIntervalSince(now) / 60)) + route.routetime + Int(ceil(route.walkingtodestination))
+        floatingpanelview.totaltime = String(total) + String(localized: "minutes")
+        floatingpanelview.departuretime = route.departureTime
+        floatingpanelview.service = route.services
+        selectedBusDataRepeat(selectedservice: route.services)
+        finishRouteSearch(error: nil)
+    }
+
+    private func setRouteControls(hidden: Bool) {
+        [minutesFor15Button, minutesFor30Button, minutesFor45Button, metersFor500Button, metersFor1000Button, metersFor1500Button].forEach { $0.isHidden = hidden }
+    }
+
+    private func finishRouteSearch(error: String?) {
+        cancelPendingRouteSearch()
+        loadingVC.dismiss(animated: false) { [weak self] in
+            guard let self else { return }
+            if let error {
+                self.setRouteControls(hidden: false)
+                self.showRouteError(error)
+            } else {
+                self.floatingPanel.show()
             }
         }
-        
     }
-        //MARK: Send Request for Walking Time
-    func walkings_calculator(request: MKDirections.Request, completion: @escaping (Double) -> ()) {
-        var time_duration: Double = 0
-        let directionsfromcurrent = MKDirections(request: request)
-        directionsfromcurrent.calculate {(response, error) -> Void in
-            guard let response = response else {
-               if let _ = error {
-                   completion(Double(9999))
-//                   String(localized: "walkingRouteError")
-//                   let alert = UIAlertController(title: String(localized: "walkingRouteError"), message: "", preferredStyle: .alert)
-//                   alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-//                   self.present(alert, animated: true, completion: nil)
-               }
-               return
-            }
-            if response.routes.count > 0 {
-                let route = response.routes[0]
-                time_duration = (route.expectedTravelTime / 60)
-                completion(Double(time_duration))
-            }
-        }
+
+    private func cancelPendingRouteSearch() {
+        routeSearchID = UUID()
+        routeTimeout?.cancel()
+        routeTimeout = nil
+        walkingDirections.forEach { $0.cancel() }
+        walkingDirections.removeAll()
+        timetableRequests.forEach { $0.cancel() }
+        timetableRequests.removeAll()
     }
-    
+
+    private func showRouteError(_ message: String) {
+        guard presentedViewController == nil, viewIfLoaded?.window != nil else { return }
+        let alert = UIAlertController(title: message, message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: .cancel))
+        alert.addAction(UIAlertAction(title: String(localized: "openInMaps"), style: .default) { [weak self] _ in
+            guard let self else { return }
+            let destination = MKMapItem(placemark: MKPlacemark(coordinate: self.selectedItemCoordination))
+            destination.name = self.selectedItemAnnotation.title
+            destination.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeTransit])
+        })
+        present(alert, animated: true)
+    }
+
     //MARK: Cancel Route Button
     func cancelRoute(){
+        cancelPendingRouteSearch()
+        selectedService = nil
+        timerForSelectedBus.invalidate()
         
         for selectedItemAnnotation in self.map.annotations {
             if let selectedItemAnnotation = selectedItemAnnotation as? CustomPointAnnotation, selectedItemAnnotation.customidentifier == "howToGoAnnotation" {
@@ -933,14 +621,15 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     }
     
     //MARK: Selected Bus Service Reload
-    func selectedBusDataRepeat(selectedservice: String){
-        timerForSelectedBus = Timer.scheduledTimer(withTimeInterval: 15, repeats: true, block: { _ in
-            self.selectedBusLocation(selectedservice: selectedservice)
-        })
+    func selectedBusDataRepeat(selectedservice: String) {
+        selectedService = selectedservice
+        timerForSelectedBus.invalidate()
+        let current = busses
+        busses = current
+        BusData()
+        BusDataRepeat()
     }
-    
-    
-    
+
 //MARK: Floating Panel Move Limit
     func floatingPanelDidMove(_ vc: FloatingPanelController) {
         if vc.isAttracting == false {
@@ -963,168 +652,36 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     }
     
     //MARK: Service Route Coordinates
-    func serviceLines(serviceName: String){
-        selectedServiceRouteCoordinates = []
-        selectedServiceRouteStopIDs = []
-        if serviceName != ""{
-            cancelServiceButton.isHidden = false
-            minutesFor15Button.isHidden = true
-            minutesFor30Button.isHidden = true
-            minutesFor45Button.isHidden = true
-            metersFor500Button.isHidden = true
-            metersFor1000Button.isHidden = true
-            metersFor1500Button.isHidden = true
-            for services in servicesArray {
-                if services.name == serviceName {
-                    let routenumber = services.routes.count-1
-                    
-                    //MARK: Selected Route Number
-                    if routenumber == 0{
-                        
-                    }
-                    if routenumber == 1{
-                        route1.isHidden = false
-                        route2.isHidden = false
-                    }
-                    if routenumber == 2{
-                        route1.isHidden = false
-                        route2.isHidden = false
-                        route3.isHidden = false
-                    }
-                    if routenumber == 3{
-                        route1.isHidden = false
-                        route2.isHidden = false
-                        route3.isHidden = false
-                        route4.isHidden = false
-                    }
-                    
-                    //MARK: Selected Route Marking
-                    if services.routes.count != 0{
-                        
-                        
-                        //MARK: Route 1
-                        if route1check == true{
-                            if map.overlays.isEmpty {
-                                
-                            } else{
-                                map.removeOverlays(map.overlays)
-                                for ServiceStopAnnotation in self.map.annotations {
-                                    if let ServiceStopAnnotation = ServiceStopAnnotation as? CustomPointAnnotation, ServiceStopAnnotation.customidentifier == "busStopAnnotation" {
-                                        map.removeAnnotation(ServiceStopAnnotation)
-                                    }
-                                }
-                                for BusAnnotation in self.map.annotations {
-                                    if let BusAnnotation = BusAnnotation as? CustomPointAnnotation, BusAnnotation.customidentifier == "selectedBusAnnotation" {
-                                        map.removeAnnotation(BusAnnotation)
-                                    }
-                                }
-                            }
-                            let serviceRoutes = services.routes[0]
-                            for serviceCoordinates in serviceRoutes.points {
-                                if serviceCoordinates.stopID != nil {
-                                    selectedServiceRouteStopIDs.append(Int(serviceCoordinates.stopID ?? "0") ?? 0)
-                                }
-                                let servicecoordinates = CLLocationCoordinate2DMake(serviceCoordinates.latitude, serviceCoordinates.longitude);
-                                selectedServiceRouteCoordinates.append(servicecoordinates)
-                            }
-                        }
-                        
-                        //MARK: Route 2
-                        if route2check == true{
-                            if map.overlays.isEmpty {
-                                
-                            } else{
-                                map.removeOverlays(map.overlays)
-                                for ServiceStopAnnotation in map.annotations {
-                                    if let ServiceStopAnnotation = ServiceStopAnnotation as? CustomPointAnnotation, ServiceStopAnnotation.customidentifier == "busStopAnnotation" {
-                                        map.removeAnnotation(ServiceStopAnnotation)
-                                    }
-                                }
-                                for BusAnnotation in self.map.annotations {
-                                    if let BusAnnotation = BusAnnotation as? CustomPointAnnotation, BusAnnotation.customidentifier == "selectedBusAnnotation" {
-                                        map.removeAnnotation(BusAnnotation)
-                                    }
-                                }
-                                
-                            }
-                            let serviceRoutes = services.routes[1]
-                            for serviceCoordinates in serviceRoutes.points {
-                                if serviceCoordinates.stopID != nil {
-                                    selectedServiceRouteStopIDs.append(Int(serviceCoordinates.stopID ?? "0") ?? 0)
-                                }
-                                let servicecoordinates = CLLocationCoordinate2DMake(serviceCoordinates.latitude, serviceCoordinates.longitude);
-                                selectedServiceRouteCoordinates.append(servicecoordinates)
-                            }
-                        }
-                        
-                        //MARK: Route 3
-                        if route3check == true{
-                            if self.map.overlays.isEmpty {
-                                
-                            } else{
-                                self.map.removeOverlays(self.map.overlays)
-                                for ServiceStopAnnotation in self.map.annotations {
-                                    if let ServiceStopAnnotation = ServiceStopAnnotation as? CustomPointAnnotation, ServiceStopAnnotation.customidentifier == "busStopAnnotation" {
-                                        self.map.removeAnnotation(ServiceStopAnnotation)
-                                    }
-                                }
-                                for BusAnnotation in self.map.annotations {
-                                    if let BusAnnotation = BusAnnotation as? CustomPointAnnotation, BusAnnotation.customidentifier == "selectedBusAnnotation" {
-                                        self.map.removeAnnotation(BusAnnotation)
-                                    }
-                                }
-                                
-                            }
-                            let serviceRoutes = services.routes[2]
-                            for serviceCoordinates in serviceRoutes.points {
-                                if serviceCoordinates.stopID != nil {
-                                    selectedServiceRouteStopIDs.append(Int(serviceCoordinates.stopID ?? "0") ?? 0)
-                                }
-                                let servicecoordinates = CLLocationCoordinate2DMake(serviceCoordinates.latitude, serviceCoordinates.longitude);
-                                selectedServiceRouteCoordinates.append(servicecoordinates)
-                            }
-                        }
-                        
-                        //MARK: Route 4
-                        if route4check == true{
-                            if self.map.overlays.isEmpty {
-                                
-                            } else{
-                                self.map.removeOverlays(self.map.overlays)
-                                for ServiceStopAnnotation in self.map.annotations {
-                                    if let ServiceStopAnnotation = ServiceStopAnnotation as? CustomPointAnnotation, ServiceStopAnnotation.customidentifier == "busStopAnnotation" {
-                                        self.map.removeAnnotation(ServiceStopAnnotation)
-                                    }
-                                }
-                                for BusAnnotation in self.map.annotations {
-                                    if let BusAnnotation = BusAnnotation as? CustomPointAnnotation, BusAnnotation.customidentifier == "selectedBusAnnotation" {
-                                        self.map.removeAnnotation(BusAnnotation)
-                                    }
-                                }
-                                
-                            }
-                            let serviceRoutes = services.routes[3]
-                            for serviceCoordinates in serviceRoutes.points {
-                                if serviceCoordinates.stopID != nil {
-                                    selectedServiceRouteStopIDs.append(Int(serviceCoordinates.stopID ?? "0") ?? 0)
-                                }
-                                let servicecoordinates = CLLocationCoordinate2DMake(serviceCoordinates.latitude, serviceCoordinates.longitude);
-                                selectedServiceRouteCoordinates.append(servicecoordinates)
-                            }
-                        }
-                    }
-                }
-            }
-            servicePolyLine(selectedServiceRouteCoordinates: selectedServiceRouteCoordinates, stopID: selectedServiceRouteStopIDs, servicepPolyMapView: map)
-            selectedBusLocation(selectedservice: serviceName)
-            for BusAnnotation in self.map.annotations {
-                if let BusAnnotation = BusAnnotation as? CustomPointAnnotation, BusAnnotation.customidentifier == "busAnnotation" {
-                    self.map.removeAnnotation(BusAnnotation)
-                }
-            }
-            selectedBusDataRepeat(selectedservice: serviceName)
-            timer.invalidate()
+    func serviceLines(serviceName: String) {
+        guard let service = servicesArray.first(where: { $0.name == serviceName }), !service.routes.isEmpty else {
+            showMessage(title: String(localized: "serviceRouteUnavailable"))
+            return
         }
+        let buttons = [route1, route2, route3, route4]
+        for (index, button) in buttons.enumerated() { button.isHidden = index >= service.routes.count }
+        let requested = route2check ? 1 : (route3check ? 2 : (route4check ? 3 : 0))
+        let index = service.routes.indices.contains(requested) ? requested : 0
+        route1check = index == 0
+        route2check = index == 1
+        route3check = index == 2
+        route4check = index == 3
+        for (position, button) in buttons.enumerated() {
+            button.backgroundColor = position == index ? UIColor.systemBlue.withAlphaComponent(0.5) : UIColor.white.withAlphaComponent(0.8)
+        }
+        selectedServiceRouteCoordinates = service.routes[index].points.map {
+            CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude)
+        }.filter(CLLocationCoordinate2DIsValid)
+        selectedServiceRouteStopIDs = service.routes[index].points.compactMap { Int($0.stopID ?? "") }
+        guard selectedServiceRouteCoordinates.count >= 2 else {
+            showMessage(title: String(localized: "serviceRouteUnavailable"))
+            return
+        }
+        map.removeOverlays(map.overlays)
+        map.removeAnnotations(map.annotations.compactMap { $0 as? CustomPointAnnotation }.filter { $0.customidentifier == "busStopAnnotation" })
+        cancelServiceButton.isHidden = false
+        setRouteControls(hidden: true)
+        servicePolyLine(selectedServiceRouteCoordinates: selectedServiceRouteCoordinates, stopID: selectedServiceRouteStopIDs, servicepPolyMapView: map)
+        selectedBusDataRepeat(selectedservice: serviceName)
     }
 
     //MARK: Service Route Polyline
@@ -1136,7 +693,9 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
         for busStops in self.stops {
             for stopIDs in stopID{
                 if busStops.stopID == stopIDs {
-                    let coordinate = CLLocationCoordinate2DMake(busStops.latitude!, busStops.longitude!)
+                    guard let latitude = busStops.latitude, let longitude = busStops.longitude,
+                          busStops.hasValidCoordinate else { continue }
+                    let coordinate = CLLocationCoordinate2DMake(latitude, longitude)
                     let busStopAnnotation = CustomPointAnnotation()
                     busStopAnnotation.coordinate = coordinate
                     busStopAnnotation.title = busStops.name
@@ -1149,6 +708,8 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     
     //MARK: Service Route Cancel
     @objc func removeServicePolyline(){
+        selectedService = nil
+        timerForSelectedBus.invalidate()
         cancelServiceButton.isHidden = true
         minutesFor15Button.isHidden = false
         minutesFor30Button.isHidden = false
@@ -1192,6 +753,7 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     
     //MARK: Map Location
     func mapLocation(){
+        map.setRegion(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 55.9533, longitude: -3.1883), latitudinalMeters: 7000, longitudinalMeters: 7000), animated: false)
         LocationManager.shared.getUserLocation { [weak self] location in DispatchQueue.main.async {
                 guard let strongSelf = self else {
                     return
@@ -1416,7 +978,9 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     //MARK: Current Location Button Action
     @objc func pressed() {
         zoom_count = 0
-        LocationManager.shared.getUserLocation { [weak self] location in DispatchQueue.main.async {
+        LocationManager.shared.getUserLocation(onError: { [weak self] _ in
+            self?.showMessage(title: String(localized: "locationUnavailable"))
+        }) { [weak self] location in DispatchQueue.main.async {
                 guard let strongSelf = self else {
                     return
                 }
@@ -1575,8 +1139,8 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     func zoomMap(byFactor delta: Double) {
         var region: MKCoordinateRegion = self.map.region
         var span: MKCoordinateSpan = map.region.span
-        span.latitudeDelta *= delta
-        span.longitudeDelta *= delta
+        span.latitudeDelta = min(170, max(0.0001, span.latitudeDelta * delta))
+        span.longitudeDelta = min(350, max(0.0001, span.longitudeDelta * delta))
         region.span = span
         map.setRegion(region, animated: true)
     }
@@ -1584,43 +1148,34 @@ class HomeViewController: UIViewController, UISearchBarDelegate, FloatingPanelCo
     
     
 //MARK: Bus Data
-    func BusDataRepeat(){
-        timer = Timer.scheduledTimer(withTimeInterval: 15, repeats: true, block: { _ in
-            self.BusData()
-        })
+    func BusDataRepeat() {
+        timer.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 15, repeats: true) { [weak self] _ in self?.BusData() }
     }
-    @objc func BusData(){
-        let basedata = GetBaseData()
-        basedata.busCompletionHandler { busses, error, message in
-            self.busses = busses ?? []
+
+    @objc func BusData() {
+        guard !busRequestInFlight else { return }
+        busRequestInFlight = true
+        let request = GetBaseData()
+        request.busCompletionHandler { [weak self] busses, success, _ in
+            guard let self else { return }
+            self.busRequestInFlight = false
+            self.busDataAvailable = success
+            self.busses = success ? (busses ?? []) : []
+            self.updateTransitStatus()
         }
-        basedata.getBusBaseData(endPoint: "vehicle_locations")
+        request.getBusBaseData(endPoint: "vehicle_locations")
     }
-    
-    
-    
-//MARK: Bus Stops Data
-    func BusStopsData(){
-        let basedata = GetBaseData()
-        basedata.completionHandler { stops, error, message in
-            
+
+    func BusStopsData() {
+        let request = GetBaseData()
+        request.completionHandler { [weak self] stops, success, _ in
+            guard let self else { return }
+            self.stopsDataAvailable = success
             self.stops = stops ?? []
+            self.updateTransitStatus()
         }
-        basedata.getStopsBaseData(endPoint: "stops")
-    }
-    
-    
-    
-//MARK: Time Data
-    let wait = DispatchGroup()
-    func timeData(timestring: String){
-        let basedata = GetBaseData()
-        self.wait.enter()
-        basedata.timeCompletionHandler { times, status, message in
-            self.times.append(contentsOf: times!)
-            self.wait.leave()
-        }
-        basedata.getTimeBaseData(endPoint: timestring)
+        request.getStopsBaseData(endPoint: "stops")
     }
 
 //MARK: Service Data

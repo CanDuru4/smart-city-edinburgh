@@ -68,3 +68,29 @@
 "cancelButton" = "Vazgeç";
 "min" = "dk";
 "routesButton" = "Rota: ";
+
+// Recovery and compatibility messages.
+"accountUnavailable" = "Hesap özellikleri şu anda kullanılamıyor.";
+"noCardAdded" = "Kart eklenmedi";
+"balanceUnavailable" = "Kullanılamıyor";
+"holdCardNearPhone" = "Bir kartı iPhone'unuzun üst kısmına yaklaştırın.";
+"oneCardAtATime" = "Aynı anda yalnızca bir kart okutun.";
+"unsupportedCard" = "Bu kart desteklenmiyor.";
+"cardIdentifierRead" = "Kart kimliği okundu.";
+"cardSaved" = "Kart kimliği kaydedildi";
+"passwordResetSent" = "Bu e-posta adresiyle bir hesap varsa şifre sıfırlama e-postası gönderildi.";
+"profileSetupIncomplete" = "Hesabınız oluşturuldu ancak profil kaydedilemedi. Giriş yaptıktan sonra Kişisel Bilgiler bölümünden tamamlayabilirsiniz.";
+"verificationEmailFailed" = "Hesabınız oluşturuldu ancak doğrulama e-postası gönderilemedi.";
+"updateIncomplete" = "Bazı değişiklikler kaydedilmiş olabilir. Bilgilerinizi kontrol edip tekrar deneyin.";
+"verifyNewEmail" = "Bilgiler kaydedildi. Yeni adresin geçerli olması için gönderdiğimiz e-postadan doğrulayın.";
+"transitUnavailable" = "Canlı ulaşım verileri kullanılamıyor.";
+"routeSearchTimedOut" = "Yolculuk araması zaman aşımına uğradı. Tekrar deneyin.";
+"locationUnavailable" = "Konumunuz bulunamadı. Ayarlar'dan konum iznini kontrol edip tekrar deneyin.";
+"openInMaps" = "Apple Haritalar'da aç";
+"loadingTransit" = "Ulaşım verileri yükleniyor...";
+"transitUnavailableRetry" = "Canlı ulaşım verileri kullanılamıyor. Tekrar denemek için dokunun.";
+"serviceRouteUnavailable" = "Bu hattın güzergah bilgileri kullanılamıyor.";
+"noStopsFound" = "Durak bulunamadı. Yenilemek için dokunun.";
+"unknownStop" = "İsimsiz durak";
+"retryProfileSetup" = "Profil kurulumunu tekrar dene";
+"continueButton" = "Devam";

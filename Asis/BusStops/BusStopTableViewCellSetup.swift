@@ -153,11 +153,11 @@ class BusStopTableViewCellSetup: UITableViewCell {
 
     
         //MARK: Maps'e Yönlendirme
-        let latitude = busstoptableStop.latitude
-        let longitude = busstoptableStop.longitude
+        guard let stop = busstoptableStop, stop.hasValidCoordinate,
+              let latitude = stop.latitude, let longitude = stop.longitude else { return }
         
         let regionDistance: CLLocationDistance = 1000;
-        let coordinates = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
+        let coordinates = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         
         let regionSpan = MKCoordinateRegion(center: coordinates, latitudinalMeters: regionDistance, longitudinalMeters: regionDistance)
         

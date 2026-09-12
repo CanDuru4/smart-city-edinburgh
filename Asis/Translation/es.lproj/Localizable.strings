@@ -68,3 +68,29 @@
 "cancelButton" = "Cancelar";
 "min" = "min";
 "routesButton" = "Ruta: ";
+
+// Recovery and compatibility messages.
+"accountUnavailable" = "Las funciones de cuenta no están disponibles en este momento.";
+"noCardAdded" = "No se añadió ninguna tarjeta";
+"balanceUnavailable" = "No disponible";
+"holdCardNearPhone" = "Acerca una tarjeta a la parte superior del iPhone.";
+"oneCardAtATime" = "Presenta una sola tarjeta a la vez.";
+"unsupportedCard" = "Esta tarjeta no es compatible.";
+"cardIdentifierRead" = "Identificador de tarjeta leído.";
+"cardSaved" = "Identificador de tarjeta guardado";
+"passwordResetSent" = "Si existe una cuenta con este correo, se ha enviado un mensaje para restablecer la contraseña.";
+"profileSetupIncomplete" = "Tu cuenta se creó, pero no se pudo guardar el perfil. Puedes completarlo en Información personal después de iniciar sesión.";
+"verificationEmailFailed" = "Tu cuenta se creó, pero no se pudo enviar el correo de verificación.";
+"updateIncomplete" = "Es posible que algunos cambios se hayan guardado. Revisa tus datos e inténtalo de nuevo.";
+"verifyNewEmail" = "Datos guardados. Verifica la nueva dirección con el correo enviado antes de que sustituya a la actual.";
+"transitUnavailable" = "Los datos de transporte en directo no están disponibles.";
+"routeSearchTimedOut" = "La búsqueda del trayecto tardó demasiado. Inténtalo de nuevo.";
+"locationUnavailable" = "No se encontró tu ubicación. Revisa el permiso de ubicación en Ajustes e inténtalo de nuevo.";
+"openInMaps" = "Abrir en Mapas de Apple";
+"loadingTransit" = "Cargando datos de transporte...";
+"transitUnavailableRetry" = "Los datos en directo no están disponibles. Toca para reintentar.";
+"serviceRouteUnavailable" = "Los detalles de esta línea no están disponibles.";
+"noStopsFound" = "No se encontraron paradas. Toca para recargar.";
+"unknownStop" = "Parada sin nombre";
+"retryProfileSetup" = "Reintentar configuración del perfil";
+"continueButton" = "Continuar";

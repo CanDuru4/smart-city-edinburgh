@@ -11,7 +11,7 @@ import UIKit
 class FloatingPanelTableViewController: UITableViewController {
 
 //MARK: Set Up
-    var parentvc: HomeViewController!
+    weak var parentvc: HomeViewController?
     var routeTime: Int!
     var walkingFromCurrentTime: Int!
     var walkingToDestinationTime: Int!
@@ -113,6 +113,6 @@ class FloatingPanelTableViewController: UITableViewController {
     
     //MARK: Cancel Route Button Action
     @objc func cancelRoute(){
-        parentvc.cancelRoute()
+        parentvc?.cancelRoute()
     }
 }

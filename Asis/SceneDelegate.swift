@@ -14,9 +14,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let _ = (scene as? UIWindowScene) else { return }
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        window = UIWindow(frame: UIScreen.main.bounds)
+        window = UIWindow(windowScene: windowScene)
 
         //MARK: Create Navigation Controller
         let nav = UINavigationController()
@@ -26,7 +25,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         //MARK: Set App Start
         self.window?.rootViewController = nav
         window?.makeKeyAndVisible()
-        window?.windowScene = windowScene
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -45,4 +43,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
 }
-

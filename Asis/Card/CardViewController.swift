@@ -1,438 +1,169 @@
-//
-//  CardViewController.swift
-//  Asis
-//
-//  Created by Can Duru on 2.08.2022.
-//
-
-//MARK: Import
 import UIKit
 import SideMenu
 import CoreNFC
 import FirebaseAuth
-import FirebaseFirestore
 
-class CardViewController: UIViewController, NFCTagReaderSessionDelegate {
-    
-    
-//MARK: Set Up
-    
-    //MARK: NFC Set Up
-    var session: NFCReaderSession?
-    
-    
-    //MARK: Auth Set Up
-    weak var handle: AuthStateDidChangeListenerHandle?
+/// Displays the signed-in user's NFC identifier without inventing a transport balance.
+///
+/// Core NFC supplies a tag identifier, not the operator's balance or card number.
+/// Example: show this controller in the My Cards navigation tab.
+final class CardViewController: UIViewController, NFCTagReaderSessionDelegate {
+    private var session: NFCTagReaderSession?
+    private var handle: AuthStateDidChangeListenerHandle?
+    private let profile = UserProfileStore()
+    private var scanUserID: String?
+    private let testcard = CreditCardView(frame: .zero, template: .Flat(.systemGray))
+    private let addCardButton = UIButton(type: .system)
+    private var menu: SideMenuNavigationController?
 
-    //MARK: Side Menu Set Up
-    var menu: SideMenuNavigationController?
-    lazy var menuBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "sidebar.leading")?.withRenderingMode(.alwaysOriginal).withTintColor(.systemBlue), style: .done, target: self, action: #selector(menuBarButtonItemTapped))
-    @objc
-    func menuBarButtonItemTapped(){
-        present(menu!, animated: true)
-    }
-    lazy var menuView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .systemGray5
-        return view
-    }()
-    lazy var containerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .systemBackground
-        return view
-    }()
-    
-    
-    
-//MARK: Load
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        //MARK: Side Menu Load
-        navigationItem.setLeftBarButton(menuBarButtonItem, animated: false)
+        view.backgroundColor = .systemBackground
         menu = SideMenuNavigationController(rootViewController: MenuListController())
         menu?.leftSide = true
-        menu?.setNavigationBarHidden(true, animated: false)
-        
-        //MARK: Default Card View
-        defaultView()
-        
-                //MARK: User Logged In
-        handle = Auth.auth().addStateDidChangeListener { [weak self] (auth, user) in
-            guard let self = self else {return}
-            if ((user) != nil) {
-                //MARK: Card Name Set
-                self.getUserData()
-                self.getCardData()
-                self.getBalanceData()
-                //MARK: User Not Logged In
-            } else {
-
-            }
-        }
-    }
-    
-
-    
-//MARK: Default View
-    var testcard = CreditCardView()
-    func defaultView(){
-        //MARK: Card
-        let c3:UIColor = UIColor(ciColor: .gray)
-        let midX = self.view.bounds.midX
-        let minY = self.view.safeAreaInsets.top
-        let width = self.view.bounds.width
-        let height = self.view.bounds.height
-        testcard = CreditCardView(frame: CGRect(x: midX-((width-40)/2), y: (minY+(height/8)), width: width-40, height: 215), template: .Flat(c3))
-        testcard.numLabel.text = "XXXX XXXX XXX XXX"
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "sidebar.leading"), style: .plain, target: self, action: #selector(showMenu))
         view.addSubview(testcard)
-        
-        //MARK: Button
-        let addCardButton = UIButton(type: .custom)
-        addCardButton.setTitle(String(localized: "addCardButton"), for: .normal)
-        addCardButton.tintColor = .black
-        addCardButton.backgroundColor = .systemBlue
-        addCardButton.addTarget(self, action: #selector(pressed), for: .touchUpInside)
         view.addSubview(addCardButton)
-    
+        testcard.translatesAutoresizingMaskIntoConstraints = false
         addCardButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([addCardButton.topAnchor.constraint(equalTo: testcard.bottomAnchor, constant: 10), addCardButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50), addCardButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50), addCardButton.heightAnchor.constraint(equalToConstant: 30)])
-        addCardButton.layer.cornerRadius = 15
-        addCardButton.layer.masksToBounds = true
+        addCardButton.setTitle(String(localized: "addCardButton"), for: .normal)
+        addCardButton.addTarget(self, action: #selector(pressed), for: .touchUpInside)
+        addCardButton.accessibilityIdentifier = "scanCardButton"
+        NSLayoutConstraint.activate([
+            testcard.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
+            testcard.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            testcard.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, constant: -40),
+            testcard.heightAnchor.constraint(equalToConstant: 215),
+            addCardButton.topAnchor.constraint(equalTo: testcard.bottomAnchor, constant: 16),
+            addCardButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            addCardButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 44)
+        ])
+        resetCard()
     }
-    
 
-
-//MARK: Get User Data
-    func getUserData(){
-        userid(name: "String") { (useruid) in
-            Auth.auth().addStateDidChangeListener { (auth, user) in
-                if (user != nil) {
-                    let db = Firestore.firestore()
-                    db.collection("users").document(useruid)
-                        .addSnapshotListener { documentSnapshot, error in
-                          guard let document = documentSnapshot else {
-                            print("Error fetching document: \(error!)")
-                            return
-                          }
-                          guard let data = document.data()?["name"] else {
-                            print("Document data was empty.")
-                            return
-                          }
-                            self.testcard.nameLabel.text = data as? String
-                            
-                        }
-                }
-            }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        guard Backend.isConfigured else {
+            addCardButton.isEnabled = false
+            testcard.nameLabel.text = String(localized: "accountUnavailable")
+            return
         }
-    }
-    
-    
-    
-//MARK: Get Card Data
-    func getCardData(){
-        userid(name: "String") { (useruid) in
-            Auth.auth().addStateDidChangeListener { (auth, user) in
-                if (user != nil) {
-                    let db = Firestore.firestore()
-                    db.collection("users").document(useruid)
-                        .addSnapshotListener { documentSnapshot, error in
-                          guard let document = documentSnapshot else {
-                            print("Error fetching document: \(error!)")
-                            return
-                          }
-                          guard let data = document.data()?["cardnumber"] else {
-                            print("Document data was empty.")
-                            return
-                          }
-                            if (data as! String) != ("") {
-                                self.testcard.numLabel.text = data as? String
-                                
-                            }
-                        }
-                }
-            }
-        }
-    }
-
-    
-    
-//MARK: Get Balance Data
-    func getBalanceData(){
-        userid(name: "String") { (useruid) in
-            Auth.auth().addStateDidChangeListener { (auth, user) in
-                if (user != nil) {
-                    let db = Firestore.firestore()
-                    db.collection("users").document(useruid)
-                        .addSnapshotListener { documentSnapshot, error in
-                          guard let document = documentSnapshot else {
-                            print("Error fetching document: \(error!)")
-                            return
-                          }
-                          guard let data = document.data()?["balance"] else {
-                            print("Document data was empty.")
-                            return
-                          }
-                            if (data as! String) != ("") {
-                                self.testcard.expLabel.text = ((data as? String)!) + " £"
-                                
-                            }
-                        }
-                }
-            }
-        }
-    }
-
-    
-    
-//MARK: Get User Path
-    func userid(name: String, completion: @escaping (String) -> Void){
-        let db = Firestore.firestore()
-        let user = Auth.auth().currentUser
-        let uid = user!.uid
-        db.collection("users").whereField("uid", isEqualTo: uid)
-            .getDocuments() { (querySnapshot, err) in
-                if err != nil {
-                    let alert = UIAlertController(title: String(localized: "dataError"), message: "", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                } else {
-                    for document in (querySnapshot!.documents) {
-                        let useruid = document.documentID
-                        completion(useruid)
-                    }
-                }
-            }
-    }
-    
-    
-    
-//MARK: NFC
-    @objc func pressed() {
-        
-        //MARK: Kullanıcı Var
-        let user = Auth.auth().currentUser
-        if ((user) != nil) {
-            guard NFCNDEFReaderSession.readingAvailable else {
-                let alertController = UIAlertController(
-                    title: String(localized: "notScanSupportedError"),
-                    message: String(localized: "notScanSupportedErrorDetail"),
-                    preferredStyle: .alert
-                )
-                alertController.addAction(UIAlertAction(title: String(localized: "okButton"), style: .default, handler: nil))
-                self.present(alertController, animated: true, completion: nil)
+        guard handle == nil else { return }
+        handle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
+            guard let self else { return }
+            self.profile.stop()
+            self.resetCard()
+            guard let user else {
+                self.session?.invalidate()
+                self.scanUserID = nil
                 return
             }
-
-            //MARK: NFC Taraması Başlatıldı
-            session = NFCTagReaderSession(pollingOption: [.iso14443, .iso15693], delegate: self)
-            session?.alertMessage = String(localized: "scanSuccess")
-            session?.begin()
-            
-        //MARK: Kullanıcı Yok
-        } else {
-            let alert = UIAlertController(title: String(localized: "notLoggedInError"), message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            self.profile.observe(uid: user.uid) { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let data):
+                    self.testcard.nameLabel.text = data["name"] as? String ?? ""
+                    self.testcard.numLabel.text = data["cardnumber"] as? String ?? String(localized: "noCardAdded")
+                case .failure:
+                    self.showMessage(title: String(localized: "dataError"))
+                }
+            }
         }
     }
 
-
-    
-//MARK: NFC Taraması Aktif
-    func tagReaderSessionDidBecomeActive(_ session: NFCTagReaderSession) {
-        
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        profile.stop()
+        if let handle, Backend.isConfigured { Auth.auth().removeStateDidChangeListener(handle) }
+        handle = nil
+        session?.invalidate()
+        session = nil
+        scanUserID = nil
+        resetCard()
     }
-    
 
-    
-//MARK: Hata Oluştu
+    private func resetCard() {
+        testcard.nameLabel.text = ""
+        testcard.numLabel.text = String(localized: "noCardAdded")
+        testcard.expLabel.text = String(localized: "balanceUnavailable")
+        testcard.numLabel.adjustsFontSizeToFitWidth = true
+        testcard.numLabel.minimumScaleFactor = 0.4
+    }
+
+    @objc private func showMenu() {
+        guard let menu else { return }
+        present(menu, animated: true)
+    }
+
+    @objc private func pressed() {
+        guard Backend.isConfigured, let user = Auth.auth().currentUser else {
+            showMessage(title: String(localized: "notLoggedInError"))
+            return
+        }
+        guard NFCTagReaderSession.readingAvailable else {
+            showMessage(title: String(localized: "notScanSupportedError"), message: String(localized: "notScanSupportedErrorDetail"))
+            return
+        }
+        guard session == nil else { return }
+        scanUserID = user.uid
+        session = NFCTagReaderSession(pollingOption: [.iso14443, .iso15693], delegate: self, queue: .main)
+        session?.alertMessage = String(localized: "holdCardNearPhone")
+        session?.begin()
+    }
+
+    func tagReaderSessionDidBecomeActive(_ session: NFCTagReaderSession) {}
+
     func tagReaderSession(_ session: NFCTagReaderSession, didInvalidateWithError error: Error) {
-        if let readerError = error as? NFCReaderError {
-            if (readerError.code != .readerSessionInvalidationErrorFirstNDEFTagRead)
-                && (readerError.code != .readerSessionInvalidationErrorUserCanceled) {
-                let alertController = UIAlertController(
-                    title: String(localized: "timeOutError"),
-                    message: error.localizedDescription,
-                    preferredStyle: .alert
-                )
-                alertController.addAction(UIAlertAction(title: String(localized: "okButton"), style: .default, handler: nil))
-                DispatchQueue.main.async {
-                    self.present(alertController, animated: true, completion: nil)
-                }
-            }
-        }
-
+        guard self.session === session else { return }
         self.session = nil
+        scanUserID = nil
+        guard let readerError = error as? NFCReaderError,
+              readerError.code != .readerSessionInvalidationErrorUserCanceled,
+              readerError.code != .readerSessionInvalidationErrorFirstNDEFTagRead else { return }
+        showMessage(title: String(localized: "timeOutError"), message: error.localizedDescription)
     }
-    
-    
-    
-//MARK: Kart Okundu
+
     func tagReaderSession(_ session: NFCTagReaderSession, didDetect tags: [NFCTag]) {
-        guard let tag = tags.first else { return }
-        let db = Firestore.firestore()
-        let user = Auth.auth().currentUser
-        let uid = user!.uid
-        
-        //MARK: 15693 Kodlu Kart
-        if case .iso15693(let nfc15693Tag) = tag {
-            var byteData = [UInt8]()
-            nfc15693Tag.identifier.withUnsafeBytes { byteData.append(contentsOf: $0) }
-            var uidcard = "0"
-            byteData.forEach {
-                uidcard.append(String($0, radix: 16))
-            }
-            
-            //MARK: Set Card Number
-            let first_four = uidcard.prefix(4)
-            
-            let start = uidcard.index(uidcard.startIndex, offsetBy: 4)
-            let end = uidcard.index(uidcard.startIndex, offsetBy: 7)
-            let range = start...end
-            let second_four = String(uidcard[range])
-            
-            let start1 = uidcard.index(uidcard.startIndex, offsetBy: 8)
-            let end1 = uidcard.index(uidcard.startIndex, offsetBy: 10)
-            let range1 = start1...end1
-            let first_three = String(uidcard[range1])
-            
-            let start2 = uidcard.index(uidcard.startIndex, offsetBy: 11)
-            let end2 = uidcard.index(uidcard.startIndex, offsetBy: uidcard.count-1)
-            let range2 = start2...end2
-            let second_three = String(uidcard[range2])
-
-            let cardnumber = first_four + " " + second_four + " " + first_three + " " + second_three
-            userid(name: "String") { (useruid) in
-                Auth.auth().addStateDidChangeListener { (auth, user) in
-                    if (user != nil) {
-                        let randomint = Int.random(in: 1..<100)
-                        
-                        //MARK: Update User
-                        db.collection("users").document(useruid).updateData(["cardnumber": cardnumber, "balance": String(randomint), "uid": uid]) { (error) in
-                            if error != nil {
-                                let alert = UIAlertController(title: String(localized: "dataError"), message: "", preferredStyle: .alert)
-                                alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-                                self.present(alert, animated: true, completion: nil)
-                            }
-                        }
-                    }
-                }
-            }
-            DispatchQueue.main.async {
-                let _ = { () in
-                    self.dismiss(animated: true, completion: {
-                    })
-                }
-            }
-            session.invalidate()
+        guard self.session === session, let scanUserID,
+              Backend.isConfigured, Auth.auth().currentUser?.uid == scanUserID else {
+            session.invalidate(errorMessage: String(localized: "notLoggedInError"))
+            return
         }
-        
-        //MARK: Mifare Kodlu Kart
-        if case .miFare(let mifareTag) = tag {
-            var byteData = [UInt8]()
-            mifareTag.identifier.withUnsafeBytes { byteData.append(contentsOf: $0) }
-            var uidcard = "0"
-            byteData.forEach {
-                uidcard.append(String($0, radix: 16))
-            }
-            
-            //MARK: Set Card Number
-            let first_four = uidcard.prefix(4)
-            
-            let start = uidcard.index(uidcard.startIndex, offsetBy: 4)
-            let end = uidcard.index(uidcard.startIndex, offsetBy: 7)
-            let range = start...end
-            let second_four = String(uidcard[range])
-            
-            let start1 = uidcard.index(uidcard.startIndex, offsetBy: 8)
-            let end1 = uidcard.index(uidcard.startIndex, offsetBy: 10)
-            let range1 = start1...end1
-            let first_three = String(uidcard[range1])
-            
-            let start2 = uidcard.index(uidcard.startIndex, offsetBy: 11)
-            let end2 = uidcard.index(uidcard.startIndex, offsetBy: uidcard.count-1)
-            let range2 = start2...end2
-            let second_three = String(uidcard[range2])
-
-            let cardnumber = first_four + " " + second_four + " " + first_three + " " + second_three
-            userid(name: "String") { (useruid) in
-                Auth.auth().addStateDidChangeListener { (auth, user) in
-                    if (user != nil) {
-                        let randomint = Int.random(in: 1..<100)
-                        
-                        //MARK: Update User
-                        db.collection("users").document(useruid).updateData(["cardnumber": cardnumber, "balance": String(randomint), "uid": uid]) { (error) in
-                            if error != nil {
-                                let alert = UIAlertController(title: String(localized: "dataError"), message: "", preferredStyle: .alert)
-                                alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-                                self.present(alert, animated: true, completion: nil)
-                            }
-                        }
-                    }
-                }
-            }
-            DispatchQueue.main.async {
-                let _ = { () in
-                    self.dismiss(animated: true, completion: {
-                    })
-                }
-            }
-            session.invalidate()
+        guard tags.count == 1, let tag = tags.first else {
+            session.alertMessage = String(localized: "oneCardAtATime")
+            session.restartPolling()
+            return
         }
-        
-        //MARK: 7816 Kodlu Kart
-        if case .iso7816(let nfc7816Tag) = tag {
-            var byteData = [UInt8]()
-            nfc7816Tag.identifier.withUnsafeBytes { byteData.append(contentsOf: $0) }
-            var uidcard = "0"
-            byteData.forEach {
-                uidcard.append(String($0, radix: 16))
-            }
-            
-            //MARK: Set Card Number
-            let first_four = uidcard.prefix(4)
-            
-            let start = uidcard.index(uidcard.startIndex, offsetBy: 4)
-            let end = uidcard.index(uidcard.startIndex, offsetBy: 7)
-            let range = start...end
-            let second_four = String(uidcard[range])
-            
-            let start1 = uidcard.index(uidcard.startIndex, offsetBy: 8)
-            let end1 = uidcard.index(uidcard.startIndex, offsetBy: 10)
-            let range1 = start1...end1
-            let first_three = String(uidcard[range1])
-            
-            let start2 = uidcard.index(uidcard.startIndex, offsetBy: 11)
-            let end2 = uidcard.index(uidcard.startIndex, offsetBy: uidcard.count-1)
-            let range2 = start2...end2
-            let second_three = String(uidcard[range2])
-
-            let cardnumber = first_four + " " + second_four + " " + first_three + " " + second_three
-            userid(name: "String") { (useruid) in
-                Auth.auth().addStateDidChangeListener { (auth, user) in
-                    if (user != nil) {
-                        let randomint = Int.random(in: 1..<100)
-                        
-                        //MARK: Update User
-                        db.collection("users").document(useruid).updateData(["cardnumber": cardnumber, "balance": String(randomint), "uid": uid]) { (error) in
-                            if error != nil {
-                                let alert = UIAlertController(title: String(localized: "dataError"), message: "", preferredStyle: .alert)
-                                alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-                                self.present(alert, animated: true, completion: nil)
-                            }
-                        }
-                    }
-                }
-            }
-            DispatchQueue.main.async {
-                let _ = { () in
-                    self.dismiss(animated: true, completion: {
-                    })
-                }
-            }
-            session.invalidate()
+        let identifier: Data
+        switch tag {
+        case .iso15693(let card): identifier = card.identifier
+        case .miFare(let card): identifier = card.identifier
+        case .iso7816(let card): identifier = card.identifier
+        default:
+            session.invalidate(errorMessage: String(localized: "unsupportedCard"))
+            return
         }
+        let value = CardIdentifier.hex(identifier)
+        guard !value.isEmpty else {
+            session.invalidate(errorMessage: String(localized: "unsupportedCard"))
+            return
+        }
+        self.session = nil
+        self.scanUserID = nil
+        session.alertMessage = String(localized: "cardIdentifierRead")
+        session.invalidate()
+        UserProfileStore.update(fields: ["cardnumber": value]) { [weak self] error in
+            guard let self, Backend.isConfigured, Auth.auth().currentUser?.uid == scanUserID else { return }
+            if let error {
+                self.showMessage(title: String(localized: "dataError"), message: error.localizedDescription)
+            } else {
+                self.testcard.numLabel.text = value
+                self.showMessage(title: String(localized: "cardSaved"))
+            }
+        }
+    }
+
+    deinit {
+        if let handle, Backend.isConfigured { Auth.auth().removeStateDidChangeListener(handle) }
     }
 }

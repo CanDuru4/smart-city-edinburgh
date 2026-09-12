@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>TransitAPIBaseURL</key>
+	<string>https://tfe-opendata.com/api/v1/</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location is used to find nearby stops and plan journeys.</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NFCReaderUsageDescription</key>

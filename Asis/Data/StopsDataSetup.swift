@@ -23,6 +23,12 @@ struct Stop: Decodable {
     var latitude: Double?
     var longitude: Double?
     var destinations, services: [String]
+
+    /// Indicates whether this stop can be placed on a map without inventing coordinates.
+    var hasValidCoordinate: Bool {
+        guard let latitude, let longitude else { return false }
+        return (-90...90).contains(latitude) && (-180...180).contains(longitude)
+    }
     
     enum CodingKeys: String, CodingKey {
         case stopID = "stop_id"
@@ -33,4 +39,3 @@ struct Stop: Decodable {
 
     }
 }
-

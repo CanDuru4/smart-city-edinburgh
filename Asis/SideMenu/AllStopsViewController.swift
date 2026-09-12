@@ -20,10 +20,12 @@ class AllStopsViewController: UIViewController {
     var stopsAnnotationView:MKPinAnnotationView!
     var stops:[Stop] = [] {
         didSet{
+            map.removeAnnotations(map.annotations.filter { !($0 is MKUserLocation) })
             let stopscount = stops.count
             for i in (0..<stopscount){
                 //MARK: Annotate Stops
-                let coordinate = CLLocationCoordinate2DMake(stops[i].latitude!, stops[i].longitude!)
+                guard let latitude = stops[i].latitude, let longitude = stops[i].longitude, stops[i].hasValidCoordinate else { continue }
+                let coordinate = CLLocationCoordinate2DMake(latitude, longitude)
                 let stopsAnnotation = CustomPointAnnotation()
                 stopsAnnotation.coordinate = coordinate
                 stopsAnnotation.title = stops[i].name
@@ -78,6 +80,7 @@ class AllStopsViewController: UIViewController {
     
 //MARK: Map
     func mapLocation(){
+        map.setRegion(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 55.9533, longitude: -3.1883), latitudinalMeters: 7000, longitudinalMeters: 7000), animated: false)
         LocationManager.shared.getUserLocation { [weak self] location in DispatchQueue.main.async {
                 guard let strongSelf = self else {
                     return
@@ -137,7 +140,9 @@ class AllStopsViewController: UIViewController {
 
     //MARK: Current Location Button Action
     @objc func pressed() {
-        LocationManager.shared.getUserLocation { [weak self] location in DispatchQueue.main.async {
+        LocationManager.shared.getUserLocation(onError: { [weak self] _ in
+            self?.showMessage(title: String(localized: "locationUnavailable"))
+        }) { [weak self] location in DispatchQueue.main.async {
                 guard let strongSelf = self else {
                     return
                 }
@@ -162,8 +167,8 @@ class AllStopsViewController: UIViewController {
     func zoomMap(byFactor delta: Double) {
         var region: MKCoordinateRegion = self.map.region
         var span: MKCoordinateSpan = map.region.span
-        span.latitudeDelta *= delta
-        span.longitudeDelta *= delta
+        span.latitudeDelta = min(170, max(0.0001, span.latitudeDelta * delta))
+        span.longitudeDelta = min(350, max(0.0001, span.longitudeDelta * delta))
         region.span = span
         map.setRegion(region, animated: true)
     }
@@ -173,8 +178,10 @@ class AllStopsViewController: UIViewController {
 //MARK: Bus Stops Data
         func BusStopsData(){
             let basedata = GetBaseData()
-            basedata.completionHandler { stops, error, message in
+            basedata.completionHandler { [weak self] stops, success, _ in
+                guard let self else { return }
                 self.stops = stops ?? []
+                if !success { self.showMessage(title: String(localized: "transitUnavailable")) }
             }
             basedata.getStopsBaseData(endPoint: "stops")
         }

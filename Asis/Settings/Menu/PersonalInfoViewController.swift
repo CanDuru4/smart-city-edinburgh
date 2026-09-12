@@ -9,7 +9,6 @@
 import UIKit
 import FirebaseAuth
 import FirebaseFirestore
-import FirebaseDatabase
 
 class PersonalInfoViewController: UIViewController {
     
@@ -24,13 +23,14 @@ class PersonalInfoViewController: UIViewController {
     var passwordField = UITextField()
     var passwordAuthenticateField = UITextField()
     var saveButton = UIButton()
+    private let profile = UserProfileStore()
     
 
     
 //MARK: Load
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         setLabels()
         getUserData()
         
@@ -67,6 +67,8 @@ class PersonalInfoViewController: UIViewController {
         emailField.layer.borderColor = CGColor(red: 13/255, green: 95/255, blue: 255/255, alpha: 1)
         emailField.layer.borderWidth = CGFloat(1)
         emailField.autocorrectionType = .no
+        emailField.keyboardType = .emailAddress
+        emailField.textContentType = .emailAddress
         view.addSubview(emailField)
         emailField.translatesAutoresizingMaskIntoConstraints = false
 
@@ -169,211 +171,103 @@ class PersonalInfoViewController: UIViewController {
     
     
 //MARK: Update User Button Action
-    @objc func updateUser(){
-        
-        
-        //MARK: Validate Fields
-        let error = validateFields()
-    
-        if error != nil {
-
-        } else {
-            
-            //MARK: Name, Email, and Password Field Checked
-            let user = Auth.auth().currentUser
-            let email = user?.email?.lowercased()
-            let password = currentpasswordField.text
-            Auth.auth().signIn(withEmail: email ?? "", password: password ?? "") { [weak self] authResult, error in
-              guard let strongSelf = self else { return }
-                if error != nil {
-                    
-                    //MARK: User Current Password Wrong
-                    let alert = UIAlertController(title: String(localized: "passwordError"), message: "", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-                    strongSelf.present(alert, animated: true, completion: nil)
-                } else {
-                    
-                    //MARK: User Current Password Correct
-                    self?.changeuser()
-                }
-            }
+    @objc func updateUser() {
+        guard Backend.isConfigured, saveButton.isEnabled, let user = Auth.auth().currentUser,
+              let currentEmail = user.email else {
+            showMessage(title: String(localized: "notLoggedInError"))
+            return
         }
-    }
-    
-    
-
-//MARK: Get User Data
-    func getUserData(){
-        userid(name: "String") { (useruid) in
-            Auth.auth().addStateDidChangeListener { (auth, user) in
-                if (user != nil) {
-                    let user = Auth.auth().currentUser
-                    let db = Firestore.firestore()
-                    db.collection("users").document(useruid)
-                        .addSnapshotListener { documentSnapshot, error in
-                          guard let document = documentSnapshot else {
-                            print("Error fetching document: \(error!)")
-                            return
-                          }
-                          guard let data = document.data()?["name"] else {
-                            print("Document data was empty.")
-                            return
-                          }
-                            self.nameField.text = data as? String
-                            self.emailField.text = user?.email
-                        }
-                }
-            }
+        let name = (nameField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        let email = (emailField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        let currentPassword = currentpasswordField.text ?? ""
+        let newPassword = passwordField.text ?? ""
+        let confirmation = passwordAuthenticateField.text ?? ""
+        guard !name.isEmpty, !email.isEmpty, !currentPassword.isEmpty else {
+            showMessage(title: String(localized: "basicFillError"))
+            return
         }
-    }
-    
-
-
-//MARK: Get User Path
-    func userid(name: String, completion: @escaping (String) -> Void){
-        let db = Firestore.firestore()
-        let user = Auth.auth().currentUser
-        let uid = user!.uid
-        db.collection("users").whereField("uid", isEqualTo: uid)
-            .getDocuments() { (querySnapshot, err) in
-                if err != nil {
-                    let alert = UIAlertController(title: String(localized: "dataError"), message: "", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                } else {
-                    for document in (querySnapshot!.documents) {
-                        let useruid = document.documentID
-                        completion(useruid)
+        guard newPassword == confirmation else {
+            showMessage(title: String(localized: "passwordNotMatchError"))
+            return
+        }
+        guard newPassword.isEmpty || isPasswordValid(newPassword) else {
+            showMessage(title: String(localized: "passwordRequirementError"))
+            return
+        }
+        saveButton.isEnabled = false
+        let credential = EmailAuthProvider.credential(withEmail: currentEmail, password: currentPassword)
+        user.reauthenticate(with: credential) { [weak self] _, error in
+            guard let self else { return }
+            guard error == nil, Auth.auth().currentUser?.uid == user.uid else {
+                self.finishUpdate(error: error ?? UserProfileStore.ProfileError.signedOut)
+                return
+            }
+            UserProfileStore.update(fields: ["name": name]) { [weak self] error in
+                guard let self else { return }
+                guard error == nil, Auth.auth().currentUser?.uid == user.uid else {
+                    self.finishUpdate(error: error ?? UserProfileStore.ProfileError.signedOut)
+                    return
+                }
+                let updateEmail = { [weak self] in
+                    guard let self else { return }
+                    guard Auth.auth().currentUser?.uid == user.uid else {
+                        self.finishUpdate(error: UserProfileStore.ProfileError.signedOut)
+                        return
                     }
-                }
-            }
-    }
-    
-    
-
-//MARK: Update User Function
-    func changeuser(){
-        let changeName =  nameField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        let changeEmail = emailField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        let changePassword = passwordField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-
-        let db = Firestore.firestore()
-        let user = Auth.auth().currentUser
-        let uid = user!.uid
-        
-        //MARK: Update User Name
-        userid(name: "String") { (useruid) in
-            Auth.auth().addStateDidChangeListener { (auth, user) in
-                if (user != nil) {
-                    db.collection("users").document(useruid).updateData(["name": changeName, "uid": uid]) { (error) in
-                        
-                        if error != nil {
-                            let alert = UIAlertController(title: String(localized: "dataError"), message: "", preferredStyle: .alert)
-                            alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-                            self.present(alert, animated: true, completion: nil)
+                    if email.caseInsensitiveCompare(currentEmail) != .orderedSame {
+                        user.sendEmailVerification(beforeUpdatingEmail: email) { [weak self] error in
+                            self?.finishUpdate(error: error, emailPending: error == nil)
                         }
-                    }
-                }
-            }
-        }
-        
-        //MARK: Update Email
-        Auth.auth().currentUser?.updateEmail(to: changeEmail) { (error) in
-            if error != nil {
-                let alert = UIAlertController(title: String(localized: "dataError"), message: "", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            }
-        }
-
-        //MARK: Update Password
-        let error = validatePasswordChange()
-        if error != nil
-        {
-            
-            //MARK: Password Change Not Wanted
-            let alert = UIAlertController(title: String(localized: "updatedUser"), message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        } else {
-            
-            //MARK: Password Change Wanted
-            let error_pass = validatePasswords()
-            if error_pass != nil {
-            } else {
-                
-                //MARK: Passwords Matched
-                Auth.auth().currentUser?.updatePassword(to: changePassword) {  (error) in
-                    if error != nil {
-                        let alert = UIAlertController(title: String(localized: "dataError"), message: "", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
                     } else {
-                        let alert = UIAlertController(title: String(localized: "updatedUser"), message: "", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
+                        self.finishUpdate(error: nil)
                     }
-                    
+                }
+                if newPassword.isEmpty {
+                    updateEmail()
+                } else {
+                    user.updatePassword(to: newPassword) { [weak self] error in
+                        if let error { self?.finishUpdate(error: error) }
+                        else { updateEmail() }
+                    }
                 }
             }
         }
     }
-    
 
-    
-//MARK: Validate Password Change
-    func validatePasswordChange() -> String? {
-        
-        if passwordField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-            passwordAuthenticateField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
-            return "şifre değişimi yok"
+    private func finishUpdate(error: Error?, emailPending: Bool = false) {
+        saveButton.isEnabled = true
+        if let error {
+            showMessage(title: String(localized: "updateIncomplete"), message: error.localizedDescription)
+        } else {
+            currentpasswordField.text = ""
+            passwordField.text = ""
+            passwordAuthenticateField.text = ""
+            showMessage(title: String(localized: emailPending ? "verifyNewEmail" : "updatedUser"))
         }
-        return nil
     }
-    
-    
 
-//MARK: Validate Match Between Password
-    func validatePasswords() -> String? {
-        let cleanedPassword = passwordField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        let authenticatecleanedPassword = passwordAuthenticateField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        if cleanedPassword != authenticatecleanedPassword{
-            let alert = UIAlertController(title: String(localized: "passwordNotMatchError"), message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-            return "Doğrulama şifreniz ile girdiğiniz şifre uyuşmuyor. "
+    func getUserData() {
+        guard Backend.isConfigured, let user = Auth.auth().currentUser else { return }
+        emailField.text = user.email
+        profile.observe(uid: user.uid) { [weak self] result in
+            guard let self else { return }
+            self.profile.stop()
+            switch result {
+            case .success(let data): self.nameField.text = data["name"] as? String ?? ""
+            case .failure: self.showMessage(title: String(localized: "dataError"))
+            }
         }
-        
-        //MARK: Password Requirements Not Matched
-        if isPasswordValid(cleanedPassword) == false {
-            let alert = UIAlertController(title: String(localized: "passwordRequirementError"), message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-            return "Lütfen şifrenizin en az 8 karakter olduğundan, özel bir karakter (!,?,&,...) ve bir sayı içerdiğinden emin olun."
-
-        }
-        return nil
     }
-    
-    
-    
-//MARK: Valite Name, Email, and Current Password Field
-    func validateFields() -> String? {
-        if nameField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-            currentpasswordField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-            emailField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
-            let alert = UIAlertController(title: String(localized: "basicFillError"), message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-            return "Lütfen bütün boşlukları doldurun."
-        }
-        return nil
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        profile.stop()
+        currentpasswordField.text = ""
+        passwordField.text = ""
+        passwordAuthenticateField.text = ""
     }
-        
 
-
-//MARK: Password Requirements
-    func isPasswordValid(_ password : String) -> Bool {
+    func isPasswordValid(_ password: String) -> Bool {
         let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[a-z])(?=.*[0-9])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{8,}")
         return passwordTest.evaluate(with: password)
     }

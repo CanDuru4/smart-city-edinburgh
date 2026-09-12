@@ -1,219 +1,121 @@
-//
-//  SettingsViewController.swift
-//  Asis
-//
-//  Created by Can Duru on 2.08.2022.
-//
-
-//MARK: Import
 import UIKit
 import SideMenu
 import FirebaseAuth
-import FirebaseFirestore
-class SettingsViewController: UIViewController {
 
-//MARK: Setup
-    
-    
-    
-    //MARK: Table Setup
-    lazy var SettingsTable: UITableView = {
-        let tb = UITableView()
-        tb.delegate = self
-        tb.dataSource = self
-        tb.register(SettingsTableViewCell.self, forCellReuseIdentifier: SettingsTableViewCell.identifer)
-        return tb
-    }()
-    var items = [String(localized: "personalPersonalInfoTable"), String(localized: "personalFAQTable"), String(localized: "personalLogOutButtonTable")]
+/// Shows account settings without presenting authentication before the screen is visible.
+///
+/// Owns its auth/profile listeners so account switches clear the preceding user's details.
+/// Example: embed in the Settings navigation tab.
+final class SettingsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    private let table = UITableView(frame: .zero, style: .insetGrouped)
+    private let greeting = UILabel()
+    private let signInButton = UIButton(type: .system)
+    private var handle: AuthStateDidChangeListenerHandle?
+    private let profile = UserProfileStore()
+    private var menu: SideMenuNavigationController?
+    private let items = [String(localized: "personalPersonalInfoTable"), String(localized: "personalFAQTable"), String(localized: "personalLogOutButtonTable")]
 
-    //MARK: Auth Setup
-    weak var handle: AuthStateDidChangeListenerHandle?
-    
-    //MARK: Side Menu Setup
-    var menu: SideMenuNavigationController?
-    lazy var menuBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "sidebar.leading")?.withRenderingMode(.alwaysOriginal).withTintColor(.systemBlue), style: .done, target: self, action: #selector(menuBarButtonItemTapped))
-    @objc
-    func menuBarButtonItemTapped(){
-        present(menu!, animated: true)
-    }
-    lazy var menuView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .systemGray5
-        return view
-    }()
-    lazy var containerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .systemBackground
-        return view
-    }()
-    
-    
-    
-//MARK: Load
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        
-        //MARK: User Check
-        
-        
-        
-                //MARK: User Logged In
-        handle = Auth.auth().addStateDidChangeListener { [weak self] (auth, user) in
-            guard let self = self else {return}
-            if ((user) != nil) {
-                //MARK: Settings Table Set
-                self.setView()
-                self.view.addSubview(self.SettingsTable)
-                self.setTableLayout()
-                self.getUserData()
-            
-                //MARK: User Not Logged In
-            } else {
-                let vc = AuthViewController()
-                vc.modalPresentationStyle = .currentContext
-                self.navigationController?.present(vc, animated: true)
-            }
-        }
-        
-        //MARK: Side Menu Load
-        navigationItem.setLeftBarButton(menuBarButtonItem, animated: false)
+        view.backgroundColor = .systemBackground
         menu = SideMenuNavigationController(rootViewController: MenuListController())
         menu?.leftSide = true
-        menu?.setNavigationBarHidden(true, animated: false)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "sidebar.leading"), style: .plain, target: self, action: #selector(showMenu))
+        greeting.font = .preferredFont(forTextStyle: .title1)
+        greeting.numberOfLines = 0
+        greeting.adjustsFontForContentSizeCategory = true
+        signInButton.setTitle(String(localized: "loginButton"), for: .normal)
+        signInButton.accessibilityIdentifier = "accountSignInButton"
+        signInButton.addTarget(self, action: #selector(signIn), for: .touchUpInside)
+        table.dataSource = self
+        table.delegate = self
+        table.register(UITableViewCell.self, forCellReuseIdentifier: "setting")
+        [greeting, signInButton, table].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview($0)
+        }
+        NSLayoutConstraint.activate([
+            greeting.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            greeting.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            greeting.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            signInButton.topAnchor.constraint(equalTo: greeting.bottomAnchor, constant: 20),
+            signInButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            signInButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 44),
+            table.topAnchor.constraint(equalTo: signInButton.bottomAnchor, constant: 16),
+            table.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            table.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            table.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
     }
-    
-    
-//MARK: Hi Text Function
-    var hiText = UILabel()
-    func setView(){
-        hiText.text = ""
-        hiText.font = hiText.font.withSize(30)
-        hiText.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(hiText)
 
-        NSLayoutConstraint.activate([
-            hiText.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            hiText.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            ])
-    }
-    
-    
-    
-//MARK: Table Layout
-    func setTableLayout(){
-        SettingsTable.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            SettingsTable.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
-            SettingsTable.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: -10),
-            SettingsTable.widthAnchor.constraint(equalToConstant: 300),
-            SettingsTable.heightAnchor.constraint(equalToConstant: 300)
-            ])
-    }
-    
-    
-    
-//MARK: Log Out
-    func logOut(){
-        let firebaseAuth = Auth.auth()
-        do {
-          try firebaseAuth.signOut()
-        } catch let signOutError as NSError {
-          print("Error signing out: %@", signOutError)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        guard Backend.isConfigured else {
+            greeting.text = String(localized: "accountUnavailable")
+            table.isHidden = true
+            signInButton.isHidden = true
+            return
+        }
+        guard handle == nil else { return }
+        handle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
+            guard let self else { return }
+            self.profile.stop()
+            self.greeting.text = user == nil ? String(localized: "notLoggedInError") : String(localized: "hiText")
+            self.table.isHidden = user == nil
+            self.signInButton.isHidden = user != nil
+            guard let user else { return }
+            self.profile.observe(uid: user.uid) { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let data):
+                    self.greeting.text = String(localized: "hiText") + (data["name"] as? String ?? "")
+                case .failure: self.showMessage(title: String(localized: "dataError"))
+                }
+            }
         }
     }
-    
-    
-    
-//MARK: Color Text Beginning
-    func addSpecificColorText(fullString: NSString, colorPartOfString: NSString) -> NSAttributedString {
-        let nonColorFontAttribute = [NSAttributedString.Key.foregroundColor: UIColor.systemBlue]
-        let colorFontAttribute = [NSAttributedString.Key.foregroundColor: UIColor.black]
-        let coloredString = NSMutableAttributedString(string: fullString as String, attributes:nonColorFontAttribute)
-        coloredString.addAttributes(colorFontAttribute, range: fullString.range(of: colorPartOfString as String))
-        return coloredString
-    }
-}
 
-//MARK: Table Extension
-extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    
-    //MARK: Rov Number
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        profile.stop()
+        if let handle, Backend.isConfigured { Auth.auth().removeStateDidChangeListener(handle) }
+        handle = nil
     }
-    
-    //MARK: Cell Content
+
+    @objc private func showMenu() {
+        guard let menu else { return }
+        present(menu, animated: true)
+    }
+
+    @objc private func signIn() {
+        guard Backend.isConfigured else { return }
+        present(AuthViewController(), animated: true)
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { items.count }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.identifer, for: indexPath) as! SettingsTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "setting", for: indexPath)
         cell.textLabel?.text = items[indexPath.row]
-        cell.textLabel?.numberOfLines = -1
-        cell.textLabel?.textColor = .black
+        cell.textLabel?.numberOfLines = 0
+        cell.accessoryType = indexPath.row == 2 ? .none : .disclosureIndicator
         return cell
     }
-    
-    //MARK: Cell Select Function
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (indexPath.row == 0) {
-            tableView.deselectRow(at: indexPath, animated: true)
-            self.navigationController?.pushViewController(PersonalInfoViewController(), animated: true)
-        }
-        if (indexPath.row == 1) {
-            tableView.deselectRow(at: indexPath, animated: true)
-            self.navigationController?.pushViewController(FAQViewController(), animated: true)
-        }
-        if (indexPath.row == 2) {
-            tableView.deselectRow(at: indexPath, animated: true)
-            logOut()
+        tableView.deselectRow(at: indexPath, animated: true)
+        guard Backend.isConfigured, Auth.auth().currentUser != nil else { return }
+        switch indexPath.row {
+        case 0: navigationController?.pushViewController(PersonalInfoViewController(), animated: true)
+        case 1: navigationController?.pushViewController(FAQViewController(), animated: true)
+        case 2:
+            do { try Auth.auth().signOut() }
+            catch { showMessage(title: String(localized: "dataError")) }
+        default: break
         }
     }
-    
-    
-    
-    //MARK: Get User Data
-    func getUserData(){
-        userid(name: "String") { (useruid) in
-            Auth.auth().addStateDidChangeListener { (auth, user) in
-                if (user != nil) {
-                    let db = Firestore.firestore()
-                    db.collection("users").document(useruid)
-                        .addSnapshotListener { documentSnapshot, error in
-                          guard let document = documentSnapshot else {
-                            print("Error fetching document: \(error!)")
-                            return
-                          }
-                          guard let data = document.data()?["name"] else {
-                            print("Document data was empty.")
-                            return
-                          }
-                            self.hiText.text = ((String(localized: "hiText")) + ((data) as! String))
-                            self.hiText.attributedText = self.addSpecificColorText(fullString: self.hiText.text! as NSString, colorPartOfString: "Hi, ")
-                        }
-                }
-            }
-        }
-    }
-    
-    
-    
-    //MARK: Get User Path
-    func userid(name: String, completion: @escaping (String) -> Void){
-        let db = Firestore.firestore()
-        let user = Auth.auth().currentUser
-        let uid = user!.uid
-        db.collection("users").whereField("uid", isEqualTo: uid)
-            .getDocuments() { (querySnapshot, err) in
-                if err != nil {
-                    let alert = UIAlertController(title: String(localized: "dataError"), message: "", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                } else {
-                    for document in (querySnapshot!.documents) {
-                        let useruid = document.documentID
-                        completion(useruid)
-                    }
-                }
-            }
+
+    deinit {
+        if let handle, Backend.isConfigured { Auth.auth().removeStateDidChangeListener(handle) }
     }
 }
