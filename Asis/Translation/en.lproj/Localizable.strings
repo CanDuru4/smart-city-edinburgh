@@ -68,3 +68,30 @@
 "cancelButton" = "Cancel";
 "min" = "min";
 "routesButton" = "Route: ";
+
+// Recovery and compatibility messages.
+"accountUnavailable" = "Account features are currently unavailable.";
+"noCardAdded" = "No card added";
+"balanceUnavailable" = "Unavailable";
+"holdCardNearPhone" = "Hold one card near the top of your iPhone.";
+"oneCardAtATime" = "Present one card at a time.";
+"unsupportedCard" = "This card is not supported.";
+"cardIdentifierRead" = "Card identifier read.";
+"cardSaved" = "Card identifier saved";
+"passwordResetSent" = "If an account exists for this email, a password reset email has been sent.";
+"profileSetupIncomplete" = "Your account was created, but the profile could not be saved. You can complete it in Personal Info after signing in.";
+"verificationEmailFailed" = "Your account was created, but the verification email could not be sent.";
+"updateIncomplete" = "Some changes may have been saved. Please review your details and try again.";
+"verifyNewEmail" = "Details saved. Verify the new email address using the email we sent before it replaces your current address.";
+"transitUnavailable" = "Live transit data is unavailable.";
+"routeSearchTimedOut" = "The journey search timed out. Please try again.";
+"locationUnavailable" = "Your location could not be found. Check location access in Settings and try again.";
+"openInMaps" = "Open in Apple Maps";
+"loadingTransit" = "Loading transit data...";
+"transitUnavailableRetry" = "Live transit data is unavailable. Tap to retry.";
+"serviceRouteUnavailable" = "Route details for this service are unavailable.";
+"noStopsFound" = "No stops found. Tap to reload.";
+"unknownStop" = "Unnamed stop";
+
+"retryProfileSetup" = "Retry profile setup";
+"continueButton" = "Continue";

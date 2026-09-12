@@ -27,7 +27,7 @@ class LoginViewController: UIViewController {
 //MARK: Load
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         setLabels()
         
         //MARK: Hide Keyboard
@@ -54,6 +54,8 @@ class LoginViewController: UIViewController {
         emailField.layer.borderColor = CGColor(red: 13/255, green: 95/255, blue: 255/255, alpha: 1)
         emailField.layer.borderWidth = CGFloat(1)
         emailField.autocorrectionType = .no
+        emailField.keyboardType = .emailAddress
+        emailField.textContentType = .emailAddress
         emailField.autocapitalizationType = .none
         view.addSubview(emailField)
         emailField.translatesAutoresizingMaskIntoConstraints = false
@@ -89,9 +91,10 @@ class LoginViewController: UIViewController {
         
         //MARK: Reset Password Features
         resetPasswordButton.setTitle(String(localized: "resetPasswordButton"), for: .normal)
-        resetPasswordButton.setTitleColor(.black, for: .normal)
+        resetPasswordButton.setTitleColor(.label, for: .normal)
         resetPasswordButton.clipsToBounds = true
         view.addSubview(resetPasswordButton)
+        resetPasswordButton.accessibilityIdentifier = "resetPasswordButton"
         resetPasswordButton.addTarget(self, action: #selector(resetPassword), for: .touchUpInside)
         resetPasswordButton.translatesAutoresizingMaskIntoConstraints = false
 
@@ -147,6 +150,7 @@ class LoginViewController: UIViewController {
     
 //MARK: Log In Button Action
     @objc func logIn(){
+        guard Backend.isConfigured, loginButton.isEnabled else { return }
         
         
         //MARK: Validate All Fields Filled
@@ -161,10 +165,12 @@ class LoginViewController: UIViewController {
             
         //MARK: Filled
         } else {
-            let email = emailField.text?.lowercased()
+            let email = emailField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
             let password = passwordField.text
+            loginButton.isEnabled = false
             Auth.auth().signIn(withEmail: email ?? "", password: password ?? "") { [weak self] authResult, error in
               guard let strongSelf = self else { return }
+                strongSelf.loginButton.isEnabled = true
                 //MARK: Wrong User Credentials
                 if error != nil {
                     let alert = UIAlertController(title: String(localized: "emailpasswordMatchError"), message: "", preferredStyle: .alert)
@@ -173,7 +179,7 @@ class LoginViewController: UIViewController {
                     
                 //MARK: Correct User Credentials
                 } else {
-                    self?.dismiss(animated: true, completion: nil)
+                    self?.navigationController?.dismiss(animated: true, completion: nil)
                 }
             }
         }
@@ -182,27 +188,24 @@ class LoginViewController: UIViewController {
 
     
 //MARK: Rest Password Button Action
-    @objc func resetPassword(){
-        let email = passwordField.text
-        if email != nil {
-            Auth.auth().sendPasswordReset(withEmail: email!) { (error) in
-                if error != nil {
-                    //MARK: Email Not Correct
-                    let alert = UIAlertController(title: String(localized: "emailError"), message: "", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                }
-            }
-        } else {
-            //MARK: Email Field Empty
-            let alert = UIAlertController(title: String(localized: "emailemptyError"), message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+    @objc func resetPassword() {
+        guard Backend.isConfigured else {
+            showMessage(title: String(localized: "accountUnavailable"))
+            return
+        }
+        let email = (emailField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !email.isEmpty else {
+            showMessage(title: String(localized: "emailemptyError"))
+            return
+        }
+        resetPasswordButton.isEnabled = false
+        Auth.auth().sendPasswordReset(withEmail: email) { [weak self] error in
+            guard let self else { return }
+            self.resetPasswordButton.isEnabled = true
+            self.showMessage(title: String(localized: error == nil ? "passwordResetSent" : "emailError"))
         }
     }
-    
-    
-    
+
 //MARK: Transition to Sign Up
     @objc func transitiontoSignUp(){
         self.navigationController?.pushViewController(SignUpViewController(), animated: true)
@@ -212,8 +215,8 @@ class LoginViewController: UIViewController {
     
 //MARK: Validate All Fields
     func validateFields() -> String? {
-        if emailField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-            passwordField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+        if (emailField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+            (passwordField.text ?? "").isEmpty {
             return "Please fill in all fields."
         }
         return nil

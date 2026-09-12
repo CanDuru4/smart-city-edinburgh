@@ -41,11 +41,12 @@ class MenuListController: UITableViewController {
         return items.count
     }
     var heightOfRow = CGFloat(0)
-    let pre = Locale.preferredLanguages[0]
+    let pre = Locale.preferredLanguages.first ?? "en"
     //MARK: Cell Content
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SideMenuTableViewCell.identifer, for: indexPath) as! SideMenuTableViewCell
         cell.titleLabel.text = items[indexPath.row]
+        cell.accessibilityIdentifier = "menuItem-\(indexPath.row)"
         cell.backgroundColor = darkColor
         
         //MARK: Language Content
@@ -136,6 +137,8 @@ class MenuListController: UITableViewController {
             ],
             applicationActivities: [Safari()]
         )
+        shareSheetVC.popoverPresentationController?.sourceView = view
+        shareSheetVC.popoverPresentationController?.sourceRect = tableView.rectForRow(at: IndexPath(row: 2, section: 0))
         present(shareSheetVC, animated: true)
     }
 }
@@ -144,7 +147,7 @@ class MenuListController: UITableViewController {
 
 //MARK: Share Sheet Class
 class Safari: UIActivity {
-    override var activityTitle: String? { "openSafari" }
+    override var activityTitle: String? { String(localized: "openSafari") }
     override var activityType: UIActivity.ActivityType? { UIActivity.ActivityType("openSafari") }
     override var activityImage: UIImage? { UIImage(systemName: "safari.fill") }
     override func canPerform(withActivityItems activityItems: [Any]) -> Bool {
@@ -155,7 +158,11 @@ class Safari: UIActivity {
     }
     override func perform() {
         if let url = URL(string: "https://apps.apple.com/developer/can-duru/id1601190409") {
-            UIApplication.shared.open(url)
+            UIApplication.shared.open(url, options: [:]) { [weak self] success in
+                self?.activityDidFinish(success)
+            }
+        } else {
+            activityDidFinish(false)
         }
     }
 }

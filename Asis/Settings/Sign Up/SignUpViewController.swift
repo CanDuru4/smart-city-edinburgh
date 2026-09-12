@@ -11,6 +11,8 @@ import FirebaseFirestore
 import FirebaseAuth
 
 class SignUpViewController: UIViewController {
+    private var pendingProfileUser: User?
+    private var profileSaved = false
 
 //MARK: Set Up
     
@@ -28,7 +30,7 @@ class SignUpViewController: UIViewController {
 //MARK: Load
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         setLabels()
         
         //MARK: Hide Keyboard
@@ -64,6 +66,8 @@ class SignUpViewController: UIViewController {
         emailField.layer.borderColor = CGColor(red: 13/255, green: 95/255, blue: 255/255, alpha: 1)
         emailField.layer.borderWidth = CGFloat(1)
         emailField.autocorrectionType = .no
+        emailField.keyboardType = .emailAddress
+        emailField.textContentType = .emailAddress
         emailField.autocapitalizationType = .none
         view.addSubview(emailField)
         emailField.translatesAutoresizingMaskIntoConstraints = false
@@ -98,6 +102,7 @@ class SignUpViewController: UIViewController {
         signUpButton.clipsToBounds = true
         view.addSubview(signUpButton)
         signUpButton.addTarget(self, action: #selector(signUpUser), for: .touchUpInside)
+        signUpButton.accessibilityIdentifier = "signUpButton"
         signUpButton.translatesAutoresizingMaskIntoConstraints = false
         
         
@@ -156,58 +161,74 @@ class SignUpViewController: UIViewController {
 
     
 //MARK: Sign Up Button Action
-    @objc func signUpUser(){
-        
-        
-        //MARK: Validate All Fields
-        let error = validateFields()
-        
-        if error != nil {
+    @objc func signUpUser() {
+        guard Backend.isConfigured, signUpButton.isEnabled else { return }
+        if profileSaved {
+            navigationController?.dismiss(animated: true)
+            return
+        }
+        guard validateFields() == nil else { return }
+        let name = (nameField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        if let user = pendingProfileUser {
+            saveNewProfile(user: user, name: name)
+            return
+        }
+        let email = (emailField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        let password = passwordField.text ?? ""
+        signUpButton.isEnabled = false
+        Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
+            guard let self else { return }
+            guard let user = result?.user, error == nil else {
+                self.signUpButton.isEnabled = true
+                self.showMessage(title: String(localized: "creatingError"))
+                return
+            }
+            self.pendingProfileUser = user
+            self.emailField.isEnabled = false
+            self.passwordField.isEnabled = false
+            self.passwordAuthenticateField.isEnabled = false
+            self.saveNewProfile(user: user, name: name)
+        }
+    }
 
-        } else {
-            //MARK: All Fields Filled
-            let name = nameField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-            let email = emailField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-            let password = passwordField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-            
-            //MARK: Create User
-            Auth.auth().createUser(withEmail: email, password: password) { (result, err) in
-                if  err != nil{
-                    let alert = UIAlertController(title: String(localized: "creatingError"), message: "", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                }
-                else {
-                    let db = Firestore.firestore()
-                    let randomInt = Int.random(in: 0..<90)
-                    db.collection("users").addDocument(data: ["name":name, "cardnumber":"", "balance": String(randomInt), "uid": result!.user.uid]) { (error) in
-                        if error != nil {
-                            let alert = UIAlertController(title: String(localized: "dataError"), message: "", preferredStyle: .alert)
-                            alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
-                            self.present(alert, animated: true, completion: nil)
-                        }
-                    }
-                    UserDefaults.standard.set(Auth.auth().currentUser!.uid, forKey: "user_uid_key")
-                    UserDefaults.standard.synchronize()
-                    Auth.auth().currentUser?.sendEmailVerification { error in
-                    }
-                    self.dismiss(animated: true)
+    private func saveNewProfile(user: User, name: String) {
+        guard Auth.auth().currentUser?.uid == user.uid else {
+            signUpButton.isEnabled = true
+            showMessage(title: String(localized: "notLoggedInError"))
+            return
+        }
+        signUpButton.isEnabled = false
+        Firestore.firestore().collection("users").document(user.uid).setData(["name": name, "uid": user.uid], merge: true) { [weak self] error in
+            guard let self else { return }
+            guard error == nil else {
+                self.signUpButton.isEnabled = true
+                self.signUpButton.setTitle(String(localized: "retryProfileSetup"), for: .normal)
+                self.showMessage(title: String(localized: "profileSetupIncomplete"))
+                return
+            }
+            self.profileSaved = true
+            user.sendEmailVerification { [weak self] error in
+                guard let self else { return }
+                self.signUpButton.isEnabled = true
+                if error != nil {
+                    self.signUpButton.setTitle(String(localized: "continueButton"), for: .normal)
+                    self.showMessage(title: String(localized: "verificationEmailFailed"))
+                } else {
+                    self.navigationController?.dismiss(animated: true)
                 }
             }
         }
     }
-    
-    
-    
+
 //MARK: Validate Fields
     func validateFields() -> String? {
         
         
         //MARK: Check Empty Fields
-        if nameField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-            emailField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-            passwordField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-            passwordAuthenticateField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+        if (nameField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+            (emailField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+            (passwordField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+            (passwordAuthenticateField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             let alert = UIAlertController(title: String(localized: "advancedFillError"), message: "", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -215,8 +236,8 @@ class SignUpViewController: UIViewController {
         }
         
         //MARK: Check Match Between Passwords
-        let cleanedPassword = passwordField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        let authenticatecleanedPassword = passwordAuthenticateField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let cleanedPassword = (passwordField.text ?? "")
+        let authenticatecleanedPassword = (passwordAuthenticateField.text ?? "")
         if cleanedPassword != authenticatecleanedPassword{
             let alert = UIAlertController(title: String(localized: "passwordNotMatchError"), message: "", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: String(localized: "okButton"), style: UIAlertAction.Style.default, handler: nil))

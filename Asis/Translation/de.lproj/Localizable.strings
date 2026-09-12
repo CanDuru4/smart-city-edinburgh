@@ -68,3 +68,29 @@
 "cancelButton" = "Absagen";
 "min" = "Min";
 "routesButton" = "Route: ";
+
+// Recovery and compatibility messages.
+"accountUnavailable" = "Die Kontofunktionen sind derzeit nicht verfügbar.";
+"noCardAdded" = "Keine Karte hinzugefügt";
+"balanceUnavailable" = "Nicht verfügbar";
+"holdCardNearPhone" = "Halten Sie eine Karte an die Oberseite Ihres iPhone.";
+"oneCardAtATime" = "Halten Sie jeweils nur eine Karte bereit.";
+"unsupportedCard" = "Diese Karte wird nicht unterstützt.";
+"cardIdentifierRead" = "Kartenkennung gelesen.";
+"cardSaved" = "Kartenkennung gespeichert";
+"passwordResetSent" = "Falls ein Konto mit dieser E-Mail-Adresse existiert, wurde eine E-Mail zum Zurücksetzen gesendet.";
+"profileSetupIncomplete" = "Ihr Konto wurde erstellt, aber das Profil konnte nicht gespeichert werden. Ergänzen Sie es nach der Anmeldung unter Persönliche Daten.";
+"verificationEmailFailed" = "Ihr Konto wurde erstellt, aber die Bestätigungs-E-Mail konnte nicht gesendet werden.";
+"updateIncomplete" = "Einige Änderungen wurden möglicherweise gespeichert. Prüfen Sie Ihre Angaben und versuchen Sie es erneut.";
+"verifyNewEmail" = "Angaben gespeichert. Bestätigen Sie die neue E-Mail-Adresse über die gesendete E-Mail, bevor sie die bisherige ersetzt.";
+"transitUnavailable" = "Live-Verkehrsdaten sind nicht verfügbar.";
+"routeSearchTimedOut" = "Die Reiseplanung hat zu lange gedauert. Bitte erneut versuchen.";
+"locationUnavailable" = "Ihr Standort wurde nicht gefunden. Prüfen Sie den Standortzugriff in den Einstellungen.";
+"openInMaps" = "In Apple Karten öffnen";
+"loadingTransit" = "Verkehrsdaten werden geladen...";
+"transitUnavailableRetry" = "Live-Verkehrsdaten sind nicht verfügbar. Zum Wiederholen tippen.";
+"serviceRouteUnavailable" = "Für diese Linie sind keine Routendetails verfügbar.";
+"noStopsFound" = "Keine Haltestellen gefunden. Zum Neuladen tippen.";
+"unknownStop" = "Unbenannte Haltestelle";
+"retryProfileSetup" = "Profileinrichtung wiederholen";
+"continueButton" = "Weiter";

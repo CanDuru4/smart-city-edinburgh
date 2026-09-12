@@ -68,3 +68,29 @@
 "cancelButton" = "取消";
 "min" = "分钟";
 "routesButton" = "路线: ";
+
+// Recovery and compatibility messages.
+"accountUnavailable" = "账户功能暂时不可用。";
+"noCardAdded" = "尚未添加卡片";
+"balanceUnavailable" = "不可用";
+"holdCardNearPhone" = "请将一张卡片靠近 iPhone 顶部。";
+"oneCardAtATime" = "每次请只出示一张卡片。";
+"unsupportedCard" = "不支持此卡片。";
+"cardIdentifierRead" = "已读取卡片标识。";
+"cardSaved" = "已保存卡片标识";
+"passwordResetSent" = "如果此邮箱已有账户，密码重置邮件已发送。";
+"profileSetupIncomplete" = "账户已创建，但个人资料未能保存。登录后可在个人信息中补全。";
+"verificationEmailFailed" = "账户已创建，但验证邮件未能发送。";
+"updateIncomplete" = "部分更改可能已保存。请检查信息后重试。";
+"verifyNewEmail" = "信息已保存。请通过发送的邮件验证新邮箱，验证后才会替换当前地址。";
+"transitUnavailable" = "实时交通数据不可用。";
+"routeSearchTimedOut" = "路线搜索已超时。请重试。";
+"locationUnavailable" = "无法获取位置。请在设置中检查定位权限后重试。";
+"openInMaps" = "在 Apple 地图中打开";
+"loadingTransit" = "正在加载交通数据...";
+"transitUnavailableRetry" = "实时交通数据不可用。轻点重试。";
+"serviceRouteUnavailable" = "此线路的路线详情不可用。";
+"noStopsFound" = "未找到站点。轻点重新加载。";
+"unknownStop" = "未命名站点";
+"retryProfileSetup" = "重试资料设置";
+"continueButton" = "继续";

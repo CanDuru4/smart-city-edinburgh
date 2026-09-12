@@ -34,7 +34,7 @@ public class CreditCardView: UIView {
     
     public override init(frame: CGRect) {
         backgroundView = CCBackgroundView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
-        cardContentView = CCContentView(frame: CGRect(x: CONTENT_PADDING, y: CONTENT_PADDING, width: frame.width - (CONTENT_PADDING * 2), height: frame.height - (CONTENT_PADDING * 2)))
+        cardContentView = CCContentView(frame: .zero)
         super.init(frame: frame)
         setupViews()
     }
@@ -48,7 +48,7 @@ public class CreditCardView: UIView {
     
     public init(frame: CGRect, template: CCBackgroundView.CCBackgroundTemplate) {
         backgroundView = CCBackgroundView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height), template: template)
-        cardContentView = CCContentView(frame: CGRect(x: CONTENT_PADDING, y: CONTENT_PADDING, width: frame.width - (CONTENT_PADDING * 2), height: frame.height - (CONTENT_PADDING * 2)))
+        cardContentView = CCContentView(frame: .zero)
         super.init(frame: frame)
         setupViews()
     }
@@ -58,6 +58,17 @@ public class CreditCardView: UIView {
         backgroundView.layer.cornerRadius = 10.0
         
         self.addSubview(cardContentView)
+    }
+
+    /// Resizes the card contents when Auto Layout changes the card's bounds.
+    ///
+    /// Initial frames may be zero on modern scene-based layouts. This keeps both layers
+    /// inside their final bounds. Takes no parameters, returns nothing, and does not throw.
+    /// Example: called by UIKit after the My Cards screen receives its safe area.
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        backgroundView.frame = bounds
+        cardContentView.frame = bounds.insetBy(dx: min(CONTENT_PADDING, bounds.width / 2), dy: min(CONTENT_PADDING, bounds.height / 2))
     }
     
     
