@@ -1,21 +1,30 @@
-[![Swift Version][swift-image]][swift-url]
-![Platform](https://img.shields.io/badge/iOS-15.6%2B-blue)
-
-# Smart City: Edinburgh
-<br />
 <p align="center">
   <a href="https://canduru.net">
-    <img src="https://i.ibb.co/rHFr92y/Original-resized.png" alt="Logo" width="221" height="90">
-    <img src="https://user-images.githubusercontent.com/73294429/186247733-fef260b6-0d34-4123-a54e-86eb9a8217fa.png" alt="Logo" width="221" height="90">
+    <img src="docs/assets/canduru-banner.png" alt="Can Duru" width="221" height="80">
   </a>
-  <p align="center">
-    An Edinburgh transport app built with Swift and UIKit. It supports maps, transit data, Firebase accounts, and NFC tag identifiers. Live transit features require an available data provider.
-  </p>
+  <img src="docs/assets/app-logo.png" alt="Smart City: Edinburgh logo" width="221" height="90">
+</p>
+
+<h1 align="center">Smart City: Edinburgh</h1>
+
+<p align="center">
+  <a href="https://swift.org"><img src="https://img.shields.io/badge/swift-5.0-orange.svg" alt="Swift 5.0"></a>
+  <img src="https://img.shields.io/badge/platform-iOS%2015.6%2B-lightgrey.svg" alt="Platform iOS 15.6+">
+  <img src="https://img.shields.io/badge/Xcode-26.2%2B-blue.svg" alt="Xcode 26.2+">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT License"></a>
 </p>
 
 <p align="center">
-    <img src= "https://media.giphy.com/media/MhA5ZFImHOKE7Ji04H/giphy.gif" width="400" >
+  An Edinburgh transport app built with Swift and UIKit. It supports maps, transit data,
+  Firebase accounts, and NFC tag identifiers. Live transit features require an available data provider.
 </p>
+
+<p align="center">
+  <img src="docs/assets/demo.gif" alt="Original application demo (2022)" width="300">
+</p>
+
+> The Xcode project, workspace and app target are still named **Asis**, the project's original
+> working title. Only the repository and the product name were renamed to *Smart City: Edinburgh*.
 
 ## Features
 
@@ -23,6 +32,19 @@
 - Live bus positions, stop search, and journey planning when the configured transit API is available.
 - Firebase email/password accounts and personal information.
 - NFC tag identifier scanning on supported physical iPhones. A tag identifier is not a bank card number or proof of a transport balance.
+
+## Tech stack
+
+| Layer | What is used |
+| --- | --- |
+| Language / UI | Swift 5, UIKit (programmatic layout, no main storyboard) |
+| Maps and location | MapKit, CoreLocation |
+| Hardware | CoreNFC (tag identifiers) |
+| Networking | Alamofire and Codable response models |
+| Backend | Firebase Auth, Cloud Firestore, Analytics |
+| Local storage | Core Data (`Asis.xcdatamodeld`) |
+| UI components | SideMenu, FloatingPanel |
+| Dependencies | CocoaPods 1.16.2 |
 
 ## Requirements
 
@@ -46,7 +68,7 @@ Select the Asis scheme and an installed iPhone simulator. For a physical device,
 
 ## Service configuration and limits
 
-The app's original `https://tfe-opendata.com/api/v1/` endpoint returned HTTP 522 during the September 12, 2026 compatibility check. Live vehicles, the complete stop list, and in-app timetables cannot be verified while that service is unavailable. Failed requests now show an unavailable state and allow retry. Journey failures offer Apple Maps transit directions.
+The app's original `https://tfe-opendata.com/api/v1/` endpoint returned HTTP 522 during the September 12, 2026 compatibility check. The owner confirmed that the old service is closed and has requested access to its replacement. Live vehicles, the complete stop list, and in-app timetables remain unavailable until a working replacement is integrated. Failed requests now show an unavailable state and allow retry. Journey failures offer Apple Maps transit directions.
 
 The council announced the [Edinburgh Travel Tracker API](https://www.edinburgh.gov.uk/news/article/14063/transport-trackers-are-go-in-edinburgh). Its [current website](https://www.edinburghtraveltracker.com/#/liveDepartures) includes API Keys and Contact Us controls. A working replacement API contract and access still need to be obtained before migration.
 
@@ -59,6 +81,27 @@ NFC scanning saves the tag's hexadecimal identifier. Earlier code generated rand
 Email changes require verification of the new address. Profile, password, and email changes are separate backend operations; a failure message tells the user to review potentially saved changes.
 
 Firebase is ending new CocoaPods releases in October 2026. Existing versions remain installable. Plan a separate migration to Swift Package Manager for future Firebase updates. See [Firebase's migration notice](https://firebase.google.com/docs/ios/cocoapods-deprecation) and [Apple SDK requirements](https://developer.apple.com/news/upcoming-requirements/).
+
+## Project structure
+
+```
+Asis/
+├── AppDelegate.swift, SceneDelegate.swift, TabBarViewController.swift
+├── Home/          Map screen, floating panel, route search
+├── BusStops/      Stop list and stop detail cells
+├── Card/          NFC card reader and the custom credit-card view
+├── Settings/      Auth (login / sign up), personal info, FAQ
+├── SideMenu/      Side menu, all-stops list, system language settings
+├── Data/          Transit API client, Codable models, Firebase profiles
+├── Domain/        Pure transit-time and NFC identifier calculations
+├── Helper/        Network reachability, location manager, annotations, loading UI
+├── Translation/   Localizable.strings for en, de, es, fr, ru, tr, zh-Hans
+└── Assets.xcassets
+Tests/             Pure Swift, app unit, and UI tests
+Package.swift      Pure Swift calculation tests only
+docs/assets/       README banner, logo, demo GIF and screenshots
+Images/            Logo artwork
+```
 
 ## Verification
 
@@ -99,33 +142,36 @@ Test output and screenshots are saved locally under the ignored `build/` directo
 
 Manual checks: launch with location denied, switch through all tabs, retry transit data, search places, cancel a journey, open stop directions, reset a password with the email field empty, and open or dismiss account screens. NFC requires a physical iPhone. Real authentication, profile updates, backend security rules, and live timetable accuracy require the owner's configured services and test account.
 
+## Build and release
+
+There is no automated iOS build workflow in this repository; builds and archives are produced from Xcode.
+Release history lives in [CHANGELOG.md](CHANGELOG.md).
+
 ## Original application screenshots (2022)
 
 <p align="center">
-<img src= "https://user-images.githubusercontent.com/73294429/186215025-a5e40cdb-2bf1-48dd-9b70-35745e120e63.png" width="400" >
-<img src= "https://user-images.githubusercontent.com/73294429/186215478-dacfe7a4-2358-4831-b046-50578876b6d2.png" width="400" >
+<img src="docs/assets/screenshot-01.png" width="300">
+<img src="docs/assets/screenshot-02.png" width="300">
 </p>
 
 <p align="center">
-<img src= "https://user-images.githubusercontent.com/73294429/186215800-73a818a7-8d0a-42cd-b352-35985c415794.png" width="400" >
-<img src= "https://user-images.githubusercontent.com/73294429/186215859-0ef4b070-48e7-4876-a93c-223eb37a8b25.png" width="400" >
+<img src="docs/assets/screenshot-03.png" width="300">
+<img src="docs/assets/screenshot-04.png" width="300">
 </p>
 
 <p align="center">
-<img src= "https://user-images.githubusercontent.com/73294429/186249659-aeace6de-b1a3-4542-beea-f927abb4a843.png" width="400" >
-<img src= "https://user-images.githubusercontent.com/73294429/186215775-8fd31174-4461-49c3-8d89-c1f399e91277.png" width="400" >
+<img src="docs/assets/screenshot-05.png" width="300">
+<img src="docs/assets/screenshot-06.png" width="300">
 </p>
 
-## Contribute
+## Credits
 
 I would like to thank **The Transport for Edinburgh Open Data API** for its contribution to the project.
 
-## Meta
+## License
 
-Can Duru: canduru2004@gmail.com, can@canduru.net
+Released under the [MIT License](LICENSE). Copyright (c) 2022-2026 Can Duru.
 
+## Author
 
-[https://github.com/CanDuru4](https://github.com/CanDuru4)
-
-[swift-image]:https://img.shields.io/badge/swift-5.0-orange.svg
-[swift-url]: https://swift.org/
+Can Duru: [canduru.net](https://canduru.net) · [github.com/CanDuru4](https://github.com/CanDuru4) · can@canduru.net
