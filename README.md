@@ -49,8 +49,8 @@ The Xcode project, workspace and app target are still named `Asis`, the project'
 1. Clone the repository and install pods.
 
    ```bash
-   git clone https://github.com/CanDuru4/Smart-City-Edinburgh.git
-   pod install --project-directory=Smart-City-Edinburgh
+   git clone https://github.com/CanDuru4/smart-city-edinburgh.git
+   pod install --project-directory=smart-city-edinburgh
    ```
 
 2. Open `Asis.xcworkspace` (not the `.xcodeproj`, because CocoaPods is still in use).
