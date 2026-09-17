@@ -144,3 +144,6 @@ __pycache__/
 venv/
 
 # End of https://www.toptal.com/developers/gitignore/api/swift,cocoapods,xcode
+
+# Swift Package Manager local state (root Package.swift)
+.swiftpm/
