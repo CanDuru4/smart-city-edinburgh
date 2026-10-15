@@ -17,7 +17,7 @@ The Xcode project, workspace, app target and scheme are all named `Asis` (the or
 - `Tests/AsisTests/` - app unit tests (`@testable import Asis`), `Tests/AsisUITests/` - screen-flow UI tests
 - `Package.swift` - pure-logic test package only; it is not how the app is built
 - `Podfile`, `Podfile.lock` (committed); `Pods/` is git-ignored
-- `docs/OPERATIONS.md` - transit provider status, Firebase rules expectations, NFC, dated verification record; `docs/assets/` - README images
+- `docs/OPERATIONS.md` - transit provider status, Firebase rules expectations, NFC, dated verification record; `design-assets/` - brand and design assets (`logo/`, `banner/`, `screenshots/` incl. README images)
 
 ## Commands
 

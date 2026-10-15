@@ -9,7 +9,7 @@
 Smart City: Edinburgh is an iOS public-transport app for Edinburgh built with Swift and UIKit. It combines map browsing and place search with live bus positions, stop search and journey planning, Firebase accounts, and NFC tag scanning for travel cards. The original version dates from 2022; it was brought up to date for current Xcode and iOS in September 2026. Live transit features are currently unavailable because the original Transport for Edinburgh open-data API has closed and a replacement is not yet integrated (see [docs/OPERATIONS.md](docs/OPERATIONS.md)).
 
 <p align="center">
-  <img src="docs/assets/demo.gif" alt="Original application demo (2022)" width="300">
+  <img src="design-assets/screenshots/demo.gif" alt="Original application demo (2022)" width="300">
 </p>
 
 The Xcode project, workspace and app target are still named `Asis`, the project's original working title.
@@ -88,7 +88,8 @@ Asis.xcodeproj/    Xcode project
 Tests/             Pure Swift, app unit, and UI tests
 Package.swift      Pure Swift calculation tests only
 Podfile, Podfile.lock
-docs/              Operations notes; docs/assets holds README images
+docs/              Operations notes
+design-assets/     Brand and design assets: logo/, banner/, screenshots/
 Images/            Logo artwork
 CHANGELOG.md       Release history
 ```
@@ -128,15 +129,15 @@ There is no automated build or release workflow; builds and archives are produce
 Original application screenshots (2022):
 
 <p align="center">
-  <img src="docs/assets/screenshot-01.png" alt="Screenshot 1" width="260">
-  <img src="docs/assets/screenshot-02.png" alt="Screenshot 2" width="260">
-  <img src="docs/assets/screenshot-03.png" alt="Screenshot 3" width="260">
+  <img src="design-assets/screenshots/screenshot-01.png" alt="Screenshot 1" width="260">
+  <img src="design-assets/screenshots/screenshot-02.png" alt="Screenshot 2" width="260">
+  <img src="design-assets/screenshots/screenshot-03.png" alt="Screenshot 3" width="260">
 </p>
 
 <p align="center">
-  <img src="docs/assets/screenshot-04.png" alt="Screenshot 4" width="260">
-  <img src="docs/assets/screenshot-05.png" alt="Screenshot 5" width="260">
-  <img src="docs/assets/screenshot-06.png" alt="Screenshot 6" width="260">
+  <img src="design-assets/screenshots/screenshot-04.png" alt="Screenshot 4" width="260">
+  <img src="design-assets/screenshots/screenshot-05.png" alt="Screenshot 5" width="260">
+  <img src="design-assets/screenshots/screenshot-06.png" alt="Screenshot 6" width="260">
 </p>
 
 ## Known limitations
