@@ -8,8 +8,8 @@ The Xcode project, workspace, app target and scheme are all named `Asis` (the or
 
 - `Asis/` - app sources, grouped by screen/feature:
   - `Home/` map screen, floating panel, route search; `BusStops/`; `Card/` (NFC reader + `CreditCardView/`); `Settings/` (auth, `Login/`, `Sign Up/`, `Menu/`); `SideMenu/`
-  - `Data/` - `GetBaseData.swift` (Alamofire transit client), Codable response models (`*DataSetup.swift`, `ServiceData.swift`), `UserProfileStore.swift` (Firestore profiles)
-  - `Domain/` - pure logic (`TransitTime`, `CardIdentifier`); also compiled by the root `Package.swift` as `AsisLogic`
+  - `Data/` - `GetBaseData.swift` (legacy Alamofire transit client), `JourneoClient.swift` (isolated NOVUS-RT client), `JourneoModels.swift` (guide response models), Codable response models (`*DataSetup.swift`, `ServiceData.swift`), `UserProfileStore.swift` (Firestore profiles)
+  - `Domain/` - pure logic (`TransitTime`, `CardIdentifier`, `JourneoConfiguration`, `JourneoRequests`); also compiled by the root `Package.swift` as `AsisLogic`
   - `Helper/` - reachability, location, annotations, loading UI, `AppFeedback`
   - `Translation/<lang>.lproj/Localizable.strings` - en, de, es, fr, ru, tr, zh-Hans
   - `Info.plist` (holds `TransitAPIBaseURL`), `Asis.entitlements`, `Asis.xcdatamodeld`
@@ -25,7 +25,7 @@ Run from the repo root (or pass `--package-path` / an absolute `-workspace` path
 
 ```bash
 pod install                      # setup; use pod update only for an intentional upgrade
-swift test                       # 7 pure Domain tests, runs on macOS in seconds
+swift test                       # pure Domain and Journeo contract tests on macOS
 xcodebuild -workspace Asis.xcworkspace -scheme Asis \
   -destination 'generic/platform=iOS Simulator' \
   -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO build
@@ -42,6 +42,8 @@ xcodebuild -workspace Asis.xcworkspace -scheme Asis \
 
 - `Asis/GoogleService-Info.plist` is git-ignored and must never be committed. A build phase copies it into the app only if present; the `FIREBASE_CONFIG_PATH` build setting overrides the source path (point it at a nonexistent file for configuration-free runs). Without it, maps work and account features show an unavailable state.
 - `TransitAPIBaseURL` in `Asis/Info.plist` is the transit API root; `GetBaseData` rejects non-HTTPS URLs.
+- `Asis/Keys.plist` is git-ignored and must never be committed. Copy `Asis/Keys.example.plist` and supply portal-verified `JourneoAPIBaseURL`, `JourneoAPIKeyHeaderName`, and `JourneoAPIKey`; omit `JourneoAPIKeySecondary` if unused. The optional build phase copies it only when present and removes a stale bundled copy otherwise. `JOURNEO_KEYS_PATH` overrides the source path. The Foundation-only resolver fails closed on missing, blank, or invalid configuration, with no legacy URL fallback. Descriptions redact configuration values.
+- Journeo request contracts come from the linked guide in `docs/OPERATIONS.md`. The base URL and header name await portal verification. No UI or legacy contract integration is present; do not switch `TransitAPIBaseURL` to Journeo.
 - Never loosen Firestore rules to get past a permissions error. Profiles are matched by an exact `uid` field; legacy randomly named profile docs must keep working; duplicate matches are an error.
 
 ## Gotchas

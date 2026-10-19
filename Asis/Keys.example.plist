@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copy to Asis/Keys.plist (git-ignored), fill verified values, and omit an unused secondary key. Never commit Keys.plist. -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>JourneoAPIBaseURL</key>
+    <string></string>
+    <key>JourneoAPIKeyHeaderName</key>
+    <string></string>
+    <key>JourneoAPIKey</key>
+    <string></string>
+    <key>JourneoAPIKeySecondary</key>
+    <string></string>
+</dict>
+</plist>

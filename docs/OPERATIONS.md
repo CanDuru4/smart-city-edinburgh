@@ -10,6 +10,32 @@ The council announced the [Edinburgh Travel Tracker API](https://www.edinburgh.g
 
 The `TransitAPIBaseURL` key in `Asis/Info.plist` selects the HTTPS API base URL. A replacement must implement the existing stops, vehicle_locations, services, and stoptostop-timetable response contracts. Changing a URL alone does not adapt an unrelated provider.
 
+### NOVUS-RT / Journeo option
+
+The isolated `JourneoClient` implements the five GET operations below from the [NOVUS-RT Open API guide](https://www.edinburghtraveltracker.com/resources/docs/open_api_guide.pdf), fetched and extracted on October 19, 2026. All paths are appended to the configured API root. This client is not wired into the UI or the legacy `stops`, `vehicle_locations`, `services`, or `stoptostop-timetable` contracts. `Asis/Info.plist` and its `TransitAPIBaseURL` remain unchanged.
+
+The base URL and exact API-key header name are **pending portal verification** for product **NRT Open API Edinburgh CEC Bus tracker Open Interface**. Section 2 describes an access-token path generically; section 16.2 instead instructs consumers to use a supplied BaseURL and send User_Key as an HTTP header. It supplies neither a customer endpoint nor an unambiguous literal header name. Do not infer either value or append a credential to a URL.
+
+| GET path | Required query parameters | Optional query parameters | Guide sections |
+| --- | --- | --- | --- |
+| `StopEvents` | Exactly one of `AtcoCode` or `SMSCode`, nonempty string identifier | `EventType`: `arrival` or `departure`; `Lookahead`: integer minutes, server default 60; `MaxEvents`: integer limit; `MinVisitsPerService`: integer minimum per service; `Ordering`: `SchArr`, `SchDep`, `RealArr`, `RelaDep`; `TimeFormat`: `UTC` or `Local` (server default `UTC`) | 3.1 to 3.3 |
+| `StopDetails` | `atcoCode`: nonempty string ATCO identifier | None documented | 7.1 to 7.3 |
+| `GetStops` | `date`: Gregorian `CCYY-MM-DD` | `FullDetails`: `true` or `false`, default false | 11.1 to 11.3 |
+| `AreaSearch` | `ne_lat`, `ne_long`, `sw_lat`, `sw_long`: finite decimal degrees | None documented; no radius or result limit | 5.1 to 5.3 |
+| `VehicleStatus` | `VehicleId`: nonempty string vehicle identifier | `TimeFormat`: `UTC` or `Local`, server default `UTC` | 4.1 to 4.3 |
+
+Pending clarification from the portal or provider:
+
+- Query-name casing differs between tables and examples: `AtcoCode` / `Atcocode`, `atcoCode` / `Atcocode`, and `date` / `Date`. Builders use the parameter-table spellings.
+- The guide spells real departure ordering `RelaDep`. The typed enum preserves that spelling; acceptance by the live service is unverified.
+- AreaSearch labels its corners top-left and bottom-right, but names them NE and SW and gives numbers consistent with NE/SW. Builders follow the names and example. They require north > south and east > west, reject antimeridian boxes, and validate latitude within -90 to 90 and longitude within -180 to 180.
+- Numeric upper limits and zero-value semantics are unspecified. Builders require positive event windows and counts. No guessed limits or extra query parameters are added.
+- The GetStops full-detail JSON shape is undocumented. Code-only responses use the documented `atcocodes` model; full-detail responses are returned as JSON-validated Data. The other four operations decode the sample envelopes. Production nullability and time formats still need verification against real responses.
+
+Configuration lives only in git-ignored `Asis/Keys.plist`, optionally selected through `JOURNEO_KEYS_PATH`. The example contains four empty values. Fill all three required entries and either fill or remove the optional secondary entry. A present blank secondary entry fails closed too. The resolver trims whitespace, requires HTTPS and a host, rejects URL credentials/query/fragment, validates the header as an RFC 7230 token, and rejects transport-controlled header names (`Accept`, `Host`, `Content-Length`, `Content-Type`, `Connection`, `Transfer-Encoding`) that would conflict with request construction. Keys with embedded control characters are rejected. The client resolves configuration for each call, uses the primary key only, accepts HTTP 200 to 299, refuses redirects, and completes on the main queue, including failures and cancellation.
+
+Portal login, subscription, credentials, and access requests are outside this repository. The owner or authorized Jarvis workflow must verify the product and store issued keys as `jarvis/JOURNEO_API_KEY` and `jarvis/JOURNEO_API_KEY_SECONDARY`. No portal actions or messages are performed by this worker. If access is unavailable, the API Keys form on [Edinburgh Travel Tracker](https://www.edinburghtraveltracker.com/) is the alternative; an authorized workflow may prepare an unsent request to `ccuk@trapezegroup.com` for owner approval.
+
 ## Firebase accounts
 
 Obtain `GoogleService-Info.plist` from your own Firebase project and keep it at `Asis/GoogleService-Info.plist`. This file is ignored by Git. The configuration is copied into the app only when present; without it, maps remain usable and account features display an unavailable state. The build setting `FIREBASE_CONFIG_PATH` can override the source path for CI or configuration-free testing. Enable Email/Password authentication and Cloud Firestore. Never commit credentials or use permissive Firestore rules to bypass a permissions error. Profile access expects an exact `uid` field matching the authenticated Firebase UID. Older randomly named profile documents remain supported. Duplicate matching profiles are treated as an error.
