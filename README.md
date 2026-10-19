@@ -65,6 +65,10 @@ Use `pod install` for repeatable setup; use `pod update` only for an intentional
 | `GoogleService-Info.plist` | `Asis/GoogleService-Info.plist` (git-ignored) | Firebase accounts. Without it, maps still work and account features show an unavailable state. |
 | `FIREBASE_CONFIG_PATH` | Xcode build setting | Overrides the Firebase config source path, for CI or configuration-free testing |
 | `TransitAPIBaseURL` | `Asis/Info.plist` | HTTPS base URL of the transit API |
+| `JourneoAPIBaseURL`, `JourneoAPIKeyHeaderName`, `JourneoAPIKey`, optional `JourneoAPIKeySecondary` | `Asis/Keys.plist` (git-ignored; copy from `Asis/Keys.example.plist`) | Separate NOVUS-RT configuration. Fill portal-verified values and omit an unused secondary key. Missing or blank required values fail closed; a present secondary value must also be nonblank. |
+| `JOURNEO_KEYS_PATH` | Xcode build setting | Overrides the optional Journeo plist source path; defaults to `$(SRCROOT)/Asis/Keys.plist`. Point to a nonexistent file for configuration-free testing. |
+
+The Journeo client is not connected to the UI or legacy transit contracts. Its base URL and API-key header name are pending portal verification; the example plist intentionally contains no values.
 
 Provider status, Firebase rules expectations and NFC details are in [docs/OPERATIONS.md](docs/OPERATIONS.md).
 

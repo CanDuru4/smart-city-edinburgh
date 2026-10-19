@@ -65,6 +65,11 @@
 		ADF5B455FF4B2F22E0FB0922 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 579EB49F8E7382142895FBDB /* Foundation.framework */; };
 		CC1880A5249FEF4887DFA0B2 /* Pods_Asis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A65472BA12A52AEE3AFBA96E /* Pods_Asis.framework */; };
 		D6BD03BA2FE1E958AC50DF1D /* CardLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1139F4075D81678AA17185F7 /* CardLayoutTests.swift */; };
+		87A7C189868E49459D5EDB50 /* JourneoConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61E59F1FD4644B88E1E1356 /* JourneoConfiguration.swift */; };
+		324DF5E7ED80463A84EAA970 /* JourneoRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9250536A6449BAA265D364 /* JourneoRequests.swift */; };
+		EA663C21031A4191BAFE891B /* JourneoClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26961501FB943C49C99B89E /* JourneoClient.swift */; };
+		EE30BC85903B4CB4B6F53707 /* JourneoModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8926E7226DDA4935BF2B9649 /* JourneoModels.swift */; };
+		B79A639D1C664AE1AEFEC409 /* JourneoClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA98297764AD423786D9E098 /* JourneoClientTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -141,7 +146,7 @@
 		1FF3355928A27F65007F3D29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1FFC05F828B11D19007BC964 /* can-duru-menu-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "can-duru-menu-logo.png"; sourceTree = "<group>"; };
 		374EB301560F4B81456EE9C3 /* Pods-Asis.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Asis.release.xcconfig"; path = "Target Support Files/Pods-Asis/Pods-Asis.release.xcconfig"; sourceTree = "<group>"; };
-		3FAB757BE038376A3552649F /* TransitTime.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TransitTime.swift; path = Domain/TransitTime.swift; sourceTree = "<group>"; };
+		3FAB757BE038376A3552649F /* TransitTime.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TransitTime.swift; path = TransitTime.swift; sourceTree = "<group>"; };
 		4F482F4681201C670D39D9A8 /* Pods-AsisTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AsisTests.release.xcconfig"; path = "Target Support Files/Pods-AsisTests/Pods-AsisTests.release.xcconfig"; sourceTree = "<group>"; };
 		579EB49F8E7382142895FBDB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		821FA53E0116EF9FB5842638 /* Pods-Asis.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Asis.debug.xcconfig"; path = "Target Support Files/Pods-Asis/Pods-Asis.debug.xcconfig"; sourceTree = "<group>"; };
@@ -150,8 +155,14 @@
 		CC533C7769B3F66F8B1708C2 /* AppFeedback.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppFeedback.swift; path = Helper/AppFeedback.swift; sourceTree = "<group>"; };
 		D8ECDAB2E67F33F2520AA704 /* Pods_AsisTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AsisTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB209DA353C74901F3455854 /* AsisUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AsisUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F1AB9CC4A280E7DD75D3B945 /* CardIdentifier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CardIdentifier.swift; path = Domain/CardIdentifier.swift; sourceTree = "<group>"; };
+		F1AB9CC4A280E7DD75D3B945 /* CardIdentifier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CardIdentifier.swift; path = CardIdentifier.swift; sourceTree = "<group>"; };
 		F273EECF8A7C87AFF0BDE871 /* Pods-AsisTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AsisTests.debug.xcconfig"; path = "Target Support Files/Pods-AsisTests/Pods-AsisTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C61E59F1FD4644B88E1E1356 /* JourneoConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JourneoConfiguration.swift; path = JourneoConfiguration.swift; sourceTree = "<group>"; };
+		CC9250536A6449BAA265D364 /* JourneoRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JourneoRequests.swift; path = JourneoRequests.swift; sourceTree = "<group>"; };
+		A26961501FB943C49C99B89E /* JourneoClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JourneoClient.swift; path = JourneoClient.swift; sourceTree = "<group>"; };
+		8926E7226DDA4935BF2B9649 /* JourneoModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JourneoModels.swift; path = JourneoModels.swift; sourceTree = "<group>"; };
+		BA98297764AD423786D9E098 /* JourneoClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JourneoClientTests.swift; path = AsisTests/JourneoClientTests.swift; sourceTree = "<group>"; };
+		001D39952662425183CD2436 /* Keys.example.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.example.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,6 +198,7 @@
 			isa = PBXGroup;
 			children = (
 				1AAD0906D87EC2C20390473D /* TransitClientTests.swift */,
+				BA98297764AD423786D9E098 /* JourneoClientTests.swift */,
 				0CE7E152794CA038FC216F0B /* AppFlowTests.swift */,
 				1139F4075D81678AA17185F7 /* CardLayoutTests.swift */,
 			);
@@ -295,6 +307,7 @@
 				1F042EB128A7720700C72FAF /* Translation */,
 				1F31E0BE289904A3003693C8 /* Helper */,
 				1F7B9C6628AF88950036336A /* Data */,
+				F068B62A8ADB46FCA958F154 /* Domain */,
 				1F31E0B72898FAD0003693C8 /* SideMenu */,
 				1F72674A2898F92300C0AAE6 /* Home */,
 				1F72674B2898F93D00C0AAE6 /* BusStops */,
@@ -306,10 +319,9 @@
 				1F0F1E8D2897BAA000695807 /* Assets.xcassets */,
 				1F0F1E8F2897BAA000695807 /* LaunchScreen.storyboard */,
 				1F0F1E922897BAA000695807 /* Info.plist */,
+				001D39952662425183CD2436 /* Keys.example.plist */,
 				1FF3355928A27F65007F3D29 /* GoogleService-Info.plist */,
 				1F0F1E8A2897BA9F00695807 /* Asis.xcdatamodeld */,
-				F1AB9CC4A280E7DD75D3B945 /* CardIdentifier.swift */,
-				3FAB757BE038376A3552649F /* TransitTime.swift */,
 				034985F2F407757BD01E1688 /* UserProfileStore.swift */,
 				CC533C7769B3F66F8B1708C2 /* AppFeedback.swift */,
 			);
@@ -400,6 +412,8 @@
 			isa = PBXGroup;
 			children = (
 				1F0EF77028991D6F0053F4DB /* GetBaseData.swift */,
+				8926E7226DDA4935BF2B9649 /* JourneoModels.swift */,
+				A26961501FB943C49C99B89E /* JourneoClient.swift */,
 				1F0EF77228992CEE0053F4DB /* StopsDataSetup.swift */,
 				1F64ABBF28A110D600FEB09C /* BusDataSetup.swift */,
 				1F7FECD028ABB4770025031D /* JourneyTımeDataSetup.swift */,
@@ -465,6 +479,17 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		F068B62A8ADB46FCA958F154 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				F1AB9CC4A280E7DD75D3B945 /* CardIdentifier.swift */,
+				3FAB757BE038376A3552649F /* TransitTime.swift */,
+				C61E59F1FD4644B88E1E1356 /* JourneoConfiguration.swift */,
+				CC9250536A6449BAA265D364 /* JourneoRequests.swift */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -478,6 +503,7 @@
 				1F0F1E7C2897BA9F00695807 /* Resources */,
 				80042376B5DFCD9260631701 /* [CP] Copy Pods Resources */,
 				69B9FCC29A4706E1DBE55DFE /* Copy optional Firebase configuration */,
+				0EBD5316F8A8484598DF0DD3 /* Copy optional Journeo keys */,
 			);
 			buildRules = (
 			);
@@ -646,6 +672,26 @@
 			shellScript = "set -eu\ndestination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleService-Info.plist\"\nif [ -f \"${FIREBASE_CONFIG_PATH}\" ]; then\n  /usr/bin/ditto \"${FIREBASE_CONFIG_PATH}\" \"$destination\"\nelif [ -f \"$destination\" ]; then\n  /bin/rm \"$destination\"\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		0EBD5316F8A8484598DF0DD3 /* Copy optional Journeo keys */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy optional Journeo keys";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -eu\ndestination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Keys.plist\"\nif [ -f \"${JOURNEO_KEYS_PATH}\" ]; then\n  /usr/bin/ditto \"${JOURNEO_KEYS_PATH}\" \"$destination\"\nelif [ -f \"$destination\" ]; then\n  /bin/rm \"$destination\"\nfi\n";
+			showEnvVarsInLog = 0;
+		};
 		80042376B5DFCD9260631701 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -736,6 +782,10 @@
 				1F0F1E842897BA9F00695807 /* SceneDelegate.swift in Sources */,
 				4F5972D6879FA253F1DEAA35 /* CardIdentifier.swift in Sources */,
 				43903B5C52C58DD153705443 /* TransitTime.swift in Sources */,
+				EE30BC85903B4CB4B6F53707 /* JourneoModels.swift in Sources */,
+				EA663C21031A4191BAFE891B /* JourneoClient.swift in Sources */,
+				324DF5E7ED80463A84EAA970 /* JourneoRequests.swift in Sources */,
+				87A7C189868E49459D5EDB50 /* JourneoConfiguration.swift in Sources */,
 				9E3FB1A7EA95419A7040FBC5 /* UserProfileStore.swift in Sources */,
 				3A85371C36B5F2D3617A0436 /* AppFeedback.swift in Sources */,
 			);
@@ -746,6 +796,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FF41C824DD039CFBB841B84 /* TransitClientTests.swift in Sources */,
+				B79A639D1C664AE1AEFEC409 /* JourneoClientTests.swift in Sources */,
 				D6BD03BA2FE1E958AC50DF1D /* CardLayoutTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -981,6 +1032,7 @@
 				DEVELOPMENT_TEAM = NV57XZ3KBV;
 				EXCLUDED_ARCHS = "";
 				FIREBASE_CONFIG_PATH = "$(SRCROOT)/Asis/GoogleService-Info.plist";
+				JOURNEO_KEYS_PATH = "$(SRCROOT)/Asis/Keys.plist";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Asis/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Smart City";
@@ -1024,6 +1076,7 @@
 				DEVELOPMENT_TEAM = NV57XZ3KBV;
 				EXCLUDED_ARCHS = "";
 				FIREBASE_CONFIG_PATH = "$(SRCROOT)/Asis/GoogleService-Info.plist";
+				JOURNEO_KEYS_PATH = "$(SRCROOT)/Asis/Keys.plist";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Asis/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Smart City";
