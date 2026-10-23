@@ -3,10 +3,10 @@ import Foundation
 /// Names of the local NOVUS-RT configuration entries. These constants contain no credentials.
 /// Example: `JourneoConfigurationKey.apiKey` identifies a value in Keys.plist.
 public enum JourneoConfigurationKey {
-    public static let baseURL = "JourneoAPIBaseURL"
-    public static let headerName = "JourneoAPIKeyHeaderName"
-    public static let apiKey = "JourneoAPIKey"
-    public static let secondaryKey = "JourneoAPIKeySecondary"
+    public static let baseURL: String = "JourneoAPIBaseURL"
+    public static let headerName: String = "JourneoAPIKeyHeaderName"
+    public static let apiKey: String = "JourneoAPIKey"
+    public static let secondaryKey: String = "JourneoAPIKeySecondary"
 }
 
 /// Fail-closed configuration errors that never carry credential values.
@@ -43,6 +43,7 @@ public struct JourneoConfiguration: CustomStringConvertible, CustomDebugStringCo
     /// Resolves a plist with no default endpoint, header, or credentials.
     /// Blank optional keys fail if present; omit the secondary entry when it is unused.
     /// URL credentials, queries, and fragments are rejected to keep authentication in the header.
+    /// Transport-controlled headers are excluded so authentication cannot override the host or JSON accept header.
     /// Header values containing control characters are rejected before any request can be made.
     /// - Parameters:
     ///   - plistData: Contents of Keys.plist, or nil if the file is absent.
@@ -84,7 +85,7 @@ public struct JourneoConfiguration: CustomStringConvertible, CustomDebugStringCo
         let rawHeader = values[JourneoConfigurationKey.headerName] as? String ?? ""
         let reserved = ["accept", "host", "content-length", "content-type", "connection", "transfer-encoding"]
         guard header.unicodeScalars.allSatisfy(token.contains),
-              !rawHeader.contains("\r"), !rawHeader.contains("\n"),
+              rawHeader.rangeOfCharacter(from: .newlines) == nil,
               !reserved.contains(header.lowercased()) else {
             throw JourneoConfigurationError.invalidHeaderName
         }
