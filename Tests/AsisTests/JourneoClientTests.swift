@@ -59,6 +59,12 @@ final class JourneoClientTests: XCTestCase {
         assertStopDetailsFailure()
     }
 
+    func testRedirectIsRefusedWithoutForwardingAuthentication() {
+        JourneoStubProtocol.respond(status: 302, body: "", redirect: URL(string: "https://other.example/StopDetails"))
+        assertStopDetailsFailure()
+        XCTAssertEqual(JourneoStubProtocol.requests.first?.url?.host, "transit.example")
+    }
+
     func testThrowingProviderCompletesOnMainAndSendsNothing() {
         client = JourneoClient(configurationProvider: { throw JourneoConfigurationError.fileMissing }, session: session)
         let done = expectation(description: "missing configuration")
@@ -221,6 +227,7 @@ private final class JourneoStubProtocol: URLProtocol {
     private static var status = 200
     private static var body = Data()
     private static var hold = false
+    private static var redirect: URL?
     private static var captured: [URLRequest] = []
     private static var startHandler: (() -> Void)?
 
@@ -249,16 +256,18 @@ private final class JourneoStubProtocol: URLProtocol {
         status = 200
         body = Data()
         hold = false
+        redirect = nil
         captured = []
         startHandler = nil
     }
 
-    static func respond(status: Int = 200, body: String, hold: Bool = false) {
+    static func respond(status: Int = 200, body: String, hold: Bool = false, redirect: URL? = nil) {
         lock.lock()
         defer { lock.unlock() }
         self.status = status
         self.body = Data(body.utf8)
         self.hold = hold
+        self.redirect = redirect
     }
 
     override class func canInit(with request: URLRequest) -> Bool { true }
@@ -270,11 +279,19 @@ private final class JourneoStubProtocol: URLProtocol {
         let status = Self.status
         let body = Self.body
         let hold = Self.hold
+        let redirect = Self.redirect
         let start = Self.startHandler
         Self.lock.unlock()
         start?()
-        guard !hold, let url = request.url,
-              let response = HTTPURLResponse(url: url, statusCode: status, httpVersion: nil,
+        guard !hold, let url = request.url else { return }
+        if let redirect, url.host == "transit.example",
+           let response = HTTPURLResponse(url: url, statusCode: status, httpVersion: nil,
+                                          headerFields: ["Location": redirect.absoluteString]) {
+            client?.urlProtocol(self, wasRedirectedTo: URLRequest(url: redirect), redirectResponse: response)
+            client?.urlProtocolDidFinishLoading(self)
+            return
+        }
+        guard let response = HTTPURLResponse(url: url, statusCode: status, httpVersion: nil,
                                              headerFields: ["Content-Type": "application/json"]) else { return }
         client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
         client?.urlProtocol(self, didLoad: body)

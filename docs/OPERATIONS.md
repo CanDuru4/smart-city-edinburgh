@@ -50,6 +50,24 @@ NFC scanning saves the tag's hexadecimal identifier. Earlier code generated rand
 
 Firebase is ending new CocoaPods releases in October 2026. Existing versions remain installable. Plan a separate migration to Swift Package Manager for future Firebase updates. See [Firebase's migration notice](https://firebase.google.com/docs/ios/cocoapods-deprecation) and [Apple SDK requirements](https://developer.apple.com/news/upcoming-requirements/).
 
+## Journeo verification record (October 19, 2026)
+
+This unattended worker used synthetic credentials and no portal account or device. No real Keys.plist or Firebase configuration was read or copied.
+
+- `pod install` passed using CocoaPods 1.16.2 installed under ignored `build/`; `Podfile.lock` is unchanged.
+- All 24 repository logic XCTest cases passed when compiled directly with `swiftc` and run with `xctest` on macOS: 17 Journeo cases plus the existing 7 domain cases.
+- All 11 portable Journeo client tests passed through a direct macOS XCTest bundle using the installed Alamofire sources. These cover the configured header, sample response decoding, HTTP and JSON failures, invalid inputs, per-call configuration resolution, no-request resolver failure, cancellation, and refusal to follow redirects.
+- The new Swift sources and tests compiled in Swift 5 mode. `plutil` and the Xcodeproj parser validated the project; source membership, Debug/Release settings, build-phase adjacency, and template exclusion from resources passed structural checks.
+- The optional Journeo build script copied an empty template fixture and removed the stale bundled fixture when its input was absent.
+- Plist syntax, all four empty example values, ignored Keys.plist, unignored example, no tracked Keys.plist, unchanged `TransitAPIBaseURL`, and the requested credential-pattern and whitespace scans passed.
+
+Not verified in this run:
+
+- `swift test` was attempted but blocked by nested sandbox and build-file access errors with Xcode 27.1. Direct XCTest results above do not claim that SwiftPM itself passed.
+- `xcodebuild -list` and the simulator build were attempted, but Xcode did not recognize the workspace in this sandbox and CoreSimulator services were inaccessible. The workspace XML and project parsed separately. The full app build, simulator app/UI tests, and the new app-bundle `TransitAPIBaseURL` assertion remain unverified; the source plist equality check passed.
+- Portal BaseURL/header verification, subscription and Jarvis secret storage, the owner-approved access-request artifact, and a live authenticated request were outside this worker's tools and authorization. No login, account changes, messages, or email occurred.
+- Before merging, an authorized run must execute the normal README SwiftPM and iOS checks. The owner must verify the portal settings, provision local configuration, confirm a successful request and fail-closed removal of a value, and review the guide ambiguities above.
+
 ## Verification record (September 12, 2026)
 
 Verified with Xcode 27.0 (27A5194q) and the iOS 27.0 (24A5355p) simulator runtime:
