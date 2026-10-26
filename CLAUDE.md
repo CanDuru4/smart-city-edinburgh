@@ -1,6 +1,6 @@
 @AGENTS.md
 
-Validation scope, shared capacity and remote execution follow AGENTS.md. Command examples below do not require a full-suite rerun for every edit.
+Compatible heavy committed-source checks prefer the gaming PC through `remote-run.py`, which handles bounded wake/connect automatically. Follow AGENTS.md for runtime/data exceptions, native checks and matching-result reuse. Do not ask for PC availability each time or silently fall back to the Mini.
 
 ## Claude Code
 
