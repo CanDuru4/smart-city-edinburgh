@@ -27,11 +27,9 @@ Run from the repo root (or pass `--package-path` / an absolute `-workspace` path
 pod install                      # setup; use pod update only for an intentional upgrade
 swift test                       # pure Domain and Journeo contract tests on macOS
 xcodebuild -workspace Asis.xcworkspace -scheme Asis \
-  -destination 'generic/platform=iOS Simulator' \
-  -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO build
+  -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
 xcodebuild -workspace Asis.xcworkspace -scheme Asis \
-  -destination 'platform=iOS Simulator,id=<UDID>' \
-  -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO test   # AsisTests + AsisUITests
+  -destination 'platform=iOS Simulator,name=smart-city-edinburgh-17' CODE_SIGNING_ALLOWED=NO test   # AsisTests + AsisUITests
 ```
 
 - Always open/build `Asis.xcworkspace`, never the bare `.xcodeproj` (CocoaPods).
@@ -40,7 +38,7 @@ xcodebuild -workspace Asis.xcworkspace -scheme Asis \
 
 ## Configuration and secrets
 
-- `Asis/GoogleService-Info.plist` is git-ignored and must never be committed. A build phase copies it into the app only if present; the `FIREBASE_CONFIG_PATH` build setting overrides the source path (point it at a nonexistent file for configuration-free runs). Without it, maps work and account features show an unavailable state.
+- `Asis/GoogleService-Info.plist` is git-ignored and must never be committed, and never open, cat or grep it. A build phase copies it into the app only if present; the `FIREBASE_CONFIG_PATH` build setting overrides the source path (point it at a nonexistent file for configuration-free runs). Without it, maps work and account features show an unavailable state.
 - `TransitAPIBaseURL` in `Asis/Info.plist` is the transit API root; `GetBaseData` rejects non-HTTPS URLs.
 - `Asis/Keys.plist` is git-ignored and must never be committed. Copy `Asis/Keys.example.plist` and supply portal-verified `JourneoAPIBaseURL`, `JourneoAPIKeyHeaderName`, and `JourneoAPIKey`; omit `JourneoAPIKeySecondary` if unused. The optional build phase copies it only when present and removes a stale bundled copy otherwise. `JOURNEO_KEYS_PATH` overrides the source path. The Foundation-only resolver fails closed on missing, blank, or invalid configuration, with no legacy URL fallback. Descriptions redact configuration values.
 - Journeo request contracts come from the linked guide in `docs/OPERATIONS.md`. The base URL and header name await portal verification. No UI or legacy contract integration is present; do not switch `TransitAPIBaseURL` to Journeo.
@@ -52,7 +50,7 @@ xcodebuild -workspace Asis.xcworkspace -scheme Asis \
 - NFC saves only the tag's hex identifier. Never generate or display balances as if real; leave existing stored balance fields intact.
 - `Asis/Data/JourneyTımeDataSetup.swift` contains a Turkish dotless `ı` in its name; reference it carefully (NFC/NFD) and do not "fix" it without updating the Xcode project.
 - New Swift files must be added to `Asis.xcodeproj/project.pbxproj` target membership; logic meant for `swift test` goes in `Asis/Domain/` and must stay free of UIKit/Firebase imports.
-- Firebase is ending new CocoaPods releases in October 2026; an SPM migration is a planned, separate piece of work. iPad runs in iPhone compatibility mode only.
+- Dependencies are CocoaPods (transport-cd already uses SPM); an SPM migration is a separate planned task, not part of other changes. iPad runs in iPhone compatibility mode only.
 
 ## Conventions
 
@@ -61,11 +59,9 @@ xcodebuild -workspace Asis.xcworkspace -scheme Asis \
 - User-facing strings go through `Localizable.strings` in all seven languages.
 - UI tests run signed-out in English and must never create accounts or send password-reset emails.
 
-## Validation placement and reuse (owner update 2026-10-26)
+## Validation
 
-- Follow the global Claude/Codex test policy and `~/Developer/personal/mac-mini/validation-economy/README.md` and `COVERAGE.md`. Focus first; full coverage only when the changed inputs require it. Docs-only policy edits need no application suite or deploy.
-- Use `~/Developer/personal/mac-mini/validation-economy/remote-run.py` for every check that can run on Linux (owner rule 2026-10-27: "all the things that we can run on pc must be on pc"): tests, lint, typecheck, Node and web checks. The Mini keeps only what needs macOS or a device, each such chunk with its reason written in the gate map; this repo wires the route in its own gate, and Linux-capable work left on the Mini is a bug to fix here. It defaults to `gaming-pc` and handles connection and bounded Wake-on-LAN automatically; call it directly without a separate online check or asking the owner each time. Match the pinned runtime and locked dependencies, bound actual workers, and preserve repo data-export restrictions. Never export credentials, production data, signing keys or uncommitted work.
-- The PC pool shares eight CPU slots and 24 GiB across isolated jobs with zero test swap; retain automatic job cleanup, the 8 GiB package-cache budget and 128 GiB virtual-disk cap. Brain is an explicit secondary route (`--runner brain`) when compatible, capped at two CPUs and 4 GiB together. If the PC remains unavailable after bounded wake/connect, report the blocker; never silently start the same work on the Mini or replay an uncertain submitted job.
-- Xcode, Swift, simulator, signing and device checks stay on the Mini. The PC Linux runner has no Apple toolchain; only compatible ancillary Python/Node checks are eligible.
-- For work that must run on the Mini: manual heavy commands use `repo-run.py --repo <absolute checkout> --profile <profile> -- <command>` from the shared helper; choose from native for the actual tool. Tiny syntax checks need no reservation. Bound tool workers and reserve separate heavy phases.
-- Reuse only supported receipts with matching source, coverage, dependencies, runtime/platform and relevant environment. Preserve passed unaffected batches; count remote results only when the owning gate aggregates them. Receipts do not replace required build artifacts or OS/device/browser proof. Split or offload an impossible reservation instead of waiting indefinitely; only stop your own obsolete jobs. Existing gates need explicit remote routing and matching-result aggregation; this instruction does not automatically move unintegrated commands.
+Mac-only: builds and tests need Xcode and a simulator, so they run on the Mini (global "Tests, CI and deploy"). Reuse this project's simulator per `~/Developer/personal/mac/ios-simulators.md`.
+
+- Simulator: `smart-city-edinburgh-17` (create once with `xcrun simctl create`, never borrow `krystal-17` or `nar-17`); shut it down when the task ends.
+- DerivedData: keep the default (symlinked to the ExtSSD); do not pass `-derivedDataPath`.
