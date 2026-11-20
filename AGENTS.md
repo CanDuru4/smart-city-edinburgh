@@ -1,6 +1,6 @@
 # Smart City: Edinburgh
 
-iOS public-transport app for Edinburgh (map + place search, live buses, stops, journey planning, Firebase accounts, NFC tag scanning). Original 2022 app, revived for current Xcode/iOS in September 2026; now maintained occasionally. Swift 5 + UIKit (programmatic, no main storyboard), MapKit, CoreLocation, CoreNFC, Alamofire, Firebase (Auth, Firestore, Analytics), Core Data, CocoaPods. Public repo, MIT.
+iOS public-transport app for Edinburgh (map + place search, live buses, stops, journey planning, Firebase accounts, NFC tag scanning). Original 2022 app, maintained occasionally. Swift 5 + UIKit (programmatic, no main storyboard), MapKit, CoreLocation, CoreNFC, Alamofire, Firebase (Auth, Firestore, Analytics), Core Data, CocoaPods. Public repo, MIT.
 
 The Xcode project, workspace, app target and scheme are all named `Asis` (the original working title). Keep that name; do not rename targets.
 
